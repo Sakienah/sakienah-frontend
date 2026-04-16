@@ -26,8 +26,12 @@ export function HeroSection() {
             <span className="text-sm text-zinc-500 ml-1">4.9 · 200+ tevreden klanten</span>
           </div>
           <div className="flex gap-4 flex-wrap">
-            <Button variant="primary">Ontdek het product</Button>
-            <Button variant="outline">Meer leren</Button>
+            <Button variant="primary" href="#product">
+              Ontdek het product
+            </Button>
+            <Button variant="outline" href="#over-ons">
+              Meer leren
+            </Button>
           </div>
         </div>
         <div className="relative flex items-center justify-center">
