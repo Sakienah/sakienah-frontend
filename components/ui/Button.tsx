@@ -32,7 +32,7 @@ export function Button({
   }
 
   return (
-    <button onClick={onClick} className={classes}>
+    <button type="button" onClick={onClick} className={classes}>
       {children}
     </button>
   );
