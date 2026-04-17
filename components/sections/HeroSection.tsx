@@ -1,73 +1,93 @@
-import Image from 'next/image';
+'use client';
+
+import { useEffect, useRef } from 'react';
 import { Button } from '../ui/Button';
 
-const GEOMETRIC_PATTERN = `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='0.4' opacity='0.22'%3E%3Cpath d='M30 5 L55 30 L30 55 L5 30 Z'/%3E%3Cpath d='M30 15 L45 30 L30 45 L15 30 Z'/%3E%3C/g%3E%3C/svg%3E")`;
-
 export function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let rafId: number;
+
+    const reversePlay = () => {
+      if (video.currentTime <= 0) {
+        video.play();
+        return;
+      }
+      video.currentTime = Math.max(0, video.currentTime - 1 / 30);
+      rafId = requestAnimationFrame(reversePlay);
+    };
+
+    const handleEnded = () => {
+      rafId = requestAnimationFrame(reversePlay);
+    };
+
+    video.addEventListener('ended', handleEnded);
+    return () => {
+      video.removeEventListener('ended', handleEnded);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
-    <section
-      className="min-h-screen flex items-center pt-16 bg-[#FAF7F2] relative overflow-hidden"
-      style={{ backgroundImage: GEOMETRIC_PATTERN, backgroundSize: '60px 60px' }}
-    >
-      <div className="max-w-7xl mx-auto px-6 w-full py-20 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="text-[10px] tracking-[0.24em] uppercase text-gold font-semibold mb-4">
-              Islamitische Lifestyle Winkel
-            </p>
+    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden">
+      <video
+        ref={videoRef}
+        src="/brand_assets/video%20(1).mp4"
+        autoPlay
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-            <div className="flex items-center gap-2 mb-5">
-              <span className="w-8 h-px bg-gold opacity-60" />
-              <span
-                className="w-[6px] h-[6px] bg-gold opacity-80"
-                style={{ transform: 'rotate(45deg)' }}
-              />
-            </div>
+      <div className="absolute inset-0 bg-black/50" />
 
-            <h1 className="font-display text-5xl md:text-6xl font-semibold leading-[1.1] text-black mb-6">
-              Alles voor jouw
-              <br />
-              <span className="text-gold">islamitische lifestyle</span>
-            </h1>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-20 md:py-32">
+        <p className="text-[10px] tracking-[0.24em] uppercase text-gold font-semibold mb-4">
+          Islamitische Lifestyle Winkel
+        </p>
 
-            <p className="text-zinc-500 text-base leading-relaxed max-w-lg mb-8 font-light">
-              Van gebedskleding tot Koran accessoires — premium producten geselecteerd met zorg en
-              intentie.
-            </p>
+        <div className="flex items-center gap-2 mb-5">
+          <span className="w-8 h-px bg-gold opacity-60" />
+          <span
+            className="w-[6px] h-[6px] bg-gold opacity-80"
+            style={{ transform: 'rotate(45deg)' }}
+          />
+        </div>
 
-            <div className="flex gap-3 flex-wrap mb-10">
-              <Button variant="secondary" href="/shop">
-                Shop collectie
-              </Button>
-              <Button variant="outline" href="/producten">
-                Bekijk producten
-              </Button>
-            </div>
+        <h1 className="font-display text-5xl md:text-6xl font-semibold leading-[1.1] text-white mb-6">
+          Alles voor jouw
+          <br />
+          <span className="text-gold">islamitische lifestyle</span>
+        </h1>
 
-            <div className="flex flex-wrap gap-6">
-              {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
-                <span
-                  key={item}
-                  className="flex items-center gap-2 text-[11px] text-zinc-400 tracking-wide"
-                >
-                  <span className="w-1 h-1 rounded-full bg-gold flex-shrink-0" />
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
+        <p className="text-white/70 text-base leading-relaxed max-w-lg mb-8 font-light">
+          Van gebedskleding tot Koran accessoires — premium producten geselecteerd met zorg en
+          intentie.
+        </p>
 
-          <div className="hidden md:flex justify-center items-center">
-            <div className="relative w-full max-w-xl aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="/images/herofoto.webp"
-                alt="Islamitische lifestyle producten"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
+        <div className="flex gap-3 flex-wrap mb-10">
+          <Button variant="secondary" href="/shop">
+            Shop collectie
+          </Button>
+          <Button variant="outline" href="/producten">
+            Bekijk producten
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-6">
+          {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
+            <span
+              key={item}
+              className="flex items-center gap-2 text-[11px] text-white/50 tracking-wide"
+            >
+              <span className="w-1 h-1 rounded-full bg-gold flex-shrink-0" />
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </section>
