@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
+import { CartProvider } from '@/contexts/CartContext';
 
 const cormorant = Cormorant_Garamond({
   variable: '--font-playfair',
@@ -30,8 +31,10 @@ export default function RootLayout({
   return (
     <html lang="nl" className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        {children}
-        <GiftFloater />
+        <CartProvider>
+          {children}
+          <GiftFloater />
+        </CartProvider>
       </body>
     </html>
   );
