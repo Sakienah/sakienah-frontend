@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { SectionTitle } from '../ui/SectionTitle';
 
 const leftFeatures = [
@@ -130,8 +131,14 @@ export function FeatureGrid() {
 
           {/* Center product image */}
           <div className="hidden md:flex items-center justify-center px-8">
-            <div className="w-56 aspect-[3/4] bg-zinc-50 rounded-2xl flex items-center justify-center">
-              <span className="text-zinc-300 text-xs tracking-widest uppercase">Productfoto</span>
+            <div className="bg-zinc-50 rounded-2xl overflow-hidden">
+              <Image
+                src="/images/aa.avif"
+                alt="Sakienah product"
+                width={224}
+                height={300}
+                className="object-cover rounded-2xl"
+              />
             </div>
           </div>
 

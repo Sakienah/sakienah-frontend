@@ -2,7 +2,7 @@ import { Button } from '../ui/Button';
 
 export function HeroSection() {
   return (
-    <section className="min-h-screen flex items-center pt-16 bg-white">
+    <section className="min-h-screen flex items-center pt-16 bg-[#FAF7F2]">
       <div className="max-w-7xl mx-auto px-6 w-full grid md:grid-cols-2 gap-12 items-center py-20">
         <div className="flex flex-col gap-6">
           <p className="text-xs tracking-widest uppercase text-gold font-medium">
@@ -35,9 +35,14 @@ export function HeroSection() {
           </div>
         </div>
         <div className="relative flex items-center justify-center">
-          <div className="w-full aspect-square max-w-lg bg-zinc-50 rounded-2xl flex items-center justify-center">
-            <span className="text-zinc-300 text-sm tracking-widest uppercase">Productfoto</span>
-          </div>
+          <video
+            src="/hero.mp4"
+            autoPlay
+            muted
+            playsInline
+            className="w-full max-w-sm rounded-[20px] border-2 border-gold/35 shadow-[0_8px_40px_rgba(201,168,76,0.18),0_2px_12px_rgba(0,0,0,0.10)]"
+            style={{ aspectRatio: '9/16', objectFit: 'cover' }}
+          />
         </div>
       </div>
     </section>

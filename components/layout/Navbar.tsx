@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
+import { AnnouncementBar } from './AnnouncementBar';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -35,6 +36,7 @@ export function Navbar() {
           Bestel nu
         </Button>
       </div>
+      <AnnouncementBar />
     </header>
   );
 }
