@@ -1,23 +1,24 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
 import './globals.css';
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   variable: '--font-playfair',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
-const inter = Inter({
+const dmSans = DM_Sans({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Sakienah — Premium Gebedsset',
+  title: 'Sakienah — Islamitische Lifestyle Winkel',
   description:
-    'Bid comfortabel met de Sakienah gebedsmat met ergonomische rugsteun en Koran-standaard.',
+    'Premium islamitische producten — gebedskleding, Koran accessoires, decor en cadeaus. Zorgvuldig geselecteerd bij Sakienah.',
 };
 
 export default function RootLayout({
@@ -26,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="nl" className={`${playfair.variable} ${inter.variable} h-full antialiased`}>
+    <html lang="nl" className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );

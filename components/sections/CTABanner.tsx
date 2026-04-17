@@ -2,7 +2,7 @@ import { Button } from '../ui/Button';
 
 export function CTABanner() {
   return (
-    <section className="py-24 bg-gold">
+    <section className="py-24 bg-[#FAF7F2]">
       <div className="max-w-7xl mx-auto px-6 text-center flex flex-col items-center gap-6">
         <p className="text-xs tracking-widest uppercase text-black/60 font-medium">Klantrecensie</p>
         <blockquote className="font-display text-2xl md:text-3xl font-semibold text-black max-w-2xl leading-snug">
