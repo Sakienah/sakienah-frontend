@@ -31,3 +31,7 @@ body {
 .animate-marquee {
   animation: marquee 30s infinite linear;
 }
+
+.footer-link:hover {
+  color: #c9a84c !important;
+}

@@ -1,27 +1,70 @@
+import Link from 'next/link';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 
 export function FinalCTA() {
   return (
-    <section className="bg-[#0a0a0a] py-25 px-10 text-center relative overflow-hidden">
+    <section
+      style={{
+        background: '#0a0a0a',
+        padding: '100px 40px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
       <GeomPattern opacity={0.08} />
-      <div className="relative z-10">
-        <p className="text-[10px] tracking-[0.22em] uppercase text-gold font-semibold mb-5">
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <p
+          style={{
+            fontSize: 10,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#c9a84c',
+            fontWeight: 600,
+            marginBottom: 20,
+          }}
+        >
           Klaar om te bestellen?
         </p>
-        <h2 className="font-display text-[52px] font-semibold text-white tracking-[-0.02em] mb-4 leading-[1.15]">
+        <h2
+          className="font-display text-white"
+          style={{
+            fontSize: 52,
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            marginBottom: 16,
+            lineHeight: 1.15,
+          }}
+        >
           Ontdek onze volledige
           <br />
-          <span className="text-gold italic">collectie</span>
+          <span style={{ color: '#c9a84c', fontStyle: 'italic' }}>collectie</span>
         </h2>
-        <p className="text-[15px] text-white/45 mb-11 max-w-[420px] mx-auto">
+        <p
+          style={{
+            fontSize: 15,
+            color: 'rgba(255,255,255,0.45)',
+            maxWidth: 420,
+            margin: '0 auto 44px',
+          }}
+        >
           Premium producten voor jouw islamitische lifestyle — met gratis verzending vanaf €50.
         </p>
-        <a
+        <Link
           href="/shop"
-          className="inline-block text-[11px] tracking-[0.18em] uppercase font-bold bg-gold text-[#0a0a0a] px-12 py-[18px] hover:opacity-85 transition-opacity"
+          className="inline-block hover:opacity-85 transition-opacity"
+          style={{
+            background: '#c9a84c',
+            color: '#0a0a0a',
+            fontSize: 11,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            padding: '18px 48px',
+          }}
         >
           Shop nu
-        </a>
+        </Link>
       </div>
     </section>
   );

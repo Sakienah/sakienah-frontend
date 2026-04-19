@@ -6,30 +6,18 @@ import Image from 'next/image';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 
-function ShopProductCard({ product }: { product: Product }) {
-  const [hovered, setHovered] = useState(false);
+function WishlistCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
-  const { addItem, toggleWishlist, isWishlisted } = useCart();
-  const wished = isWishlisted(product.id);
+  const { addItem, toggleWishlist } = useCart();
   const image = product.images[0];
 
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: '#fff',
-        border: '1px solid #F0EBE3',
-        boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.09)' : 'none',
-        transition: 'box-shadow 0.3s',
-        overflow: 'hidden',
-      }}
-    >
+    <div style={{ background: '#fff', border: '1px solid #F0EBE3', overflow: 'hidden' }}>
       <div
         style={{
           aspectRatio: '3/4',
-          overflow: 'hidden',
           position: 'relative',
+          overflow: 'hidden',
           background: '#EDE8DF',
         }}
       >
@@ -43,51 +31,8 @@ function ShopProductCard({ product }: { product: Product }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="text-[10px] text-gold/60 font-mono">geen foto</span>
+            <span style={{ fontSize: 10, color: '#c9a84c', opacity: 0.6 }}>geen foto</span>
           </div>
-        )}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(10,10,10,0.6)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingBottom: 24,
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.3s',
-          }}
-        >
-          <Link
-            href={`/products/${product.slug}`}
-            style={{
-              fontSize: 10,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              fontWeight: 600,
-            }}
-          >
-            Bekijk product →
-          </Link>
-        </div>
-        {product.stock === 0 && (
-          <span
-            style={{
-              position: 'absolute',
-              top: 14,
-              left: 14,
-              background: '#0a0a0a',
-              color: '#c9a84c',
-              fontSize: 9,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              padding: '5px 10px',
-            }}
-          >
-            Uitverkocht
-          </span>
         )}
         <button
           onClick={() => toggleWishlist(product.id)}
@@ -105,13 +50,13 @@ function ShopProductCard({ product }: { product: Product }) {
             justifyContent: 'center',
             borderRadius: '50%',
           }}
-          aria-label={wished ? 'Verwijder uit favorieten' : 'Toevoegen aan favorieten'}
+          aria-label="Verwijder uit favorieten"
         >
           <svg
-            width="13"
-            height="13"
-            fill={wished ? '#c9a84c' : 'none'}
-            stroke={wished ? '#c9a84c' : '#999'}
+            width="14"
+            height="14"
+            fill="#c9a84c"
+            stroke="#c9a84c"
             strokeWidth="1.5"
             viewBox="0 0 24 24"
           >
@@ -119,7 +64,6 @@ function ShopProductCard({ product }: { product: Product }) {
           </svg>
         </button>
       </div>
-
       <div style={{ padding: '18px 20px 22px' }}>
         {product.category && (
           <p
@@ -128,7 +72,7 @@ function ShopProductCard({ product }: { product: Product }) {
               fontSize: 14,
               color: '#c9a84c',
               direction: 'rtl',
-              marginBottom: 3,
+              marginBottom: 4,
               opacity: 0.8,
             }}
           >
@@ -137,15 +81,12 @@ function ShopProductCard({ product }: { product: Product }) {
         )}
         <p
           className="font-display"
-          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
+          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 10 }}
         >
           {product.name}
         </p>
-        {product.category && (
-          <p style={{ fontSize: 11, color: '#bbb', marginBottom: 12 }}>{product.category.name}</p>
-        )}
-        <div className="flex items-center justify-between">
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#c9a84c' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
             € {parseFloat(product.price).toFixed(2).replace('.', ',')}
           </span>
           <button
@@ -162,7 +103,7 @@ function ShopProductCard({ product }: { product: Product }) {
               fontSize: 9,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
-              padding: '10px 16px',
+              padding: '8px 14px',
               fontWeight: 600,
               transition: 'all 0.25s',
             }}
@@ -175,11 +116,53 @@ function ShopProductCard({ product }: { product: Product }) {
   );
 }
 
-export function ShopGrid({ products }: { products: Product[] }) {
+export function WishlistPageContent({ allProducts }: { allProducts: Product[] }) {
+  const { wishlist } = useCart();
+  const wishedProducts = allProducts.filter((p) => wishlist.has(p.id));
+
+  if (wishlist.size === 0) {
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '80px 0',
+          border: '1px solid #F0EBE3',
+          background: '#fff',
+        }}
+      >
+        <div style={{ fontSize: 48, marginBottom: 16, color: '#ddd' }}>♡</div>
+        <h2
+          className="font-display"
+          style={{ fontSize: 28, fontWeight: 600, color: '#0a0a0a', marginBottom: 12 }}
+        >
+          Geen favorieten opgeslagen
+        </h2>
+        <p style={{ fontSize: 14, color: '#aaa', marginBottom: 32 }}>
+          Voeg producten toe aan je verlanglijst vanuit de shop.
+        </p>
+        <Link
+          href="/shop"
+          style={{
+            display: 'inline-block',
+            background: '#0a0a0a',
+            color: '#c9a84c',
+            fontSize: 11,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            padding: '14px 36px',
+          }}
+        >
+          Ontdek onze collectie
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
-      {products.map((p) => (
-        <ShopProductCard key={p.id} product={p} />
+      {wishedProducts.map((product) => (
+        <WishlistCard key={product.id} product={product} />
       ))}
     </div>
   );

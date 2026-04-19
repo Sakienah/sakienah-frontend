@@ -5,10 +5,17 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
-import { StarRating } from '@/components/ui/StarRating';
 
-function formatPrice(price: string) {
-  return `€ ${parseFloat(price).toFixed(2).replace('.', ',')}`;
+function Stars() {
+  return (
+    <span className="flex" style={{ gap: 2 }}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg key={i} width="12" height="12" viewBox="0 0 20 20" style={{ fill: '#c9a84c' }}>
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </span>
+  );
 }
 
 function BigProductCard({ product }: { product: Product }) {
@@ -18,66 +25,114 @@ function BigProductCard({ product }: { product: Product }) {
   const wished = isWishlisted(product.id);
   const image = product.images[0];
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.preventDefault();
-    addItem(product);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  };
-
   return (
     <div
-      className="bg-white overflow-hidden"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      style={{ background: '#fff', overflow: 'hidden', cursor: 'pointer', position: 'relative' }}
     >
-      <Link
-        href={`/products/${product.slug}`}
-        className="block relative aspect-[3/4] overflow-hidden"
-      >
+      <div style={{ aspectRatio: '3/4', overflow: 'hidden', position: 'relative' }}>
         {image ? (
           <Image
             src={image}
             alt={product.name}
             fill
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width:768px) 100vw, 50vw"
           />
         ) : (
-          <div className="w-full h-full bg-[#EDE8DF] flex items-center justify-center">
-            <span className="text-[10px] text-gold/70 font-mono tracking-[0.1em] text-center px-6">
-              product shot
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              background: '#EDE8DF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span style={{ fontSize: 10, color: '#c9a84c', opacity: 0.6, fontFamily: 'monospace' }}>
+              geen foto
             </span>
           </div>
         )}
-
-        {/* Hover overlay */}
         <div
-          className="absolute inset-0 bg-[#0a0a0a]/60 flex items-end justify-center pb-7 transition-opacity duration-300"
-          style={{ opacity: hovered ? 1 : 0 }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(10,10,10,0.6)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            paddingBottom: 28,
+            opacity: hovered ? 1 : 0,
+            transition: 'opacity 0.28s',
+          }}
         >
-          <span className="text-[11px] tracking-[0.18em] uppercase text-gold font-semibold">
+          <Link
+            href={`/products/${product.slug}`}
+            style={{
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: '#c9a84c',
+              fontWeight: 600,
+            }}
+          >
             Bekijk product →
-          </span>
+          </Link>
         </div>
-
         {product.stock === 0 && (
-          <span className="absolute top-4 left-4 bg-[#0a0a0a] text-gold text-[9px] tracking-[0.15em] uppercase px-2.5 py-1.5">
+          <span
+            style={{
+              position: 'absolute',
+              top: 16,
+              left: 16,
+              background: '#0a0a0a',
+              color: '#c9a84c',
+              fontSize: 9,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              padding: '6px 12px',
+            }}
+          >
             Uitverkocht
           </span>
         )}
         {product.comparePrice && (
-          <span className="absolute top-4 right-14 bg-gold text-[#0a0a0a] text-[9px] tracking-[0.12em] uppercase px-2.5 py-1.5 font-bold">
+          <span
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 56,
+              background: '#c9a84c',
+              color: '#0a0a0a',
+              fontSize: 9,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '6px 10px',
+              fontWeight: 700,
+            }}
+          >
             Sale
           </span>
         )}
-
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            toggleWishlist(product.id);
+          onClick={() => toggleWishlist(product.id)}
+          style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'rgba(255,255,255,0.95)',
+            border: 'none',
+            cursor: 'pointer',
+            width: 36,
+            height: 36,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '50%',
           }}
-          className="absolute top-3 right-3 bg-white/95 rounded-full w-9 h-9 flex items-center justify-center"
           aria-label={wished ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
         >
           <svg
@@ -91,36 +146,74 @@ function BigProductCard({ product }: { product: Product }) {
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </button>
-      </Link>
+      </div>
 
-      <div className="px-6 py-[22px] flex items-start justify-between gap-4">
-        <Link href={`/products/${product.slug}`} className="flex-1 min-w-0">
-          <p className="font-arabic text-[15px] text-gold/85 mb-1" style={{ direction: 'rtl' }}>
-            {product.category?.name ?? ''}
-          </p>
-          <p className="font-display text-[18px] font-medium text-[#0a0a0a] mb-1.5">
+      <div
+        style={{
+          padding: '22px 24px 26px',
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 16,
+        }}
+      >
+        <Link href={`/products/${product.slug}`} style={{ flex: 1 }}>
+          {product.category && (
+            <p
+              className="font-arabic"
+              style={{
+                fontSize: 15,
+                color: '#c9a84c',
+                direction: 'rtl',
+                marginBottom: 4,
+                opacity: 0.85,
+              }}
+            >
+              {product.category.name}
+            </p>
+          )}
+          <p
+            className="font-display"
+            style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
+          >
             {product.name}
           </p>
-          <p className="text-[12px] text-zinc-400 mb-2.5">{product.category?.name}</p>
-          <div className="flex items-center gap-2">
-            <StarRating count={5} />
-            <span className="text-[11px] text-zinc-400">4.9</span>
+          {product.category && (
+            <p style={{ fontSize: 12, color: '#aaa', marginBottom: 10 }}>{product.category.name}</p>
+          )}
+          <div className="flex items-center" style={{ gap: 8 }}>
+            <Stars />
+            <span style={{ fontSize: 11, color: '#aaa' }}>4.9</span>
           </div>
         </Link>
 
-        <div className="flex flex-col items-end gap-2.5 flex-shrink-0">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
           {product.comparePrice && (
-            <span className="text-[12px] text-zinc-300 line-through">
-              {formatPrice(product.comparePrice)}
+            <span style={{ fontSize: 12, color: '#ccc', textDecoration: 'line-through' }}>
+              € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
             </span>
           )}
-          <span className="text-[18px] font-bold text-gold">{formatPrice(product.price)}</span>
+          <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
+            € {parseFloat(product.price).toFixed(2).replace('.', ',')}
+          </span>
           <button
-            onClick={handleAdd}
-            className="text-[10px] tracking-[0.15em] uppercase font-semibold px-5 py-3 transition-all duration-200 whitespace-nowrap"
+            onClick={() => {
+              addItem(product);
+              setAdded(true);
+              setTimeout(() => setAdded(false), 1500);
+            }}
             style={{
               background: added ? '#c9a84c' : '#0a0a0a',
               color: added ? '#0a0a0a' : '#fff',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 10,
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase',
+              padding: '12px 20px',
+              fontWeight: 600,
+              transition: 'all 0.25s',
+              whiteSpace: 'nowrap',
             }}
           >
             {added ? '✓ Toegevoegd' : '+ Winkelwagen'}
@@ -133,7 +226,7 @@ function BigProductCard({ product }: { product: Product }) {
 
 export function BestsellersGrid({ products }: { products: Product[] }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
       {products.map((p) => (
         <BigProductCard key={p.id} product={p} />
       ))}

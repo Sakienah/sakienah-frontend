@@ -1,13 +1,10 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { Button } from '@/components/ui/Button';
+import { ProductDetailClient } from '@/components/sections/ProductDetailClient';
 import { getProduct } from '@/lib/api';
-
-function formatPrice(price: string) {
-  return `€ ${parseFloat(price).toFixed(2).replace('.', ',')}`;
-}
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -20,85 +17,66 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-white pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <a
-            href="/shop"
-            className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-zinc-400 hover:text-black transition-colors mb-10"
-          >
-            ← Terug naar shop
-          </a>
-
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-20">
-            {/* Afbeelding */}
-            <div className="relative bg-[#FAF7F2] rounded-2xl aspect-square overflow-hidden">
-              {image ? (
-                <Image
-                  src={image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-zinc-300 text-sm">Geen foto beschikbaar</span>
-                </div>
-              )}
+      <main className="min-h-screen bg-white" style={{ paddingTop: 106 }}>
+        {/* Breadcrumb */}
+        <div
+          style={{ background: '#fff', padding: '14px 40px', borderBottom: '1px solid #F0EBE3' }}
+        >
+          <div className="max-w-[1280px] mx-auto">
+            <div className="flex items-center" style={{ gap: 8, fontSize: 12 }}>
+              <Link href="/" style={{ color: '#999' }}>
+                Home
+              </Link>
+              <span style={{ color: '#ccc' }}>›</span>
+              <Link href="/shop" style={{ color: '#999' }}>
+                Shop
+              </Link>
+              <span style={{ color: '#ccc' }}>›</span>
+              <span style={{ color: '#0a0a0a', fontWeight: 500 }}>{product.name}</span>
             </div>
+          </div>
+        </div>
 
-            {/* Info */}
-            <div className="flex flex-col justify-center">
-              {product.category && (
-                <p className="text-[10px] tracking-[0.24em] uppercase text-gold font-semibold mb-3">
-                  {product.category.name}
-                </p>
-              )}
-
-              <h1 className="font-display text-3xl md:text-4xl font-semibold text-black mb-4">
-                {product.name}
-              </h1>
-
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl font-semibold text-gold">
-                  {formatPrice(product.price)}
-                </span>
-                {product.comparePrice && (
-                  <span className="text-base text-zinc-400 line-through">
-                    {formatPrice(product.comparePrice)}
-                  </span>
-                )}
-              </div>
-
-              <div className="mb-6">
-                {product.stock > 0 ? (
-                  <span className="text-xs text-emerald-600 font-medium">
-                    Op voorraad ({product.stock} beschikbaar)
-                  </span>
+        {/* Main content */}
+        <div style={{ background: '#fff', padding: '56px 40px 80px' }}>
+          <div className="max-w-[1280px] mx-auto">
+            <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: 72 }}>
+              {/* Image */}
+              <div
+                style={{
+                  aspectRatio: '4/5',
+                  background: '#FAF7F2',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 20,
+                    border: '1px solid rgba(201,168,76,0.2)',
+                    zIndex: 10,
+                    pointerEvents: 'none',
+                  }}
+                />
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 768px) 100vw, 55vw"
+                  />
                 ) : (
-                  <span className="text-xs text-red-500 font-medium">Uitverkocht</span>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span style={{ color: '#ccc', fontSize: 14 }}>Geen foto beschikbaar</span>
+                  </div>
                 )}
               </div>
 
-              <div className="flex gap-3 mb-8">
-                <Button variant="primary" className="flex-1">
-                  + Voeg toe aan winkelwagen
-                </Button>
-              </div>
-
-              {product.description && (
-                <div className="border-t border-zinc-100 pt-6">
-                  <p className="text-[10px] tracking-[0.24em] uppercase text-zinc-400 font-semibold mb-3">
-                    Beschrijving
-                  </p>
-                  <p className="text-sm text-zinc-600 leading-relaxed whitespace-pre-line">
-                    {product.description}
-                  </p>
-                </div>
-              )}
-
-              {product.sku && <p className="text-[10px] text-zinc-300 mt-6">SKU: {product.sku}</p>}
+              {/* Info + actions */}
+              <ProductDetailClient product={product} />
             </div>
           </div>
         </div>

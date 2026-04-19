@@ -2,21 +2,50 @@ import { GeomPattern } from '@/components/ui/GeomPattern';
 
 export function CTABanner() {
   return (
-    <section className="bg-[#0a0a0a] py-20 px-10 text-center relative overflow-hidden">
+    <section
+      style={{
+        background: '#0a0a0a',
+        padding: '80px 40px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
       <GeomPattern opacity={0.07} />
-      <div className="relative z-10">
+      <div style={{ position: 'relative', zIndex: 1 }}>
         <div
-          className="font-arabic text-[52px] text-gold leading-[1.4] mb-4"
-          style={{ direction: 'rtl' }}
+          className="font-arabic"
+          style={{
+            fontSize: 52,
+            color: '#c9a84c',
+            direction: 'rtl',
+            marginBottom: 16,
+            lineHeight: 1.4,
+          }}
         >
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </div>
-        <div className="flex items-center justify-center gap-4 mb-3">
-          <span className="w-14 h-px bg-gold/30" />
-          <span className="w-1.5 h-1.5 bg-gold/50 rotate-45" />
-          <span className="w-14 h-px bg-gold/30" />
+        <div className="flex items-center justify-center" style={{ gap: 16, marginBottom: 12 }}>
+          <span style={{ width: 60, height: 1, background: 'rgba(201,168,76,0.3)' }} />
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              background: '#c9a84c',
+              opacity: 0.5,
+              transform: 'rotate(45deg)',
+            }}
+          />
+          <span style={{ width: 60, height: 1, background: 'rgba(201,168,76,0.3)' }} />
         </div>
-        <p className="text-[12px] text-white/35 tracking-[0.15em] uppercase">
+        <p
+          style={{
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.35)',
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+          }}
+        >
           In naam van Allah, de Barmhartige, de Genadevolle
         </p>
       </div>

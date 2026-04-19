@@ -1,13 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 
-function formatPrice(price: string) {
-  return `€ ${parseFloat(price).toFixed(2).replace('.', ',')}`;
+export function HeroProductCards({ products }: { products: Product[] }) {
+  return (
+    <>
+      {products.map((p) => (
+        <HeroProductCard key={p.id} product={p} />
+      ))}
+    </>
+  );
 }
 
 function HeroProductCard({ product }: { product: Product }) {
@@ -18,17 +24,32 @@ function HeroProductCard({ product }: { product: Product }) {
 
   return (
     <div
-      className="w-full max-w-[300px] bg-white relative cursor-pointer z-10 transition-all duration-300"
-      style={{
-        boxShadow: hovered ? '0 20px 60px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.06)',
-        transform: hovered ? 'translateY(-4px)' : 'none',
-      }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      style={{
+        width: '100%',
+        maxWidth: 300,
+        background: '#fff',
+        position: 'relative',
+        boxShadow: hovered ? '0 20px 60px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.06)',
+        transition: 'box-shadow 0.3s, transform 0.3s',
+        transform: hovered ? 'translateY(-4px)' : 'none',
+        zIndex: 2,
+      }}
     >
       <button
         onClick={() => toggleWishlist(product.id)}
-        className="absolute top-3 right-3 z-20 bg-white/90 rounded-full w-8 h-8 flex items-center justify-center"
+        className="absolute z-10 flex items-center justify-center"
+        style={{
+          top: 12,
+          right: 12,
+          background: 'rgba(255,255,255,0.9)',
+          border: 'none',
+          cursor: 'pointer',
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+        }}
         aria-label={wished ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
       >
         <svg
@@ -43,45 +64,54 @@ function HeroProductCard({ product }: { product: Product }) {
         </svg>
       </button>
 
-      <Link href={`/products/${product.slug}`}>
-        <div className="aspect-[4/3] overflow-hidden bg-[#EDE8DF] relative">
-          {image ? (
-            <Image src={image} alt={product.name} fill className="object-cover" sizes="300px" />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <span className="text-[10px] text-gold/70 font-mono tracking-[0.1em] text-center px-6">
-                product shot
-              </span>
-            </div>
+      <Link
+        href={`/products/${product.slug}`}
+        style={{
+          aspectRatio: '4/3',
+          display: 'block',
+          overflow: 'hidden',
+          position: 'relative',
+          background: '#EDE8DF',
+        }}
+      >
+        {image ? (
+          <Image src={image} alt={product.name} fill className="object-cover" sizes="300px" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-[10px] text-gold/60 font-mono">geen foto</span>
+          </div>
+        )}
+      </Link>
+
+      <div style={{ padding: '16px 18px 20px' }}>
+        {product.category && (
+          <p
+            className="font-arabic"
+            style={{
+              fontSize: 14,
+              color: '#c9a84c',
+              direction: 'rtl',
+              marginBottom: 4,
+              opacity: 0.8,
+            }}
+          >
+            {product.category.name}
+          </p>
+        )}
+        <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 8 }}>
+          {product.name}
+        </p>
+        <div className="flex items-center" style={{ gap: 10 }}>
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#c9a84c' }}>
+            € {parseFloat(product.price).toFixed(2).replace('.', ',')}
+          </span>
+          {product.comparePrice && (
+            <span style={{ fontSize: 12, color: '#aaa', textDecoration: 'line-through' }}>
+              € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
+            </span>
           )}
         </div>
-        <div className="px-[18px] py-5">
-          <p className="font-arabic text-[14px] text-gold/80 mb-1" style={{ direction: 'rtl' }}>
-            {product.category?.name ?? ''}
-          </p>
-          <p className="text-[13px] font-medium text-[#0a0a0a] mb-2">{product.name}</p>
-          <div className="flex items-center gap-2.5">
-            <span className="text-[15px] font-semibold text-gold">
-              {formatPrice(product.price)}
-            </span>
-            {product.comparePrice && (
-              <span className="text-[12px] text-zinc-400 line-through">
-                {formatPrice(product.comparePrice)}
-              </span>
-            )}
-          </div>
-        </div>
-      </Link>
+      </div>
     </div>
-  );
-}
-
-export function HeroProductCards({ products }: { products: Product[] }) {
-  return (
-    <>
-      {products.map((p) => (
-        <HeroProductCard key={p.id} product={p} />
-      ))}
-    </>
   );
 }
