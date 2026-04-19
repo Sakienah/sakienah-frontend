@@ -16,12 +16,16 @@ type CartContextValue = {
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  wishlist: Set<string>;
+  toggleWishlist: (productId: string) => void;
+  isWishlisted: (productId: string) => boolean;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
 
   const addItem = useCallback((product: Product) => {
     setItems((prev) => {
@@ -49,12 +53,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = useCallback(() => setItems([]), []);
 
+  const toggleWishlist = useCallback((productId: string) => {
+    setWishlist((prev) => {
+      const next = new Set(prev);
+      if (next.has(productId)) {
+        next.delete(productId);
+      } else {
+        next.add(productId);
+      }
+      return next;
+    });
+  }, []);
+
+  const isWishlisted = useCallback((productId: string) => wishlist.has(productId), [wishlist]);
+
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + parseFloat(i.product.price) * i.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, totalItems, totalPrice, addItem, removeItem, updateQuantity, clearCart }}
+      value={{
+        items,
+        totalItems,
+        totalPrice,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+        wishlist,
+        toggleWishlist,
+        isWishlisted,
+      }}
     >
       {children}
     </CartContext.Provider>
