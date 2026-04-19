@@ -1,94 +1,92 @@
-'use client';
+import { getProducts } from '@/lib/api';
+import { GeomPattern } from '@/components/ui/GeomPattern';
+import { HeroProductCards } from './HeroProductCards';
 
-import { useEffect, useRef } from 'react';
-import { Button } from '../ui/Button';
-
-export function HeroSection() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    let rafId: number;
-
-    const reversePlay = () => {
-      if (video.currentTime <= 0) {
-        video.play();
-        return;
-      }
-      video.currentTime = Math.max(0, video.currentTime - 1 / 30);
-      rafId = requestAnimationFrame(reversePlay);
-    };
-
-    const handleEnded = () => {
-      rafId = requestAnimationFrame(reversePlay);
-    };
-
-    video.addEventListener('ended', handleEnded);
-    return () => {
-      video.removeEventListener('ended', handleEnded);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
+export async function HeroSection() {
+  const products = await getProducts().catch(() => []);
+  const featured = products.slice(0, 2);
 
   return (
-    <section className="min-h-screen flex items-center pt-16 relative overflow-hidden">
-      <video
-        ref={videoRef}
-        src="/brand_assets/video%20(1).mp4"
-        autoPlay
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+    <section className="min-h-screen grid" style={{ gridTemplateColumns: '58% 42%' }}>
+      {/* Left — dark */}
+      <div className="bg-[#0a0a0a] flex flex-col justify-center px-16 py-36 relative overflow-hidden">
+        <GeomPattern opacity={0.06} />
 
-      <div className="absolute inset-0 bg-black/50" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-20 md:py-32">
-        <p className="text-[10px] tracking-[0.24em] uppercase text-gold font-semibold mb-4">
-          Islamitische Lifestyle Winkel
-        </p>
-
-        <div className="flex items-center gap-2 mb-5">
-          <span className="w-8 h-px bg-gold opacity-60" />
-          <span
-            className="w-[6px] h-[6px] bg-gold opacity-80"
-            style={{ transform: 'rotate(45deg)' }}
-          />
+        {/* Arabic watermark */}
+        <div
+          className="absolute -right-10 top-1/2 -translate-y-1/2 font-arabic text-[280px] text-gold/[0.04] leading-none pointer-events-none select-none"
+          aria-hidden="true"
+          style={{ direction: 'rtl' }}
+        >
+          سكينة
         </div>
 
-        <h1 className="font-display text-5xl md:text-6xl font-semibold leading-[1.1] text-white mb-6">
-          Alles voor jouw
-          <br />
-          <span className="text-gold">islamitische lifestyle</span>
-        </h1>
-
-        <p className="text-white/70 text-base leading-relaxed max-w-lg mb-8 font-light">
-          Van gebedskleding tot Koran accessoires — premium producten geselecteerd met zorg en
-          intentie.
-        </p>
-
-        <div className="flex gap-3 flex-wrap mb-10">
-          <Button variant="secondary" href="/shop">
-            Shop collectie
-          </Button>
-          <Button variant="outline" href="/producten">
-            Bekijk producten
-          </Button>
-        </div>
-
-        <div className="flex flex-wrap gap-6">
-          {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
-            <span
-              key={item}
-              className="flex items-center gap-2 text-[11px] text-white/50 tracking-wide"
-            >
-              <span className="w-1 h-1 rounded-full bg-gold flex-shrink-0" />
-              {item}
+        <div className="relative z-10">
+          {/* Bismillah ornament */}
+          <div className="flex items-center gap-3 mb-7">
+            <span className="w-7 h-px bg-gold opacity-60" />
+            <span className="font-arabic text-[18px] text-gold/85" style={{ direction: 'rtl' }}>
+              بِسْمِ اللَّهِ
             </span>
-          ))}
+            <span className="w-7 h-px bg-gold opacity-60" />
+          </div>
+
+          <p className="text-[10px] tracking-[0.22em] uppercase text-gold font-semibold mb-5">
+            Islamitische Lifestyle Winkel
+          </p>
+
+          <h1 className="font-display text-[64px] font-bold leading-[1.1] text-white mb-1 tracking-[-0.02em]">
+            Alles voor jouw
+          </h1>
+          <h1 className="font-display text-[64px] font-normal italic leading-[1.1] text-gold mb-8 tracking-[-0.02em]">
+            islamitische lifestyle
+          </h1>
+
+          <p className="text-white/55 text-base leading-[1.75] max-w-[420px] mb-11 font-light">
+            Premium producten geselecteerd met zorg en intentie — van gebedskleding tot Koran
+            accessoires.
+          </p>
+
+          <div className="flex gap-3.5 mb-12">
+            <a
+              href="/shop"
+              className="text-[11px] tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] px-9 py-4 hover:opacity-85 transition-opacity"
+            >
+              Shop collectie
+            </a>
+            <a
+              href="/about"
+              className="text-[11px] tracking-[0.15em] uppercase font-medium text-white/70 border border-white/20 px-9 py-4 hover:border-gold hover:text-gold transition-all"
+            >
+              Over Sakienah
+            </a>
+          </div>
+
+          <div className="flex gap-8 flex-wrap">
+            {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
+              <span
+                key={item}
+                className="flex items-center gap-2 text-[11px] text-white/40 tracking-[0.05em]"
+              >
+                <span className="w-1 h-1 bg-gold rotate-45 flex-shrink-0" />
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Right — cream */}
+      <div className="bg-[#FAF7F2] flex flex-col justify-center items-center px-12 py-36 gap-6 relative overflow-hidden">
+        <GeomPattern opacity={0.09} />
+        <div
+          className="absolute top-40 right-10 font-arabic text-[48px] text-gold/25 select-none pointer-events-none"
+          aria-hidden="true"
+          style={{ direction: 'rtl' }}
+        >
+          سكينة
+        </div>
+        <HeroProductCards products={featured} />
       </div>
     </section>
   );
