@@ -198,7 +198,7 @@ export default function ContactPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 106,
+            paddingTop: 146,
             paddingBottom: 48,
             paddingLeft: 40,
             paddingRight: 40,

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { Product } from '@/types';
 
 export type CartItem = {
@@ -25,7 +25,15 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const [wishlist, setWishlist] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') return new Set();
+    try {
+      const saved = localStorage.getItem('wishlist');
+      return saved ? new Set<string>(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const addItem = useCallback((product: Product) => {
     setItems((prev) => {
@@ -66,6 +74,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const isWishlisted = useCallback((productId: string) => wishlist.has(productId), [wishlist]);
+
+  useEffect(() => {
+    localStorage.setItem('wishlist', JSON.stringify([...wishlist]));
+  }, [wishlist]);
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const totalPrice = items.reduce((sum, i) => sum + parseFloat(i.product.price) * i.quantity, 0);

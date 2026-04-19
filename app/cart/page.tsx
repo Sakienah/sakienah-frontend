@@ -12,7 +12,7 @@ function CartHeader() {
     <div
       style={{
         background: '#0a0a0a',
-        paddingTop: 106,
+        paddingTop: 146,
         paddingBottom: 56,
         paddingLeft: 40,
         paddingRight: 40,

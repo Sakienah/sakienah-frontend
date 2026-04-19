@@ -124,7 +124,13 @@ export async function HeroSection() {
 
           <p
             className="text-white/55 mb-11"
-            style={{ fontSize: 16, lineHeight: 1.75, maxWidth: 420, fontWeight: 300 }}
+            style={{
+              fontSize: 16,
+              lineHeight: 1.75,
+              maxWidth: 420,
+              fontWeight: 300,
+              color: 'white',
+            }}
           >
             Premium producten geselecteerd met zorg en intentie — van gebedskleding tot Koran
             accessoires.
@@ -159,7 +165,7 @@ export async function HeroSection() {
                 className="flex items-center"
                 style={{
                   fontSize: 11,
-                  color: 'rgba(255,255,255,0.4)',
+                  color: 'rgb(253, 253, 253)',
                   letterSpacing: '0.05em',
                   gap: 8,
                 }}

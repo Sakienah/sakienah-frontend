@@ -43,7 +43,7 @@ export function FinalCTA() {
         <p
           style={{
             fontSize: 15,
-            color: 'rgba(255,255,255,0.45)',
+            color: 'rgb(255, 255, 255)',
             maxWidth: 420,
             margin: '0 auto 44px',
           }}

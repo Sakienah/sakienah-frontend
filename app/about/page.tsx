@@ -22,8 +22,8 @@ export default function AboutPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 106,
-            paddingBottom: 64,
+            paddingTop: 146,
+            paddingBottom: 24,
             paddingLeft: 40,
             paddingRight: 40,
             position: 'relative',
@@ -247,7 +247,7 @@ export default function AboutPage() {
           }}
         >
           <GeomPattern opacity={0.06} />
-          <div className="max-w-[720px] mx-auto relative z-10" style={{ padding: '80px 40px' }}>
+          <div className="max-w-[720px] mx-auto relative z-10">
             <p
               className="font-arabic"
               style={{
@@ -273,7 +273,9 @@ export default function AboutPage() {
               />
               <span style={{ width: 40, height: 1, background: 'rgba(201,168,76,0.3)' }} />
             </div>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>
+            <p
+              style={{ fontSize: 14, color: 'rgba(255, 255, 255, 0.96)', letterSpacing: '0.08em' }}
+            >
               Al-Bayyinah 98:5
             </p>
           </div>
