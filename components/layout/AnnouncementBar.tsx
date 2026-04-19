@@ -1,25 +1,14 @@
 'use client';
 
-const messages = [
-  'Gratis verzending vanaf €50',
-  '✦',
-  'Handgemaakt met zorg',
-  '✦',
-  'Snel geleverd in Nederland & België',
-  '✦',
-  'Premium kwaliteit gebedssets',
-  '✦',
-];
+const TEXT =
+  'Gratis verzending v.a. €50 · Veilig betalen · 30 dagen retour · Premium islamitische producten · سكينة — Rust voor lichaam en ziel · ';
 
 export function AnnouncementBar() {
-  const text = messages.join('   ');
-
   return (
-    <div className="w-full h-8 bg-black overflow-hidden flex items-center">
+    <div className="w-full bg-[#0a0a0a] border-b border-gold/20 overflow-hidden py-2">
       <div className="flex whitespace-nowrap animate-marquee">
-        <span className="text-[11px] tracking-widest uppercase text-yellow-500/80 px-8">
-          {text}&nbsp;&nbsp;&nbsp;&nbsp;{text}
-        </span>
+        <span className="text-[10px] tracking-[0.18em] uppercase text-gold pr-16">{TEXT}</span>
+        <span className="text-[10px] tracking-[0.18em] uppercase text-gold pr-16">{TEXT}</span>
       </div>
     </div>
   );
