@@ -1,20 +1,24 @@
-import { Button } from '../ui/Button';
+import { GeomPattern } from '@/components/ui/GeomPattern';
 
 export function CTABanner() {
   return (
-    <section className="py-24 bg-[#FAF7F2]">
-      <div className="max-w-7xl mx-auto px-6 text-center flex flex-col items-center gap-6">
-        <p className="text-xs tracking-widest uppercase text-black/60 font-medium">Klantrecensie</p>
-        <blockquote className="font-display text-2xl md:text-3xl font-semibold text-black max-w-2xl leading-snug">
-          &ldquo;De beste investering voor mijn dagelijkse gebed. Ik bid nu zoveel
-          comfortabeler.&rdquo;
-        </blockquote>
-        <p className="text-sm text-black/60">— Fatima R., tevreden klant</p>
-        <div className="w-16 h-px bg-black/20 my-2" />
-        <h2 className="font-display text-4xl md:text-5xl font-semibold text-black">
-          Klaar om comfortabel te bidden?
-        </h2>
-        <Button variant="secondary">Bestel nu →</Button>
+    <section className="bg-[#0a0a0a] py-20 px-10 text-center relative overflow-hidden">
+      <GeomPattern opacity={0.07} />
+      <div className="relative z-10">
+        <div
+          className="font-arabic text-[52px] text-gold leading-[1.4] mb-4"
+          style={{ direction: 'rtl' }}
+        >
+          بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+        </div>
+        <div className="flex items-center justify-center gap-4 mb-3">
+          <span className="w-14 h-px bg-gold/30" />
+          <span className="w-1.5 h-1.5 bg-gold/50 rotate-45" />
+          <span className="w-14 h-px bg-gold/30" />
+        </div>
+        <p className="text-[12px] text-white/35 tracking-[0.15em] uppercase">
+          In naam van Allah, de Barmhartige, de Genadevolle
+        </p>
       </div>
     </section>
   );

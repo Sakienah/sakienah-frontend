@@ -1,26 +1,19 @@
-const items = [
-  { icon: '🚚', title: 'Gratis verzending', subtitle: 'v.a. € 50' },
-  { icon: '↩', title: '30 dagen retour', subtitle: 'Geen gedoe' },
-  { icon: '🔒', title: 'Veilig betalen', subtitle: 'iDEAL & meer' },
-  { icon: '⭐', title: 'Premium garantie', subtitle: 'Op elk product' },
-];
+import { trustItems } from '@/lib/data';
 
 export function TrustBar() {
   return (
-    <section className="bg-white py-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {items.map(({ icon, title, subtitle }) => (
-            <div key={title} className="flex flex-col items-center text-center gap-2">
-              <span className="text-2xl">{icon}</span>
-              <p className="text-white text-xs font-semibold tracking-wide font-sans">{title}</p>
-              <p className="text-gold text-[10px] tracking-widest uppercase font-sans">
-                {subtitle}
-              </p>
+    <div className="bg-white border-b border-[#F0EBE3] py-5">
+      <div className="max-w-[1280px] mx-auto px-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+        {trustItems.map(({ icon, label, sub }) => (
+          <div key={label} className="flex items-center gap-3.5 justify-center">
+            <span className="text-[20px]">{icon}</span>
+            <div>
+              <div className="text-[12px] font-semibold text-[#0a0a0a]">{label}</div>
+              <div className="text-[11px] text-zinc-400">{sub}</div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
