@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
+import { Cormorant_Garamond, DM_Sans, Amiri } from 'next/font/google';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
 import { CartProvider } from '@/contexts/CartContext';
@@ -17,6 +17,13 @@ const dmSans = DM_Sans({
   display: 'swap',
 });
 
+const amiri = Amiri({
+  variable: '--font-amiri',
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Sakienah — Islamitische Lifestyle Winkel',
   description:
@@ -29,7 +36,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="nl" className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}>
+    <html
+      lang="nl"
+      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col font-sans">
         <CartProvider>
           {children}
