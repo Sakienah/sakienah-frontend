@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prepare": "node -e \"if (process.env.CI || process.env.RENDER) process.exit(0)\" && husky || true"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",
