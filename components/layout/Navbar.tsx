@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnnouncementBar } from './AnnouncementBar';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { totalItems, wishlist } = useCart();
+  const { user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -66,6 +68,28 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center" style={{ gap: 22 }}>
+          <Link
+            href="/account"
+            className="text-[#0a0a0a] flex items-center gap-1.5"
+            title={user ? user.naam : 'Inloggen'}
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg>
+            {user && (
+              <span className="hidden md:block text-[10px] tracking-[0.1em] uppercase font-medium text-[#c9a84c]">
+                {user.naam.split(' ')[0]}
+              </span>
+            )}
+          </Link>
           <Link href="/wishlist" className="text-[#0a0a0a] relative flex">
             <svg
               width="20"

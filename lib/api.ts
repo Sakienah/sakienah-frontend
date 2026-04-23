@@ -1,4 +1,4 @@
-import type { Product, Category } from '@/types';
+import type { Product, Category, User } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -19,4 +19,88 @@ export function getProduct(slug: string): Promise<Product> {
 
 export function getCategories(): Promise<Category[]> {
   return apiFetch<Category[]>('/products/categories');
+}
+
+async function apiPost<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+export function loginUser(email: string, password: string): Promise<User> {
+  return apiPost<User>('/auth/login', { email, password });
+}
+
+export function registerUser(data: {
+  voornaam: string;
+  achternaam: string;
+  email: string;
+  wachtwoord: string;
+  nieuwsbrief: boolean;
+}): Promise<User> {
+  return apiPost<User>('/auth/register', {
+    voornaam: data.voornaam,
+    achternaam: data.achternaam,
+    email: data.email,
+    password: data.wachtwoord,
+    nieuwsbrief: data.nieuwsbrief,
+  });
+}
+
+export async function updateProfile(data: {
+  voornaam?: string;
+  achternaam?: string;
+  email?: string;
+  telefoon?: string;
+}): Promise<User> {
+  const res = await fetch(`${API_URL}/auth/profile`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<User>;
+}
+
+export async function changePassword(
+  huidigWachtwoord: string,
+  nieuwWachtwoord: string,
+): Promise<void> {
+  const res = await fetch(`${API_URL}/auth/password`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ huidigWachtwoord, nieuwWachtwoord }),
+  });
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${res.status}`);
+  }
+}
+
+export function getOrders(): Promise<
+  {
+    id: string;
+    orderNumber: string;
+    status: string;
+    total: string;
+    createdAt: string;
+    items: { productId: string; quantity: number; unitPrice: string }[];
+  }[]
+> {
+  return fetch(`${API_URL}/orders/my`, { credentials: 'include' })
+    .then((r) => (r.ok ? r.json() : []))
+    .catch(() => []) as Promise<never>;
 }
