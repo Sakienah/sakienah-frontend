@@ -166,17 +166,43 @@ export function postCheckout(payload: CheckoutPayload): Promise<OrderResponse> {
   return apiPost<OrderResponse>('/orders/checkout', payload);
 }
 
-export function getOrders(): Promise<
-  {
-    id: string;
-    orderNumber: string;
-    status: string;
-    total: string;
-    createdAt: string;
-    items: { productId: string; quantity: number; unitPrice: string }[];
-  }[]
-> {
+export type OrderItem = {
+  productId: string;
+  quantity: number;
+  unitPrice: string;
+  total: string;
+  product: { name: string; slug: string; images: string[] };
+};
+
+export type OrderAddress = {
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
+
+export type OrderSummary = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  subtotal: string;
+  shippingCost: string;
+  total: string;
+  createdAt: string;
+  notes: string | null;
+  items: OrderItem[];
+  address: OrderAddress | null;
+};
+
+export function getOrders(): Promise<OrderSummary[]> {
   return fetch(`${API_URL}/orders/my`, { credentials: 'include' })
     .then((r) => (r.ok ? r.json() : []))
-    .catch(() => []) as Promise<never>;
+    .catch(() => []) as Promise<OrderSummary[]>;
+}
+
+export async function getOrderById(id: string): Promise<OrderSummary> {
+  const r = await fetch(`${API_URL}/orders/${id}`, { credentials: 'include' });
+  if (!r.ok) throw new Error(`Fout: ${r.status}`);
+  return r.json() as Promise<OrderSummary>;
 }

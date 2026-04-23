@@ -1,51 +1,55 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateProfile, changePassword } from '@/lib/api';
-
-const MOCK_ORDERS = [
-  {
-    id: '#SAK-2401',
-    datum: '18 april 2026',
-    status: 'Bezorgd' as const,
-    items: ['Gebedskleed met Rugsteun'],
-    totaal: 24.99,
-  },
-  {
-    id: '#SAK-2389',
-    datum: '2 april 2026',
-    status: 'Onderweg' as const,
-    items: ['Koran Tafel'],
-    totaal: 49.99,
-  },
-  {
-    id: '#SAK-2344',
-    datum: '14 maart 2026',
-    status: 'Bezorgd' as const,
-    items: ['Gebedskleed met Rugsteun', 'Koran Tafel'],
-    totaal: 74.98,
-  },
-];
+import { updateProfile, changePassword, getOrders } from '@/lib/api';
+import type { OrderSummary } from '@/lib/api';
 
 const inputClass =
   'w-full bg-[#FAF7F2] border border-[#E8E0D5] text-[#0a0a0a] text-sm px-4 py-3.5 outline-none focus:border-[#c9a84c] transition-colors';
 const labelClass = 'block font-sans text-[10px] tracking-[0.13em] uppercase text-[#888] mb-2';
 
 function statusColor(s: string) {
-  if (s === 'Bezorgd') return '#4CAF78';
-  if (s === 'Onderweg') return '#c9a84c';
+  if (s === 'DELIVERED') return '#4CAF78';
+  if (s === 'SHIPPED') return '#c9a84c';
+  if (s === 'CANCELLED' || s === 'REFUNDED') return '#C62828';
   return '#888';
+}
+
+function statusLabel(s: string) {
+  const map: Record<string, string> = {
+    PENDING: 'In behandeling',
+    CONFIRMED: 'Bevestigd',
+    PROCESSING: 'Verwerking',
+    SHIPPED: 'Onderweg',
+    DELIVERED: 'Bezorgd',
+    CANCELLED: 'Geannuleerd',
+    REFUNDED: 'Terugbetaald',
+  };
+  return map[s] ?? s;
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('nl-NL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function formatPrice(val: string | number) {
+  return `€ ${Number(val).toFixed(2).replace('.', ',')}`;
 }
 
 type Tab = 'overzicht' | 'bestellingen' | 'gegevens' | 'adres' | 'wachtwoord';
 
-function OverzichtTab({ onTab }: { onTab: (t: Tab) => void }) {
+function OverzichtTab({ onTab, orders }: { onTab: (t: Tab) => void; orders: OrderSummary[] }) {
   const { user } = useAuth();
-  const totaalBesteed = MOCK_ORDERS.reduce((s, o) => s + o.totaal, 0);
+  const totaalBesteed = orders.reduce((s, o) => s + Number(o.total), 0);
+  const latest = orders[0];
 
   return (
     <div>
@@ -54,13 +58,13 @@ function OverzichtTab({ onTab }: { onTab: (t: Tab) => void }) {
           {
             arabic: 'الطلبات',
             label: 'Bestellingen',
-            value: MOCK_ORDERS.length,
+            value: orders.length,
             sub: 'Totaal geplaatst',
           },
           {
             arabic: 'الإنفاق',
             label: 'Totaal besteed',
-            value: `€ ${totaalBesteed.toFixed(2).replace('.', ',')}`,
+            value: formatPrice(totaalBesteed),
             sub: 'Alle bestellingen',
           },
           { arabic: 'المكافأة', label: 'Loyaliteitspunten', value: '247', sub: 'Te verzilveren' },
@@ -96,26 +100,37 @@ function OverzichtTab({ onTab }: { onTab: (t: Tab) => void }) {
             Alles bekijken →
           </button>
         </div>
-        {MOCK_ORDERS.slice(0, 1).map((o) => (
-          <div key={o.id} className="flex flex-wrap justify-between items-center gap-3 py-4">
+        {latest ? (
+          <div className="flex flex-wrap justify-between items-center gap-3 py-4">
             <div>
-              <span className="font-sans text-[13px] font-semibold text-[#0a0a0a]">{o.id}</span>
-              <span className="font-sans text-[12px] text-[#aaa] ml-3.5">{o.datum}</span>
+              <span className="font-sans text-[13px] font-semibold text-[#0a0a0a]">
+                #{latest.orderNumber}
+              </span>
+              <span className="font-sans text-[12px] text-[#aaa] ml-3.5">
+                {formatDate(latest.createdAt)}
+              </span>
             </div>
-            <div className="font-sans text-[12px] text-[#666]">{o.items.join(', ')}</div>
+            <div className="font-sans text-[12px] text-[#666]">
+              {latest.items.map((i) => i.product.name).join(', ')}
+            </div>
             <div className="flex items-center gap-5">
               <span className="font-sans text-[14px] font-bold text-[#c9a84c]">
-                € {o.totaal.toFixed(2).replace('.', ',')}
+                {formatPrice(latest.total)}
               </span>
               <span
                 className="font-sans text-[10px] tracking-[0.12em] uppercase font-semibold px-3 py-1"
-                style={{ background: `${statusColor(o.status)}18`, color: statusColor(o.status) }}
+                style={{
+                  background: `${statusColor(latest.status)}18`,
+                  color: statusColor(latest.status),
+                }}
               >
-                {o.status}
+                {statusLabel(latest.status)}
               </span>
             </div>
           </div>
-        ))}
+        ) : (
+          <p className="font-sans text-[13px] text-[#aaa] py-4">Nog geen bestellingen geplaatst.</p>
+        )}
       </div>
 
       {user && (
@@ -129,43 +144,66 @@ function OverzichtTab({ onTab }: { onTab: (t: Tab) => void }) {
   );
 }
 
-function BestellingenTab() {
+function BestellingenTab({ orders }: { orders: OrderSummary[] }) {
   return (
     <div className="bg-white border border-[#F0EBE3]">
       <div className="px-8 py-7 border-b border-[#F0EBE3]">
         <h2 className="font-display text-[24px] font-semibold text-[#0a0a0a]">Mijn bestellingen</h2>
       </div>
-      {MOCK_ORDERS.map((o, i) => (
-        <div
-          key={o.id}
-          className="px-8 py-6"
-          style={{ borderBottom: i < MOCK_ORDERS.length - 1 ? '1px solid #F8F4EF' : 'none' }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 items-center">
-            <div>
-              <div className="font-sans text-[13px] font-semibold text-[#0a0a0a] mb-1">{o.id}</div>
-              <div className="font-sans text-[12px] text-[#aaa]">{o.datum}</div>
-            </div>
-            <div className="font-sans text-[12px] text-[#555] leading-relaxed sm:col-span-1">
-              {o.items.join(', ')}
-            </div>
-            <div className="font-sans text-[16px] font-bold text-[#c9a84c]">
-              € {o.totaal.toFixed(2).replace('.', ',')}
-            </div>
-            <div className="flex items-center gap-3">
-              <span
-                className="font-sans text-[10px] tracking-[0.12em] uppercase font-semibold px-3.5 py-1.5 whitespace-nowrap"
-                style={{ background: `${statusColor(o.status)}18`, color: statusColor(o.status) }}
-              >
-                {o.status}
-              </span>
-              <button className="font-sans text-[10px] tracking-[0.1em] uppercase px-3.5 py-1.5 border border-[#E8E0D5] text-[#888] whitespace-nowrap hover:border-[#0a0a0a] hover:text-[#0a0a0a] transition-colors">
-                Details
-              </button>
+      {orders.length === 0 ? (
+        <div className="px-8 py-12 text-center">
+          <p className="font-sans text-[13px] text-[#aaa]">
+            Je hebt nog geen bestellingen geplaatst.
+          </p>
+          <Link
+            href="/shop"
+            className="inline-block mt-5 font-sans text-[11px] tracking-[0.18em] uppercase font-bold px-7 py-3.5"
+            style={{ background: '#0a0a0a', color: '#c9a84c' }}
+          >
+            Naar de winkel →
+          </Link>
+        </div>
+      ) : (
+        orders.map((o, i) => (
+          <div
+            key={o.id}
+            className="px-8 py-6"
+            style={{ borderBottom: i < orders.length - 1 ? '1px solid #F8F4EF' : 'none' }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 items-center">
+              <div>
+                <div className="font-sans text-[13px] font-semibold text-[#0a0a0a] mb-1">
+                  #{o.orderNumber}
+                </div>
+                <div className="font-sans text-[12px] text-[#aaa]">{formatDate(o.createdAt)}</div>
+              </div>
+              <div className="font-sans text-[12px] text-[#555] leading-relaxed sm:col-span-1">
+                {o.items.map((item) => item.product.name).join(', ')}
+              </div>
+              <div className="font-sans text-[16px] font-bold text-[#c9a84c]">
+                {formatPrice(o.total)}
+              </div>
+              <div className="flex items-center gap-3">
+                <span
+                  className="font-sans text-[10px] tracking-[0.12em] uppercase font-semibold px-3.5 py-1.5 whitespace-nowrap"
+                  style={{
+                    background: `${statusColor(o.status)}18`,
+                    color: statusColor(o.status),
+                  }}
+                >
+                  {statusLabel(o.status)}
+                </span>
+                <Link
+                  href={`/account/orders/${o.id}`}
+                  className="font-sans text-[10px] tracking-[0.1em] uppercase px-3.5 py-1.5 border border-[#E8E0D5] text-[#888] whitespace-nowrap hover:border-[#0a0a0a] hover:text-[#0a0a0a] transition-colors"
+                >
+                  Details
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
@@ -427,6 +465,15 @@ export function AccountDashboard() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('overzicht');
+  const [orders, setOrders] = useState<OrderSummary[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      getOrders()
+        .then(setOrders)
+        .catch(() => {});
+    }
+  }, [user]);
 
   if (loading) {
     return (
@@ -533,8 +580,8 @@ export function AccountDashboard() {
             ))}
           </div>
 
-          {tab === 'overzicht' && <OverzichtTab onTab={setTab} />}
-          {tab === 'bestellingen' && <BestellingenTab />}
+          {tab === 'overzicht' && <OverzichtTab onTab={setTab} orders={orders} />}
+          {tab === 'bestellingen' && <BestellingenTab orders={orders} />}
           {tab === 'gegevens' && <GegevensTab />}
           {tab === 'adres' && <AdresTab />}
           {tab === 'wachtwoord' && <WachtwoordTab />}
