@@ -206,3 +206,37 @@ export async function getOrderById(id: string): Promise<OrderSummary> {
   if (!r.ok) throw new Error(`Fout: ${r.status}`);
   return r.json() as Promise<OrderSummary>;
 }
+
+export type AddressData = {
+  id: string;
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
+
+export async function getAddress(): Promise<AddressData | null> {
+  const r = await fetch(`${API_URL}/addresses/default`, { credentials: 'include' });
+  if (!r.ok) return null;
+  const data = await r.json();
+  return (data as AddressData) ?? null;
+}
+
+export async function saveAddress(data: {
+  street: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}): Promise<AddressData> {
+  const r = await fetch(`${API_URL}/addresses/default`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(data),
+  });
+  if (!r.ok) {
+    const d = (await r.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${r.status}`);
+  }
+  return r.json() as Promise<AddressData>;
+}

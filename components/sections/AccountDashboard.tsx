@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateProfile, changePassword, getOrders } from '@/lib/api';
+import { updateProfile, changePassword, getOrders, getAddress, saveAddress } from '@/lib/api';
 import type { OrderSummary } from '@/lib/api';
 
 const inputClass =
@@ -303,14 +303,49 @@ function GegevensTab() {
 }
 
 function AdresTab() {
-  const [form, setForm] = useState({ straat: '', postcode: '', stad: '', land: 'Nederland' });
+  const [form, setForm] = useState({ street: '', postalCode: '', city: '', country: 'Nederland' });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    getAddress()
+      .then((addr) => {
+        if (addr) {
+          setForm({
+            street: addr.street,
+            postalCode: addr.postalCode,
+            city: addr.city,
+            country: addr.country,
+          });
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2200);
+    setSaving(true);
+    setError('');
+    try {
+      await saveAddress(form);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Opslaan mislukt.');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="bg-white border border-[#F0EBE3] p-10 max-w-[640px] flex items-center justify-center py-20">
+        <div className="font-arabic text-[32px] text-[#c9a84c] opacity-40">سكينة</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white border border-[#F0EBE3] p-10 max-w-[640px]">
@@ -320,12 +355,17 @@ function AdresTab() {
           ✓ Adres opgeslagen!
         </div>
       )}
+      {error && (
+        <div className="bg-[#FFF3F3] border border-[#FCCACA] px-4 py-3 font-sans text-[13px] text-[#C62828] mb-6">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className={labelClass}>Straat + huisnummer</label>
           <input
-            value={form.straat}
-            onChange={(e) => setForm((f) => ({ ...f, straat: e.target.value }))}
+            value={form.street}
+            onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))}
             placeholder="Hoofdstraat 12"
             className={inputClass}
           />
@@ -334,8 +374,8 @@ function AdresTab() {
           <div>
             <label className={labelClass}>Postcode</label>
             <input
-              value={form.postcode}
-              onChange={(e) => setForm((f) => ({ ...f, postcode: e.target.value }))}
+              value={form.postalCode}
+              onChange={(e) => setForm((f) => ({ ...f, postalCode: e.target.value }))}
               placeholder="1234 AB"
               className={inputClass}
             />
@@ -343,8 +383,8 @@ function AdresTab() {
           <div className="col-span-2">
             <label className={labelClass}>Stad</label>
             <input
-              value={form.stad}
-              onChange={(e) => setForm((f) => ({ ...f, stad: e.target.value }))}
+              value={form.city}
+              onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
               placeholder="Amsterdam"
               className={inputClass}
             />
@@ -353,8 +393,8 @@ function AdresTab() {
         <div>
           <label className={labelClass}>Land</label>
           <select
-            value={form.land}
-            onChange={(e) => setForm((f) => ({ ...f, land: e.target.value }))}
+            value={form.country}
+            onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}
             className={`${inputClass} appearance-none`}
           >
             {['Nederland', 'België', 'Duitsland', 'Frankrijk', 'Verenigd Koninkrijk'].map((l) => (
@@ -364,10 +404,11 @@ function AdresTab() {
         </div>
         <button
           type="submit"
-          className="font-sans text-[11px] tracking-[0.18em] uppercase font-bold px-8 py-4 self-start mt-2"
+          disabled={saving}
+          className="font-sans text-[11px] tracking-[0.18em] uppercase font-bold px-8 py-4 self-start mt-2 disabled:cursor-wait transition-all"
           style={{ background: '#0a0a0a', color: '#c9a84c' }}
         >
-          Adres opslaan
+          {saving ? 'Opslaan...' : 'Adres opslaan'}
         </button>
       </form>
     </div>
