@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 function Stars() {
   return (
@@ -22,6 +24,8 @@ function BigProductCard({ product }: { product: Product }) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(false);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
   const wished = isWishlisted(product.id);
   const image = product.images[0];
 
@@ -198,7 +202,11 @@ function BigProductCard({ product }: { product: Product }) {
           </span>
           <button
             onClick={() => {
-              addItem(product);
+              if (!user) {
+                router.push('/login');
+                return;
+              }
+              void addItem(product.id);
               setAdded(true);
               setTimeout(() => setAdded(false), 1500);
             }}

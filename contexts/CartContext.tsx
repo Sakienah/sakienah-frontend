@@ -1,10 +1,19 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import type { Product } from '@/types';
+import { useAuth } from './AuthContext';
+import {
+  getCart,
+  addToCart,
+  updateCartItem,
+  removeCartItem,
+  clearCart as apiClearCart,
+  type CartItemResponse,
+  type CartResponse,
+} from '@/lib/api';
 
 export type CartItem = {
-  product: Product;
+  product: CartItemResponse['product'];
   quantity: number;
 };
 
@@ -12,10 +21,11 @@ type CartContextValue = {
   items: CartItem[];
   totalItems: number;
   totalPrice: number;
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
+  loading: boolean;
+  addItem: (productId: string) => Promise<void>;
+  removeItem: (productId: string) => Promise<void>;
+  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   wishlist: Set<string>;
   toggleWishlist: (productId: string) => void;
   isWishlisted: (productId: string) => boolean;
@@ -23,8 +33,14 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+type CartData = { items: CartItem[]; totalItems: number; totalPrice: number };
+const emptyCartData: CartData = { items: [], totalItems: 0, totalPrice: 0 };
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { user, loading: authLoading } = useAuth();
+  const [cartData, setCartData] = useState<CartData>(emptyCartData);
+  const [loading, setLoading] = useState(true);
+
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     if (typeof window === 'undefined') return new Set();
     try {
@@ -35,31 +51,40 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  const addItem = useCallback((product: Product) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.product.id === product.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i,
-        );
-      }
-      return [...prev, { product, quantity: 1 }];
+  function applyCart(data: CartResponse) {
+    setCartData({
+      items: data.items.map((i) => ({ product: i.product, quantity: i.quantity })),
+      totalItems: data.totalItems,
+      totalPrice: parseFloat(data.subtotal),
     });
+  }
+
+  useEffect(() => {
+    if (authLoading) return;
+    getCart()
+      .then(applyCart)
+      .finally(() => setLoading(false));
+  }, [user, authLoading]);
+
+  const addItem = useCallback(async (productId: string) => {
+    const data = await addToCart(productId);
+    applyCart(data);
   }, []);
 
-  const removeItem = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((i) => i.product.id !== productId));
+  const removeItem = useCallback(async (productId: string) => {
+    const data = await removeCartItem(productId);
+    applyCart(data);
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      setItems((prev) => prev.filter((i) => i.product.id !== productId));
-    } else {
-      setItems((prev) => prev.map((i) => (i.product.id === productId ? { ...i, quantity } : i)));
-    }
+  const updateQuantity = useCallback(async (productId: string, quantity: number) => {
+    const data = await updateCartItem(productId, quantity);
+    applyCart(data);
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(async () => {
+    const data = await apiClearCart();
+    applyCart(data);
+  }, []);
 
   const toggleWishlist = useCallback((productId: string) => {
     setWishlist((prev) => {
@@ -79,15 +104,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('wishlist', JSON.stringify([...wishlist]));
   }, [wishlist]);
 
-  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
-  const totalPrice = items.reduce((sum, i) => sum + parseFloat(i.product.price) * i.quantity, 0);
-
   return (
     <CartContext.Provider
       value={{
-        items,
-        totalItems,
-        totalPrice,
+        ...cartData,
+        loading,
         addItem,
         removeItem,
         updateQuantity,

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 function Stars() {
   return (
@@ -22,6 +24,8 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
   const wished = isWishlisted(product.id);
 
   useEffect(() => {
@@ -31,7 +35,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
   }, []);
 
   const handleAdd = () => {
-    for (let i = 0; i < qty; i++) addItem(product);
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    void addItem(product.id);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };

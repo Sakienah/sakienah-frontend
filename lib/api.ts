@@ -90,6 +90,62 @@ export async function changePassword(
   }
 }
 
+export type CartItemResponse = {
+  id: string;
+  quantity: number;
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    price: string;
+    comparePrice: string | null;
+    images: string[];
+    stock: number;
+    category: { id: string; name: string; slug: string } | null;
+  };
+};
+
+export type CartResponse = {
+  items: CartItemResponse[];
+  totalItems: number;
+  subtotal: string;
+};
+
+const emptyCart: CartResponse = { items: [], totalItems: 0, subtotal: '0.00' };
+
+export function getCart(): Promise<CartResponse> {
+  return fetch(`${API_URL}/cart`, { credentials: 'include' })
+    .then((r) => (r.ok ? r.json() : emptyCart))
+    .catch(() => emptyCart) as Promise<CartResponse>;
+}
+
+export function addToCart(productId: string, quantity = 1): Promise<CartResponse> {
+  return apiPost<CartResponse>('/cart/add', { productId, quantity });
+}
+
+export function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
+  return fetch(`${API_URL}/cart/update`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ productId, quantity }),
+  }).then((r) => r.json()) as Promise<CartResponse>;
+}
+
+export function removeCartItem(productId: string): Promise<CartResponse> {
+  return fetch(`${API_URL}/cart/item/${productId}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  }).then((r) => r.json()) as Promise<CartResponse>;
+}
+
+export function clearCart(): Promise<CartResponse> {
+  return fetch(`${API_URL}/cart/clear`, {
+    method: 'DELETE',
+    credentials: 'include',
+  }).then((r) => r.json()) as Promise<CartResponse>;
+}
+
 export function getOrders(): Promise<
   {
     id: string;

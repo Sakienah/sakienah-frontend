@@ -1,16 +1,28 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function ProductActions({ product }: { product: Product }) {
   const { addItem, toggleWishlist, isWishlisted } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
   const wished = isWishlisted(product.id);
+
+  function handleAddToCart() {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    void addItem(product.id);
+  }
 
   return (
     <div className="flex gap-3 mb-8">
       <button
-        onClick={() => addItem(product)}
+        onClick={handleAddToCart}
         disabled={product.stock === 0}
         className="flex-1 bg-gold text-[#0a0a0a] text-[11px] tracking-[0.15em] uppercase font-semibold py-4 hover:opacity-85 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
       >
