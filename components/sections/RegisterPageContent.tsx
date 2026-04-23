@@ -20,6 +20,47 @@ type FormState = {
 
 type Errors = Partial<Record<keyof FormState, string>>;
 
+function Field({
+  label,
+  field,
+  type = 'text',
+  placeholder,
+  form,
+  errors,
+  onChange,
+}: {
+  label: string;
+  field: keyof FormState;
+  type?: string;
+  placeholder: string;
+  form: FormState;
+  errors: Errors;
+  onChange: (field: keyof FormState, value: string) => void;
+}) {
+  const inputClass = `w-full bg-[#FAF7F2] border text-[#0a0a0a] text-sm px-4 py-3.5 outline-none focus:border-[#c9a84c] transition-colors placeholder:text-[#bbb] ${
+    errors[field] ? 'border-[#e57373]' : 'border-[#E8E0D5]'
+  }`;
+  return (
+    <div>
+      <div className="mb-2">
+        <span className={`${labelClass} ${errors[field] ? 'text-[#e57373]' : 'text-[#888]'}`}>
+          {label}
+        </span>
+        {errors[field] && (
+          <span className="font-sans text-[10px] text-[#e57373] ml-2">— {errors[field]}</span>
+        )}
+      </div>
+      <input
+        type={type}
+        value={form[field] as string}
+        onChange={(e) => onChange(field, e.target.value)}
+        placeholder={placeholder}
+        className={inputClass}
+      />
+    </div>
+  );
+}
+
 export function RegisterPageContent() {
   const router = useRouter();
   const { login } = useAuth();
@@ -70,41 +111,6 @@ export function RegisterPageContent() {
     }
   };
 
-  const inputClass = (field: keyof FormState) =>
-    `w-full bg-[#FAF7F2] border text-[#0a0a0a] text-sm px-4 py-3.5 outline-none focus:border-[#c9a84c] transition-colors placeholder:text-[#bbb] ${
-      errors[field] ? 'border-[#e57373]' : 'border-[#E8E0D5]'
-    }`;
-
-  const Field = ({
-    label,
-    field,
-    type = 'text',
-    placeholder,
-  }: {
-    label: string;
-    field: keyof FormState;
-    type?: string;
-    placeholder: string;
-  }) => (
-    <div>
-      <div className="mb-2">
-        <span className={`${labelClass} ${errors[field] ? 'text-[#e57373]' : 'text-[#888]'}`}>
-          {label}
-        </span>
-        {errors[field] && (
-          <span className="font-sans text-[10px] text-[#e57373] ml-2">— {errors[field]}</span>
-        )}
-      </div>
-      <input
-        type={type}
-        value={form[field] as string}
-        onChange={(e) => set(field, e.target.value)}
-        placeholder={placeholder}
-        className={inputClass(field)}
-      />
-    </div>
-  );
-
   return (
     <AuthLayout title="Account aanmaken" arabicTitle="انضم إلينا" subtitle="Nieuw bij Sakienah">
       {apiError && (
@@ -114,16 +120,49 @@ export function RegisterPageContent() {
       )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-3.5">
-          <Field label="Voornaam" field="voornaam" placeholder="Omar" />
-          <Field label="Achternaam" field="achternaam" placeholder="El-Amrani" />
+          <Field
+            label="Voornaam"
+            field="voornaam"
+            placeholder="Omar"
+            form={form}
+            errors={errors}
+            onChange={set}
+          />
+          <Field
+            label="Achternaam"
+            field="achternaam"
+            placeholder="El-Amrani"
+            form={form}
+            errors={errors}
+            onChange={set}
+          />
         </div>
-        <Field label="E-mailadres" field="email" type="email" placeholder="jouw@email.nl" />
-        <Field label="Wachtwoord" field="wachtwoord" type="password" placeholder="Min. 6 tekens" />
+        <Field
+          label="E-mailadres"
+          field="email"
+          type="email"
+          placeholder="jouw@email.nl"
+          form={form}
+          errors={errors}
+          onChange={set}
+        />
+        <Field
+          label="Wachtwoord"
+          field="wachtwoord"
+          type="password"
+          placeholder="Min. 6 tekens"
+          form={form}
+          errors={errors}
+          onChange={set}
+        />
         <Field
           label="Bevestig wachtwoord"
           field="bevestig"
           type="password"
           placeholder="••••••••"
+          form={form}
+          errors={errors}
+          onChange={set}
         />
         <label className="flex items-start gap-3 cursor-pointer mt-1">
           <div
