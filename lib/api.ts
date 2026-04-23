@@ -146,6 +146,26 @@ export function clearCart(): Promise<CartResponse> {
   }).then((r) => r.json()) as Promise<CartResponse>;
 }
 
+export type CheckoutPayload = {
+  address: { street: string; city: string; postalCode: string };
+  paymentMethod: string;
+  notes?: string;
+};
+
+export type OrderResponse = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  subtotal: string;
+  shippingCost: string;
+  total: string;
+  createdAt: string;
+};
+
+export function postCheckout(payload: CheckoutPayload): Promise<OrderResponse> {
+  return apiPost<OrderResponse>('/orders/checkout', payload);
+}
+
 export function getOrders(): Promise<
   {
     id: string;

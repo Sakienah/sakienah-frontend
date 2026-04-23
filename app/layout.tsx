@@ -4,7 +4,6 @@ import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
 import { CartProvider } from '@/contexts/CartContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { Analytics } from '@vercel/analytics/next';
 
 const cormorant = Cormorant_Garamond({
   variable: '--font-playfair',
@@ -49,7 +48,6 @@ export default function RootLayout({
             <GiftFloater />
           </CartProvider>
         </AuthProvider>
-        <Analytics />
       </body>
     </html>
   );

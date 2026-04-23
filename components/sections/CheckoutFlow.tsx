@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useCart } from '@/contexts/CartContext';
+import { postCheckout, type OrderResponse } from '@/lib/api';
 
 type Step = 1 | 2 | 3;
 
@@ -87,6 +88,9 @@ export function CheckoutFlow() {
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>(defaultForm);
   const [placed, setPlaced] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [order, setOrder] = useState<OrderResponse | null>(null);
 
   const shipping = totalPrice >= 50 ? 0 : 4.95;
   const grandTotal = totalPrice + shipping;
@@ -95,9 +99,26 @@ export function CheckoutFlow() {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
-  function handlePlaceOrder() {
-    clearCart();
-    setPlaced(true);
+  async function handlePlaceOrder() {
+    setSubmitting(true);
+    setError(null);
+    try {
+      const result = await postCheckout({
+        address: {
+          street: form.address,
+          city: form.city,
+          postalCode: form.postalCode,
+        },
+        paymentMethod: form.payment,
+      });
+      setOrder(result);
+      await clearCart();
+      setPlaced(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Er ging iets mis. Probeer opnieuw.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const stepLabels = ['Gegevens', 'Betaling', 'Bevestiging'];
@@ -301,9 +322,14 @@ export function CheckoutFlow() {
               Je bestelling is ontvangen. Je ontvangt een bevestiging op{' '}
               {form.email || 'jouw e-mailadres'}.
             </p>
-            <p style={{ fontSize: 13, color: '#aaa', marginBottom: 36 }}>
+            <p style={{ fontSize: 13, color: '#aaa', marginBottom: 8 }}>
               Verwachte levertijd: 2–4 werkdagen
             </p>
+            {order && (
+              <p style={{ fontSize: 12, color: '#aaa', marginBottom: 36 }}>
+                Bestelnummer: <strong style={{ color: '#555' }}>{order.orderNumber}</strong>
+              </p>
+            )}
             <div
               style={{
                 background: '#FAF7F2',
@@ -651,23 +677,30 @@ export function CheckoutFlow() {
                     ← Terug
                   </button>
                   <button
-                    onClick={handlePlaceOrder}
+                    onClick={() => {
+                      void handlePlaceOrder();
+                    }}
+                    disabled={submitting}
                     style={{
                       flex: 1,
-                      background: '#0a0a0a',
+                      background: submitting ? '#555' : '#0a0a0a',
                       color: '#c9a84c',
                       border: 'none',
-                      cursor: 'pointer',
+                      cursor: submitting ? 'not-allowed' : 'pointer',
                       fontSize: 11,
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
                       fontWeight: 700,
                       padding: 16,
+                      transition: 'background 0.2s',
                     }}
                   >
-                    Bestelling plaatsen — {formatPrice(grandTotal)}
+                    {submitting
+                      ? 'Verwerken...'
+                      : `Bestelling plaatsen — ${formatPrice(grandTotal)}`}
                   </button>
                 </div>
+                {error && <p style={{ fontSize: 13, color: '#c0392b', marginTop: 12 }}>{error}</p>}
               </div>
             )}
           </div>
