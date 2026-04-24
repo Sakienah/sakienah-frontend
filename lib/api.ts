@@ -1,13 +1,60 @@
 import type { Product, Category, User } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+const PROXY = '/api/proxy';
 
+// Public (server of client) — roept de backend direct aan
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`API fout: ${res.status}`);
   return res.json() as Promise<T>;
 }
 
+// Authenticated GET via Next.js proxy — client only
+async function proxyGet<T>(path: string, fallback: T): Promise<T> {
+  return fetch(`${PROXY}${path}`)
+    .then((r) => (r.ok ? (r.json() as Promise<T>) : Promise.resolve(fallback)))
+    .catch(() => fallback);
+}
+
+async function proxyGetOrThrow<T>(path: string): Promise<T> {
+  const res = await fetch(`${PROXY}${path}`);
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// Authenticated mutatie via Next.js proxy — client only
+async function proxyMutate<T>(method: string, path: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${PROXY}${path}`, {
+    method,
+    headers: body !== undefined ? { 'Content-Type': 'application/json' } : {},
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// Auth via BFF-routes (zetten cookie op Next.js-domein)
+async function authPost<T>(route: string, body: unknown): Promise<T> {
+  const res = await fetch(route, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+// Publieke producten
 export function getProducts(categorySlug?: string): Promise<Product[]> {
   const query = categorySlug ? `?category=${categorySlug}` : '';
   return apiFetch<Product[]>(`/products${query}`);
@@ -21,22 +68,9 @@ export function getCategories(): Promise<Category[]> {
   return apiFetch<Category[]>('/products/categories');
 }
 
-async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(data.message ?? `Fout: ${res.status}`);
-  }
-  return res.json() as Promise<T>;
-}
-
+// Auth
 export function loginUser(email: string, password: string): Promise<User> {
-  return apiPost<User>('/auth/login', { email, password });
+  return authPost<User>('/api/auth/login', { email, password });
 }
 
 export function registerUser(data: {
@@ -46,7 +80,7 @@ export function registerUser(data: {
   wachtwoord: string;
   nieuwsbrief: boolean;
 }): Promise<User> {
-  return apiPost<User>('/auth/register', {
+  return authPost<User>('/api/auth/register', {
     voornaam: data.voornaam,
     achternaam: data.achternaam,
     email: data.email,
@@ -61,35 +95,20 @@ export async function updateProfile(data: {
   email?: string;
   telefoon?: string;
 }): Promise<User> {
-  const res = await fetch(`${API_URL}/auth/profile`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const d = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(d.message ?? `Fout: ${res.status}`);
-  }
-  return res.json() as Promise<User>;
+  return proxyMutate<User>('PATCH', '/auth/profile', data);
 }
 
 export async function changePassword(
   huidigWachtwoord: string,
   nieuwWachtwoord: string,
 ): Promise<void> {
-  const res = await fetch(`${API_URL}/auth/password`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ huidigWachtwoord, nieuwWachtwoord }),
+  await proxyMutate<unknown>('PATCH', '/auth/password', {
+    huidigWachtwoord,
+    nieuwWachtwoord,
   });
-  if (!res.ok) {
-    const d = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(d.message ?? `Fout: ${res.status}`);
-  }
 }
 
+// Cart
 export type CartItemResponse = {
   id: string;
   quantity: number;
@@ -114,53 +133,26 @@ export type CartResponse = {
 const emptyCart: CartResponse = { items: [], totalItems: 0, subtotal: '0.00' };
 
 export function getCart(): Promise<CartResponse> {
-  return fetch(`${API_URL}/cart`, { credentials: 'include' })
-    .then((r) => (r.ok ? r.json() : emptyCart))
-    .catch(() => emptyCart) as Promise<CartResponse>;
+  return proxyGet<CartResponse>('/cart', emptyCart);
 }
 
 export function addToCart(productId: string, quantity = 1): Promise<CartResponse> {
-  return apiPost<CartResponse>('/cart/add', { productId, quantity });
+  return proxyMutate<CartResponse>('POST', '/cart/add', { productId, quantity });
 }
 
-export async function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
-  const res = await fetch(`${API_URL}/cart/update`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ productId, quantity }),
-  });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(data.message ?? `Fout: ${res.status}`);
-  }
-  return res.json() as Promise<CartResponse>;
+export function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
+  return proxyMutate<CartResponse>('PATCH', '/cart/update', { productId, quantity });
 }
 
-export async function removeCartItem(productId: string): Promise<CartResponse> {
-  const res = await fetch(`${API_URL}/cart/item/${productId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-  });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(data.message ?? `Fout: ${res.status}`);
-  }
-  return res.json() as Promise<CartResponse>;
+export function removeCartItem(productId: string): Promise<CartResponse> {
+  return proxyMutate<CartResponse>('DELETE', `/cart/item/${productId}`);
 }
 
-export async function clearCart(): Promise<CartResponse> {
-  const res = await fetch(`${API_URL}/cart/clear`, {
-    method: 'DELETE',
-    credentials: 'include',
-  });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { message?: string };
-    throw new Error(data.message ?? `Fout: ${res.status}`);
-  }
-  return res.json() as Promise<CartResponse>;
+export function clearCart(): Promise<CartResponse> {
+  return proxyMutate<CartResponse>('DELETE', '/cart/clear');
 }
 
+// Checkout
 export type CheckoutPayload = {
   address: { street: string; city: string; postalCode: string };
   paymentMethod: string;
@@ -178,9 +170,10 @@ export type OrderResponse = {
 };
 
 export function postCheckout(payload: CheckoutPayload): Promise<OrderResponse> {
-  return apiPost<OrderResponse>('/orders/checkout', payload);
+  return proxyMutate<OrderResponse>('POST', '/orders/checkout', payload);
 }
 
+// Orders
 export type OrderItem = {
   productId: string;
   quantity: number;
@@ -211,17 +204,14 @@ export type OrderSummary = {
 };
 
 export function getOrders(): Promise<OrderSummary[]> {
-  return fetch(`${API_URL}/orders/my`, { credentials: 'include' })
-    .then((r) => (r.ok ? r.json() : []))
-    .catch(() => []) as Promise<OrderSummary[]>;
+  return proxyGet<OrderSummary[]>('/orders/my', []);
 }
 
-export async function getOrderById(id: string): Promise<OrderSummary> {
-  const r = await fetch(`${API_URL}/orders/${id}`, { credentials: 'include' });
-  if (!r.ok) throw new Error(`Fout: ${r.status}`);
-  return r.json() as Promise<OrderSummary>;
+export function getOrderById(id: string): Promise<OrderSummary> {
+  return proxyGetOrThrow<OrderSummary>(`/orders/${id}`);
 }
 
+// Adressen
 export type AddressData = {
   id: string;
   street: string;
@@ -230,38 +220,26 @@ export type AddressData = {
   country: string;
 };
 
-export async function getAddress(): Promise<AddressData | null> {
-  const r = await fetch(`${API_URL}/addresses/default`, { credentials: 'include' });
-  if (!r.ok) return null;
-  const data = await r.json();
-  return (data as AddressData) ?? null;
+export function getAddress(): Promise<AddressData | null> {
+  return fetch(`${PROXY}/addresses/default`)
+    .then((r) => (r.ok ? (r.json() as Promise<AddressData>) : Promise.resolve(null)))
+    .catch(() => null);
 }
 
-export async function saveAddress(data: {
+export function saveAddress(data: {
   street: string;
   city: string;
   postalCode: string;
   country: string;
 }): Promise<AddressData> {
-  const r = await fetch(`${API_URL}/addresses/default`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify(data),
-  });
-  if (!r.ok) {
-    const d = (await r.json().catch(() => ({}))) as { message?: string };
-    throw new Error(d.message ?? `Fout: ${r.status}`);
-  }
-  return r.json() as Promise<AddressData>;
+  return proxyMutate<AddressData>('PUT', '/addresses/default', data);
 }
 
+// Favorieten
 export function getFavorites(): Promise<string[]> {
-  return fetch(`${API_URL}/favorites`, { credentials: 'include' })
-    .then((r) => (r.ok ? r.json() : []))
-    .catch(() => []) as Promise<string[]>;
+  return proxyGet<string[]>('/favorites', []);
 }
 
 export function toggleFavorite(productId: string): Promise<string[]> {
-  return apiPost<string[]>('/favorites/toggle', { productId });
+  return proxyMutate<string[]>('POST', '/favorites/toggle', { productId });
 }

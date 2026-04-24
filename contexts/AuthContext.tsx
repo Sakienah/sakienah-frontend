@@ -3,8 +3,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { User } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-
 type AuthContextValue = {
   user: User | null;
   loading: boolean;
@@ -20,7 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/auth/me`, { credentials: 'include' })
+    fetch('/api/auth/me')
       .then((r) => (r.ok ? r.json() : null))
       .then((data: User | null) => {
         if (data) setUser(data);
@@ -32,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback((u: User) => setUser(u), []);
 
   const logout = useCallback(async () => {
-    await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
+    await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
   }, []);
 
