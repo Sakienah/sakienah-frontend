@@ -1,9 +1,30 @@
 import type { Metadata } from 'next';
 import { Cormorant_Garamond, DM_Sans, Amiri } from 'next/font/google';
+import { cookies } from 'next/headers';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
 import { CartProvider } from '@/contexts/CartContext';
 import { AuthProvider } from '@/contexts/AuthContext';
+import type { User } from '@/types';
+
+const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+const COOKIE_NAME = 'sakienah_token';
+
+async function getInitialUser(): Promise<User | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(COOKIE_NAME)?.value;
+  if (!token) return null;
+  try {
+    const res = await fetch(`${API_URL}/auth/me`, {
+      headers: { Cookie: `${COOKIE_NAME}=${token}` },
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    return res.json() as Promise<User>;
+  } catch {
+    return null;
+  }
+}
 
 const cormorant = Cormorant_Garamond({
   variable: '--font-playfair',
@@ -31,18 +52,20 @@ export const metadata: Metadata = {
     'Premium islamitische producten — gebedskleding, Koran accessoires, decor en cadeaus. Zorgvuldig geselecteerd bij Sakienah.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialUser = await getInitialUser();
+
   return (
     <html
       lang="nl"
       className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <AuthProvider>
+        <AuthProvider initialUser={initialUser}>
           <CartProvider>
             {children}
             <GiftFloater />

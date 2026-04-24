@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Product, Category, User } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -54,19 +55,19 @@ async function authPost<T>(route: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-// Publieke producten
-export function getProducts(categorySlug?: string): Promise<Product[]> {
+// Publieke producten — cache() deduplicates per request (voorkomt dubbele fetches)
+export const getProducts = cache(async (categorySlug?: string): Promise<Product[]> => {
   const query = categorySlug ? `?category=${categorySlug}` : '';
   return apiFetch<Product[]>(`/products${query}`);
-}
+});
 
 export function getProduct(slug: string): Promise<Product> {
   return apiFetch<Product>(`/products/${slug}`);
 }
 
-export function getCategories(): Promise<Category[]> {
+export const getCategories = cache(async (): Promise<Category[]> => {
   return apiFetch<Category[]>('/products/categories');
-}
+});
 
 // Auth
 export function loginUser(email: string, password: string): Promise<User> {

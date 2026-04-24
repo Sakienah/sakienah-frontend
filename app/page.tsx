@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { TrustBar } from '@/components/sections/TrustBar';
 import { BestsellersSection } from '@/components/sections/BestsellersSection';
+import { BestsellersSkeleton } from '@/components/sections/BestsellersSkeleton';
 import { CTABanner } from '@/components/sections/CTABanner';
 import { ValueProposition } from '@/components/sections/ValueProposition';
 import { SocialProof } from '@/components/sections/SocialProof';
@@ -15,7 +17,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <TrustBar />
-        <BestsellersSection />
+        <Suspense fallback={<BestsellersSkeleton />}>
+          <BestsellersSection />
+        </Suspense>
         <CTABanner />
         <ValueProposition />
         <SocialProof />

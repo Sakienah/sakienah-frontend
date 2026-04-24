@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import type { User } from '@/types';
 
 type AuthContextValue = {
@@ -13,19 +13,14 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data: User | null) => {
-        if (data) setUser(data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+export function AuthProvider({
+  children,
+  initialUser = null,
+}: {
+  children: React.ReactNode;
+  initialUser?: User | null;
+}) {
+  const [user, setUser] = useState<User | null>(initialUser);
 
   const login = useCallback((u: User) => setUser(u), []);
 
@@ -37,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateUser = useCallback((u: User) => setUser(u), []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading: false, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
