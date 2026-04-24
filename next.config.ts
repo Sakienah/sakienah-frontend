@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next';
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const nextConfig: NextConfig = {
   async headers() {
     return [
@@ -18,7 +20,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' blob: data: https:",
               "font-src 'self'",
-              "connect-src 'self' https:",
+              isDev ? "connect-src 'self' http://localhost:* https:" : "connect-src 'self' https:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

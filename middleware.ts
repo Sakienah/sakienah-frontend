@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const PROTECTED_ROUTES = ['/account', '/checkout', '/wishlist'];
 const COOKIE_NAME = 'sakienah_token';
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isProtected = PROTECTED_ROUTES.some(
