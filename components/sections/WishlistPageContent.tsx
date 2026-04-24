@@ -126,6 +126,18 @@ function WishlistCard({ product }: { product: Product }) {
 
 export function WishlistPageContent({ allProducts }: { allProducts: Product[] }) {
   const { wishlist } = useCart();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  if (loading) {
+    return <div style={{ padding: '80px 0', textAlign: 'center' }}>Laden...</div>;
+  }
+
+  if (!user) {
+    router.push('/login');
+    return null;
+  }
+
   const wishedProducts = allProducts.filter((p) => wishlist.has(p.id));
 
   if (wishlist.size === 0) {

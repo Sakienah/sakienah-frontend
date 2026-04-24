@@ -122,7 +122,13 @@ function BigProductCard({ product }: { product: Product }) {
           </span>
         )}
         <button
-          onClick={() => toggleWishlist(product.id)}
+          onClick={() => {
+            if (!user) {
+              router.push('/login');
+              return;
+            }
+            toggleWishlist(product.id);
+          }}
           style={{
             position: 'absolute',
             top: 12,

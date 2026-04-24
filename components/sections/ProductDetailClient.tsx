@@ -209,7 +209,13 @@ export function ProductDetailClient({ product }: { product: Product }) {
                 : 'Voeg toe aan winkelwagen'}
           </button>
           <button
-            onClick={() => toggleWishlist(product.id)}
+            onClick={() => {
+              if (!user) {
+                router.push('/login');
+                return;
+              }
+              toggleWishlist(product.id);
+            }}
             style={{
               width: 52,
               height: 52,

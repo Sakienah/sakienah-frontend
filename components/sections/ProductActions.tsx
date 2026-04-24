@@ -29,7 +29,13 @@ export function ProductActions({ product }: { product: Product }) {
         {product.stock === 0 ? 'Uitverkocht' : '+ Voeg toe aan winkelwagen'}
       </button>
       <button
-        onClick={() => toggleWishlist(product.id)}
+        onClick={() => {
+          if (!user) {
+            router.push('/login');
+            return;
+          }
+          toggleWishlist(product.id);
+        }}
         className="border border-[#E8E0D5] px-4 py-4 hover:border-gold transition-colors"
         aria-label={wished ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
       >

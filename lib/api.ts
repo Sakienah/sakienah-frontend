@@ -240,3 +240,13 @@ export async function saveAddress(data: {
   }
   return r.json() as Promise<AddressData>;
 }
+
+export function getFavorites(): Promise<string[]> {
+  return fetch(`${API_URL}/favorites`, { credentials: 'include' })
+    .then((r) => (r.ok ? r.json() : []))
+    .catch(() => []) as Promise<string[]>;
+}
+
+export function toggleFavorite(productId: string): Promise<string[]> {
+  return apiPost<string[]>('/favorites/toggle', { productId });
+}

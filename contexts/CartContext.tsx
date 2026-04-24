@@ -8,6 +8,8 @@ import {
   updateCartItem,
   removeCartItem,
   clearCart as apiClearCart,
+  getFavorites,
+  toggleFavorite,
   type CartItemResponse,
   type CartResponse,
 } from '@/lib/api';
@@ -41,15 +43,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartData, setCartData] = useState<CartData>(emptyCartData);
   const [loading, setLoading] = useState(true);
 
-  const [wishlist, setWishlist] = useState<Set<string>>(() => {
-    if (typeof window === 'undefined') return new Set();
-    try {
-      const saved = localStorage.getItem('wishlist');
-      return saved ? new Set<string>(JSON.parse(saved)) : new Set();
-    } catch {
-      return new Set();
-    }
-  });
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
 
   function applyCart(data: CartResponse) {
     setCartData({
@@ -64,6 +58,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     getCart()
       .then(applyCart)
       .finally(() => setLoading(false));
+    if (user) {
+      getFavorites()
+        .then((ids) => setWishlist(new Set(ids)))
+        .catch(() => setWishlist(new Set()));
+    } else {
+      void Promise.resolve().then(() => setWishlist(new Set()));
+    }
   }, [user, authLoading]);
 
   const addItem = useCallback(async (productId: string) => {
@@ -86,23 +87,32 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     applyCart(data);
   }, []);
 
-  const toggleWishlist = useCallback((productId: string) => {
-    setWishlist((prev) => {
-      const next = new Set(prev);
-      if (next.has(productId)) {
-        next.delete(productId);
-      } else {
-        next.add(productId);
-      }
-      return next;
-    });
-  }, []);
+  const toggleWishlist = useCallback(
+    (productId: string) => {
+      if (!user) return;
+      // Optimistic update
+      setWishlist((prev) => {
+        const next = new Set(prev);
+        if (next.has(productId)) next.delete(productId);
+        else next.add(productId);
+        return next;
+      });
+      void toggleFavorite(productId)
+        .then((ids) => setWishlist(new Set(ids)))
+        .catch(() => {
+          // Revert on error
+          setWishlist((prev) => {
+            const next = new Set(prev);
+            if (next.has(productId)) next.delete(productId);
+            else next.add(productId);
+            return next;
+          });
+        });
+    },
+    [user],
+  );
 
   const isWishlisted = useCallback((productId: string) => wishlist.has(productId), [wishlist]);
-
-  useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify([...wishlist]));
-  }, [wishlist]);
 
   return (
     <CartContext.Provider

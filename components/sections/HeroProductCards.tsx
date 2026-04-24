@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroProductCards({ products }: { products: Product[] }) {
   return (
@@ -19,6 +21,8 @@ export function HeroProductCards({ products }: { products: Product[] }) {
 function HeroProductCard({ product }: { product: Product }) {
   const [hovered, setHovered] = useState(false);
   const { toggleWishlist, isWishlisted } = useCart();
+  const { user } = useAuth();
+  const router = useRouter();
   const wished = isWishlisted(product.id);
   const image = product.images[0];
 
@@ -38,7 +42,13 @@ function HeroProductCard({ product }: { product: Product }) {
       }}
     >
       <button
-        onClick={() => toggleWishlist(product.id)}
+        onClick={() => {
+          if (!user) {
+            router.push('/login');
+            return;
+          }
+          toggleWishlist(product.id);
+        }}
         className="absolute z-10 flex items-center justify-center"
         style={{
           top: 12,
