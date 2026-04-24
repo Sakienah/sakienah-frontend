@@ -1,7 +1,7 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GeomPattern } from '@/components/ui/GeomPattern';
-import { WishlistPageContent } from '@/components/sections/WishlistPageContent';
+import { WishlistPage as WishlistContent } from '@/components/features/wishlist/WishlistPage';
 import { getProducts } from '@/lib/api';
 
 export default async function WishlistPage() {
@@ -52,7 +52,7 @@ export default async function WishlistPage() {
 
         <div style={{ background: '#FAF7F2', padding: '48px 40px 96px' }}>
           <div className="max-w-[1280px] mx-auto">
-            <WishlistPageContent allProducts={allProducts} />
+            <WishlistContent allProducts={allProducts} />
           </div>
         </div>
       </main>

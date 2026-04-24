@@ -1,14 +1,14 @@
 import { Suspense } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { HeroSection } from '@/components/sections/HeroSection';
-import { TrustBar } from '@/components/sections/TrustBar';
-import { BestsellersSection } from '@/components/sections/BestsellersSection';
-import { BestsellersSkeleton } from '@/components/sections/BestsellersSkeleton';
-import { CTABanner } from '@/components/sections/CTABanner';
-import { ValueProposition } from '@/components/sections/ValueProposition';
-import { SocialProof } from '@/components/sections/SocialProof';
-import { FinalCTA } from '@/components/sections/FinalCTA';
+import { HeroSection } from '@/components/home/HeroSection';
+import { TrustBar } from '@/components/home/TrustBar';
+import { BestsellersSection } from '@/components/home/BestsellersSection';
+import { BestsellersSkeleton } from '@/components/home/BestsellersSkeleton';
+import { CTABanner } from '@/components/home/CTABanner';
+import { ValueProposition } from '@/components/home/ValueProposition';
+import { SocialProof } from '@/components/home/SocialProof';
+import { FinalCTA } from '@/components/home/FinalCTA';
 
 export default function Home() {
   return (

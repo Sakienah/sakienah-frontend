@@ -61,7 +61,7 @@ function Field({
   );
 }
 
-export function RegisterPageContent() {
+export function RegisterForm() {
   const router = useRouter();
   const { login } = useAuth();
   const [form, setForm] = useState<FormState>({

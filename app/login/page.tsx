@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { LoginPageContent } from '@/components/sections/LoginPageContent';
+import { LoginForm } from '@/components/features/auth/LoginForm';
 
 export const metadata: Metadata = {
   title: 'Inloggen — Sakienah',
@@ -12,7 +12,7 @@ export default function LoginPage() {
     <>
       <Navbar />
       <main>
-        <LoginPageContent />
+        <LoginForm />
       </main>
       <Footer />
     </>

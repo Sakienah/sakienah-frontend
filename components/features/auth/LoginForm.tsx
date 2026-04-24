@@ -11,7 +11,7 @@ const inputClass =
   'w-full bg-[#FAF7F2] border border-[#E8E0D5] text-[#0a0a0a] text-sm px-4 py-3.5 outline-none focus:border-[#c9a84c] transition-colors placeholder:text-[#bbb]';
 const labelClass = 'block font-sans text-[10px] tracking-[0.13em] uppercase text-[#888] mb-2';
 
-export function LoginPageContent() {
+export function LoginForm() {
   const router = useRouter();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', wachtwoord: '' });

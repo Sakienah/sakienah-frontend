@@ -8,7 +8,7 @@ function formatPrice(n: number) {
   return `€ ${n.toFixed(2).replace('.', ',')}`;
 }
 
-export function CartPageContent() {
+export function CartPage() {
   const { items, totalItems, totalPrice, removeItem, updateQuantity } = useCart();
 
   const shipping = totalPrice >= 50 ? 0 : 4.95;

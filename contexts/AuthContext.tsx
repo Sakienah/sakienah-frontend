@@ -5,7 +5,6 @@ import type { User } from '@/types';
 
 type AuthContextValue = {
   user: User | null;
-  loading: boolean;
   login: (user: User) => void;
   logout: () => Promise<void>;
   updateUser: (user: User) => void;
@@ -32,7 +31,7 @@ export function AuthProvider({
   const updateUser = useCallback((u: User) => setUser(u), []);
 
   return (
-    <AuthContext.Provider value={{ user, loading: false, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

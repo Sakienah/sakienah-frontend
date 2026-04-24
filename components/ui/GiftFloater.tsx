@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useDiscountCode } from '@/hooks/useDiscountCode';
 
 export default function GiftFloater() {
   const [bubbleVisible, setBubbleVisible] = useState(false);
   const [showCode, setShowCode] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { copied, copyCode: handleCopy } = useDiscountCode('SAKIENAH10');
 
   useEffect(() => {
     const mountTimer = setTimeout(() => setMounted(true), 0);
@@ -25,12 +26,6 @@ export default function GiftFloater() {
   const handleClose = () => {
     setBubbleVisible(false);
     setTimeout(() => setShowCode(false), 300);
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText('SAKIENAH10');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   if (!mounted) return null;

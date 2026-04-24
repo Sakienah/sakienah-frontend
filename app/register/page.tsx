@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { RegisterPageContent } from '@/components/sections/RegisterPageContent';
+import { RegisterForm } from '@/components/features/auth/RegisterForm';
 
 export const metadata: Metadata = {
   title: 'Account aanmaken — Sakienah',
@@ -12,7 +12,7 @@ export default function RegisterPage() {
     <>
       <Navbar />
       <main>
-        <RegisterPageContent />
+        <RegisterForm />
       </main>
       <Footer />
     </>

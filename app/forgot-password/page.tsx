@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { ForgotPasswordPageContent } from '@/components/sections/ForgotPasswordPageContent';
+import { ForgotPasswordForm } from '@/components/features/auth/ForgotPasswordForm';
 
 export const metadata: Metadata = {
   title: 'Wachtwoord vergeten — Sakienah',
@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
     <>
       <Navbar />
       <main>
-        <ForgotPasswordPageContent />
+        <ForgotPasswordForm />
       </main>
       <Footer />
     </>

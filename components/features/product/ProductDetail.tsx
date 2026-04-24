@@ -18,7 +18,7 @@ function Stars() {
   );
 }
 
-export function ProductDetailClient({ product }: { product: Product }) {
+export function ProductDetail({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState('beschrijving');
   const [added, setAdded] = useState(false);

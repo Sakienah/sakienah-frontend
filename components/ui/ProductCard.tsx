@@ -3,30 +3,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
-import { useCart } from '@/contexts/CartContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { StarRating } from './StarRating';
+import { useProductActions } from '@/hooks/useProductActions';
+import { formatPrice } from '@/lib/utils';
 
-function Stars() {
-  return (
-    <span className="flex" style={{ gap: 2 }}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="12" height="12" viewBox="0 0 20 20" style={{ fill: '#c9a84c' }}>
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </span>
-  );
-}
+type Props = {
+  product: Product;
+  aspectRatio?: '3/4' | '4/3' | '1/1';
+  sizes?: string;
+};
 
-function BigProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  aspectRatio = '3/4',
+  sizes = '(max-width:768px) 100vw, 50vw',
+}: Props) {
   const [hovered, setHovered] = useState(false);
-  const [added, setAdded] = useState(false);
-  const { addItem, toggleWishlist, isWishlisted } = useCart();
-  const { user } = useAuth();
-  const router = useRouter();
-  const wished = isWishlisted(product.id);
+  const { added, wishlisted, handleAddToCart, handleToggleWishlist } = useProductActions(
+    product.id,
+  );
   const image = product.images[0];
 
   return (
@@ -35,15 +31,10 @@ function BigProductCard({ product }: { product: Product }) {
       onMouseLeave={() => setHovered(false)}
       style={{ background: '#fff', overflow: 'hidden', cursor: 'pointer', position: 'relative' }}
     >
-      <div style={{ aspectRatio: '3/4', overflow: 'hidden', position: 'relative' }}>
+      {/* Image */}
+      <div style={{ aspectRatio, overflow: 'hidden', position: 'relative' }}>
         {image ? (
-          <Image
-            src={image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width:768px) 100vw, 50vw"
-          />
+          <Image src={image} alt={product.name} fill className="object-cover" sizes={sizes} />
         ) : (
           <div
             style={{
@@ -60,6 +51,8 @@ function BigProductCard({ product }: { product: Product }) {
             </span>
           </div>
         )}
+
+        {/* Hover overlay */}
         <div
           style={{
             position: 'absolute',
@@ -86,6 +79,8 @@ function BigProductCard({ product }: { product: Product }) {
             Bekijk product →
           </Link>
         </div>
+
+        {/* Badges */}
         {product.stock === 0 && (
           <span
             style={{
@@ -121,14 +116,10 @@ function BigProductCard({ product }: { product: Product }) {
             Sale
           </span>
         )}
+
+        {/* Wishlist button */}
         <button
-          onClick={() => {
-            if (!user) {
-              router.push('/login');
-              return;
-            }
-            toggleWishlist(product.id);
-          }}
+          onClick={handleToggleWishlist}
           style={{
             position: 'absolute',
             top: 12,
@@ -143,13 +134,13 @@ function BigProductCard({ product }: { product: Product }) {
             justifyContent: 'center',
             borderRadius: '50%',
           }}
-          aria-label={wished ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
+          aria-label={wishlisted ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
         >
           <svg
             width="15"
             height="15"
-            fill={wished ? '#c9a84c' : 'none'}
-            stroke={wished ? '#c9a84c' : '#888'}
+            fill={wishlisted ? '#c9a84c' : 'none'}
+            stroke={wishlisted ? '#c9a84c' : '#888'}
             strokeWidth="1.5"
             viewBox="0 0 24 24"
           >
@@ -158,6 +149,7 @@ function BigProductCard({ product }: { product: Product }) {
         </button>
       </div>
 
+      {/* Product info */}
       <div
         style={{
           padding: '22px 24px 26px',
@@ -188,11 +180,8 @@ function BigProductCard({ product }: { product: Product }) {
           >
             {product.name}
           </p>
-          {product.category && (
-            <p style={{ fontSize: 12, color: '#aaa', marginBottom: 10 }}>{product.category.name}</p>
-          )}
           <div className="flex items-center" style={{ gap: 8 }}>
-            <Stars />
+            <StarRating count={5} />
             <span style={{ fontSize: 11, color: '#aaa' }}>4.9</span>
           </div>
         </Link>
@@ -200,27 +189,21 @@ function BigProductCard({ product }: { product: Product }) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
           {product.comparePrice && (
             <span style={{ fontSize: 12, color: '#ccc', textDecoration: 'line-through' }}>
-              € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
+              {formatPrice(product.comparePrice)}
             </span>
           )}
           <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
-            € {parseFloat(product.price).toFixed(2).replace('.', ',')}
+            {formatPrice(product.price)}
           </span>
           <button
-            onClick={() => {
-              if (!user) {
-                router.push('/login');
-                return;
-              }
-              void addItem(product.id);
-              setAdded(true);
-              setTimeout(() => setAdded(false), 1500);
-            }}
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
             style={{
               background: added ? '#c9a84c' : '#0a0a0a',
               color: added ? '#0a0a0a' : '#fff',
               border: 'none',
-              cursor: 'pointer',
+              cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
+              opacity: product.stock === 0 ? 0.5 : 1,
               fontSize: 10,
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
@@ -234,16 +217,6 @@ function BigProductCard({ product }: { product: Product }) {
           </button>
         </div>
       </div>
-    </div>
-  );
-}
-
-export function BestsellersGrid({ products }: { products: Product[] }) {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-      {products.map((p) => (
-        <BigProductCard key={p.id} product={p} />
-      ))}
     </div>
   );
 }

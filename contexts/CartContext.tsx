@@ -39,7 +39,7 @@ type CartData = { items: CartItem[]; totalItems: number; totalPrice: number };
 const emptyCartData: CartData = { items: [], totalItems: 0, totalPrice: 0 };
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const [cartData, setCartData] = useState<CartData>(emptyCartData);
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +54,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    if (authLoading) return;
     getCart()
       .then(applyCart)
       .finally(() => setLoading(false));
@@ -65,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     } else {
       void Promise.resolve().then(() => setWishlist(new Set()));
     }
-  }, [user, authLoading]);
+  }, [user]);
 
   const addItem = useCallback(async (productId: string) => {
     const data = await addToCart(productId);

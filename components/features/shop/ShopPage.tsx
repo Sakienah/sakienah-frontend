@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { Product, Category } from '@/types';
 import { ShopGrid } from './ShopGrid';
 
-export function ShopClientShell({
+export function ShopPage({
   products,
   categories,
 }: {

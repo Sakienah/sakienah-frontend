@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { CheckoutFlow } from '@/components/sections/CheckoutFlow';
+import { CheckoutFlow } from '@/components/features/checkout/CheckoutFlow';
 
 export default function CheckoutPage() {
   return (

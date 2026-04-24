@@ -127,30 +127,30 @@ function StatusTimeline({ status }: { status: string }) {
   );
 }
 
-export function OrderDetailContent({ orderId }: { orderId: string }) {
-  const { user, loading: authLoading } = useAuth();
+export function OrderDetail({ orderId }: { orderId: string }) {
+  const { user } = useAuth();
   const router = useRouter();
   const [order, setOrder] = useState<OrderSummary | null>(null);
   const [fetchDone, setFetchDone] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!user) {
       router.push('/login');
     }
-  }, [authLoading, user, router]);
+  }, [user, router]);
 
   useEffect(() => {
-    if (authLoading || !user) return;
+    if (!user) return;
     getOrderById(orderId)
       .then(setOrder)
       .catch((e: unknown) => {
         setError(e instanceof Error ? e.message : 'Bestelling kon niet worden geladen.');
       })
       .finally(() => setFetchDone(true));
-  }, [orderId, user, authLoading]);
+  }, [orderId, user]);
 
-  const loading = authLoading || !user || (!!user && !fetchDone);
+  const loading = !user || (!!user && !fetchDone);
 
   if (loading) {
     return (

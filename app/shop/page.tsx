@@ -2,7 +2,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { getProducts, getCategories } from '@/lib/api';
 import { GeomPattern } from '@/components/ui/GeomPattern';
-import { ShopClientShell } from '@/components/sections/ShopClientShell';
+import { ShopPage as ShopContent } from '@/components/features/shop/ShopPage';
 
 export default async function ShopPage() {
   const [products, categories] = await Promise.all([
@@ -73,7 +73,7 @@ export default async function ShopPage() {
           </div>
         </div>
 
-        <ShopClientShell products={products} categories={categories} />
+        <ShopContent products={products} categories={categories} />
       </main>
       <Footer />
     </>

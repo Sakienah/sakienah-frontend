@@ -124,18 +124,18 @@ function WishlistCard({ product }: { product: Product }) {
   );
 }
 
-export function WishlistPageContent({ allProducts }: { allProducts: Product[] }) {
+export function WishlistPage({ allProducts }: { allProducts: Product[] }) {
   const { wishlist } = useCart();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!user) {
       router.push('/login');
     }
-  }, [loading, user, router]);
+  }, [user, router]);
 
-  if (loading || !user) {
+  if (!user) {
     return <div style={{ padding: '80px 0', textAlign: 'center' }}>Laden...</div>;
   }
 

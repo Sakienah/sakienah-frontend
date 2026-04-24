@@ -3,7 +3,7 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GeomPattern } from '@/components/ui/GeomPattern';
-import { CartPageContent } from '@/components/sections/CartPageContent';
+import { CartPage as CartContent } from '@/components/features/cart/CartPage';
 import { useCart } from '@/contexts/CartContext';
 
 function CartHeader() {
@@ -61,7 +61,7 @@ export default function CartPage() {
         <CartHeader />
         <div style={{ background: '#FAF7F2', padding: '48px 40px 96px' }}>
           <div className="max-w-[1280px] mx-auto">
-            <CartPageContent />
+            <CartContent />
           </div>
         </div>
       </main>

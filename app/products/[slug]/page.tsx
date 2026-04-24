@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { ProductDetailClient } from '@/components/sections/ProductDetailClient';
+import { ProductDetail } from '@/components/features/product/ProductDetail';
 import { getProduct } from '@/lib/api';
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -76,7 +76,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </div>
 
               {/* Info + actions */}
-              <ProductDetailClient product={product} />
+              <ProductDetail product={product} />
             </div>
           </div>
         </div>
