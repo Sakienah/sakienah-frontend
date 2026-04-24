@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -129,13 +129,14 @@ export function WishlistPageContent({ allProducts }: { allProducts: Product[] })
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  if (loading) {
-    return <div style={{ padding: '80px 0', textAlign: 'center' }}>Laden...</div>;
-  }
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [loading, user, router]);
 
-  if (!user) {
-    router.push('/login');
-    return null;
+  if (loading || !user) {
+    return <div style={{ padding: '80px 0', textAlign: 'center' }}>Laden...</div>;
   }
 
   const wishedProducts = allProducts.filter((p) => wishlist.has(p.id));

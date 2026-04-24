@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { getOrderById } from '@/lib/api';
 import type { OrderSummary } from '@/lib/api';
@@ -128,9 +129,16 @@ function StatusTimeline({ status }: { status: string }) {
 
 export function OrderDetailContent({ orderId }: { orderId: string }) {
   const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [order, setOrder] = useState<OrderSummary | null>(null);
   const [fetchDone, setFetchDone] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [authLoading, user, router]);
 
   useEffect(() => {
     if (authLoading || !user) return;
@@ -142,28 +150,12 @@ export function OrderDetailContent({ orderId }: { orderId: string }) {
       .finally(() => setFetchDone(true));
   }, [orderId, user, authLoading]);
 
-  const loading = authLoading || (!!user && !fetchDone);
+  const loading = authLoading || !user || (!!user && !fetchDone);
 
   if (loading) {
     return (
       <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center">
         <div className="font-arabic text-[48px] text-[#c9a84c] opacity-40">سكينة</div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center px-6">
-        <div className="text-center bg-white border border-[#F0EBE3] p-[60px] max-w-[420px] w-full">
-          <h2 className="font-display text-[24px] text-[#0a0a0a] mb-3">Niet ingelogd</h2>
-          <Link
-            href="/login"
-            className="inline-block font-sans text-[11px] tracking-[0.18em] uppercase font-bold px-7 py-3.5 bg-[#0a0a0a] text-[#c9a84c]"
-          >
-            Inloggen
-          </Link>
-        </div>
       </div>
     );
   }
