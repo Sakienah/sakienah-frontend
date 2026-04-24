@@ -123,27 +123,42 @@ export function addToCart(productId: string, quantity = 1): Promise<CartResponse
   return apiPost<CartResponse>('/cart/add', { productId, quantity });
 }
 
-export function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
-  return fetch(`${API_URL}/cart/update`, {
+export async function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
+  const res = await fetch(`${API_URL}/cart/update`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
     body: JSON.stringify({ productId, quantity }),
-  }).then((r) => r.json()) as Promise<CartResponse>;
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<CartResponse>;
 }
 
-export function removeCartItem(productId: string): Promise<CartResponse> {
-  return fetch(`${API_URL}/cart/item/${productId}`, {
+export async function removeCartItem(productId: string): Promise<CartResponse> {
+  const res = await fetch(`${API_URL}/cart/item/${productId}`, {
     method: 'DELETE',
     credentials: 'include',
-  }).then((r) => r.json()) as Promise<CartResponse>;
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<CartResponse>;
 }
 
-export function clearCart(): Promise<CartResponse> {
-  return fetch(`${API_URL}/cart/clear`, {
+export async function clearCart(): Promise<CartResponse> {
+  const res = await fetch(`${API_URL}/cart/clear`, {
     method: 'DELETE',
     credentials: 'include',
-  }).then((r) => r.json()) as Promise<CartResponse>;
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(data.message ?? `Fout: ${res.status}`);
+  }
+  return res.json() as Promise<CartResponse>;
 }
 
 export type CheckoutPayload = {
