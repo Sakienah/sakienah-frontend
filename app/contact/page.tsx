@@ -12,16 +12,39 @@ const contactItems = [
   { label: 'Reactietijd', value: 'Binnen 24 uur' },
 ];
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+
 function ContactForm() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setSent(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const data = {
+      naam: (form.elements.namedItem('naam') as HTMLInputElement).value,
+      email: (form.elements.namedItem('email') as HTMLInputElement).value,
+      onderwerp: (form.elements.namedItem('onderwerp') as HTMLInputElement).value,
+      bericht: (form.elements.namedItem('bericht') as HTMLTextAreaElement).value,
+    };
+
+    try {
+      const res = await fetch(`${API_URL}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error();
+      setSent(true);
+    } catch {
+      setError('Er ging iets mis. Probeer het opnieuw of mail ons direct.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (sent) {
@@ -62,6 +85,7 @@ function ContactForm() {
           </label>
           <input
             type="text"
+            name="naam"
             required
             style={{
               width: '100%',
@@ -91,6 +115,7 @@ function ContactForm() {
           </label>
           <input
             type="email"
+            name="email"
             required
             style={{
               width: '100%',
@@ -121,6 +146,7 @@ function ContactForm() {
         </label>
         <input
           type="text"
+          name="onderwerp"
           required
           style={{
             width: '100%',
@@ -149,6 +175,7 @@ function ContactForm() {
           Bericht
         </label>
         <textarea
+          name="bericht"
           required
           rows={5}
           style={{
@@ -164,6 +191,7 @@ function ContactForm() {
           }}
         />
       </div>
+      {error && <p style={{ fontSize: 13, color: '#dc2626' }}>{error}</p>}
       <div>
         <button
           type="submit"
