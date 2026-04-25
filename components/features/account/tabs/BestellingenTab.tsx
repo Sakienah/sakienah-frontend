@@ -39,7 +39,13 @@ export function BestellingenTab({ orders }: { orders: OrderSummary[] }) {
                 <div className="font-sans text-[12px] text-[#aaa]">{formatDate(o.createdAt)}</div>
               </div>
               <div className="font-sans text-[12px] text-[#555] leading-relaxed">
-                {o.items.map((item) => item.product.name).join(', ')}
+                {o.items
+                  .map((item) =>
+                    item.selectedColor
+                      ? `${item.product.name} (${item.selectedColor === 'bruin' ? 'Bruin' : item.selectedColor === 'rood' ? 'Rood' : item.selectedColor})`
+                      : item.product.name,
+                  )
+                  .join(', ')}
               </div>
               <div className="font-sans text-[16px] font-bold text-[#c9a84c]">
                 {formatPrice(o.total)}

@@ -185,6 +185,7 @@ export type OrderItem = {
   quantity: number;
   unitPrice: string;
   total: string;
+  selectedColor: string | null;
   product: { name: string; slug: string; images: string[] };
 };
 

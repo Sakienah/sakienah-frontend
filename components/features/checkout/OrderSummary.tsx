@@ -2,6 +2,26 @@ import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import type { CartItem } from '@/contexts/CartContext';
 
+function ColorBadge({ color }: { color: string }) {
+  const hex = color === 'bruin' ? '#7B4F2E' : color === 'rood' ? '#9B2626' : '#888';
+  const label = color === 'bruin' ? 'Bruin' : color === 'rood' ? 'Rood' : color;
+  return (
+    <span className="flex items-center" style={{ gap: 5, marginTop: 3 }}>
+      <span
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: '50%',
+          background: hex,
+          display: 'inline-block',
+          flexShrink: 0,
+        }}
+      />
+      <span style={{ fontSize: 10, color: '#aaa' }}>{label}</span>
+    </span>
+  );
+}
+
 type Props = {
   items: CartItem[];
   totalPrice: number;
@@ -27,7 +47,7 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
         Jouw bestelling
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 20 }}>
-        {items.map(({ product, quantity }) => (
+        {items.map(({ product, quantity, selectedColor }) => (
           <div key={product.id} className="flex items-center" style={{ gap: 16 }}>
             <div
               style={{
@@ -53,7 +73,8 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
               <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 2 }}>
                 {product.name}
               </p>
-              <p style={{ fontSize: 11, color: '#aaa' }}>Aantal: {quantity}</p>
+              {selectedColor && <ColorBadge color={selectedColor} />}
+              <p style={{ fontSize: 11, color: '#aaa', marginTop: 3 }}>Aantal: {quantity}</p>
             </div>
             <span style={{ fontSize: 14, fontWeight: 600, color: '#0a0a0a' }}>
               {formatPrice(parseFloat(product.price) * quantity)}
