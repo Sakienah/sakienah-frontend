@@ -15,6 +15,15 @@ export type Category = {
   children?: Category[];
 };
 
+export type ProductColor = {
+  name: string;
+  value: string;
+};
+
+export type ProductOptions = {
+  colors?: ProductColor[];
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -25,6 +34,7 @@ export type Product = {
   sku: string | null;
   stock: number;
   images: string[];
+  options: ProductOptions | null;
   isActive: boolean;
   categoryId: string | null;
   category: Category | null;

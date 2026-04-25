@@ -23,6 +23,8 @@ export function ProductDetail({ product }: { product: Product }) {
   const [tab, setTab] = useState('beschrijving');
   const [added, setAdded] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
+  const colors = product.options?.colors ?? [];
+  const [selectedColor, setSelectedColor] = useState(colors[0]?.value ?? null);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
   const { user } = useAuth();
   const router = useRouter();
@@ -136,10 +138,54 @@ export function ProductDetail({ product }: { product: Product }) {
         )}
 
         {product.description && (
-          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8, marginBottom: 32 }}>
-            {product.description.slice(0, 200)}
-            {product.description.length > 200 ? '...' : ''}
+          <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8, marginBottom: 24 }}>
+            {product.description.split('\n\n')[0]}
           </p>
+        )}
+
+        {/* Color picker */}
+        {colors.length > 0 && (
+          <div style={{ marginBottom: 28 }}>
+            <p
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: '#aaa',
+                marginBottom: 10,
+              }}
+            >
+              Kleur —{' '}
+              <span style={{ color: '#0a0a0a', fontWeight: 600 }}>
+                {colors.find((c) => c.value === selectedColor)?.name}
+              </span>
+            </p>
+            <div className="flex" style={{ gap: 10 }}>
+              {colors.map((color) => {
+                const hex =
+                  color.value === 'bruin' ? '#7B4F2E' : color.value === 'rood' ? '#9B2626' : '#888';
+                const isSelected = selectedColor === color.value;
+                return (
+                  <button
+                    key={color.value}
+                    onClick={() => setSelectedColor(color.value)}
+                    title={color.name}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: '50%',
+                      background: hex,
+                      border: isSelected ? '2px solid #c9a84c' : '2px solid transparent',
+                      outline: isSelected ? '2px solid #c9a84c' : '2px solid #E8E0D5',
+                      outlineOffset: 2,
+                      cursor: 'pointer',
+                      transition: 'outline 0.15s',
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
         )}
 
         {/* Qty + Add */}
@@ -300,9 +346,20 @@ export function ProductDetail({ product }: { product: Product }) {
         </div>
         {tab === 'beschrijving' && (
           <div style={{ maxWidth: 680 }}>
-            <p style={{ fontSize: 15, color: '#555', lineHeight: 1.9 }}>
-              {product.description || 'Geen beschrijving beschikbaar.'}
-            </p>
+            {product.description ? (
+              product.description.split('\n\n').map((para, i) => (
+                <p
+                  key={i}
+                  style={{ fontSize: 15, color: '#555', lineHeight: 1.9, marginBottom: 20 }}
+                >
+                  {para}
+                </p>
+              ))
+            ) : (
+              <p style={{ fontSize: 15, color: '#555', lineHeight: 1.9 }}>
+                Geen beschrijving beschikbaar.
+              </p>
+            )}
           </div>
         )}
         {tab === 'kenmerken' && (
