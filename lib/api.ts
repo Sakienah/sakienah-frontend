@@ -113,6 +113,7 @@ export async function changePassword(
 export type CartItemResponse = {
   id: string;
   quantity: number;
+  selectedColor: string | null;
   product: {
     id: string;
     name: string;
@@ -137,8 +138,12 @@ export function getCart(): Promise<CartResponse> {
   return proxyGet<CartResponse>('/cart', emptyCart);
 }
 
-export function addToCart(productId: string, quantity = 1): Promise<CartResponse> {
-  return proxyMutate<CartResponse>('POST', '/cart/add', { productId, quantity });
+export function addToCart(
+  productId: string,
+  quantity = 1,
+  selectedColor?: string | null,
+): Promise<CartResponse> {
+  return proxyMutate<CartResponse>('POST', '/cart/add', { productId, quantity, selectedColor });
 }
 
 export function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
@@ -237,10 +242,15 @@ export function saveAddress(data: {
 }
 
 // Favorieten
-export function getFavorites(): Promise<string[]> {
-  return proxyGet<string[]>('/favorites', []);
+export type FavoriteItem = { productId: string; selectedColor: string | null };
+
+export function getFavorites(): Promise<FavoriteItem[]> {
+  return proxyGet<FavoriteItem[]>('/favorites', []);
 }
 
-export function toggleFavorite(productId: string): Promise<string[]> {
-  return proxyMutate<string[]>('POST', '/favorites/toggle', { productId });
+export function toggleFavorite(
+  productId: string,
+  selectedColor?: string | null,
+): Promise<FavoriteItem[]> {
+  return proxyMutate<FavoriteItem[]>('POST', '/favorites/toggle', { productId, selectedColor });
 }

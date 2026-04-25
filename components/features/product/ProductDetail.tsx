@@ -41,7 +41,7 @@ export function ProductDetail({ product }: { product: Product }) {
       router.push('/login');
       return;
     }
-    void addItem(product.id);
+    void addItem(product.id, selectedColor);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };
@@ -260,7 +260,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 router.push('/login');
                 return;
               }
-              toggleWishlist(product.id);
+              toggleWishlist(product.id, selectedColor);
             }}
             style={{
               width: 52,

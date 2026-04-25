@@ -17,6 +17,7 @@ import {
 export type CartItem = {
   product: CartItemResponse['product'];
   quantity: number;
+  selectedColor: string | null;
 };
 
 type CartContextValue = {
@@ -24,12 +25,12 @@ type CartContextValue = {
   totalItems: number;
   totalPrice: number;
   loading: boolean;
-  addItem: (productId: string) => Promise<void>;
+  addItem: (productId: string, selectedColor?: string | null) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
-  wishlist: Set<string>;
-  toggleWishlist: (productId: string) => void;
+  wishlist: Map<string, string | null>;
+  toggleWishlist: (productId: string, selectedColor?: string | null) => void;
   isWishlisted: (productId: string) => boolean;
 };
 
@@ -43,11 +44,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartData, setCartData] = useState<CartData>(emptyCartData);
   const [loading, setLoading] = useState(true);
 
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const [wishlist, setWishlist] = useState<Map<string, string | null>>(new Map());
 
   function applyCart(data: CartResponse) {
     setCartData({
-      items: data.items.map((i) => ({ product: i.product, quantity: i.quantity })),
+      items: data.items.map((i) => ({
+        product: i.product,
+        quantity: i.quantity,
+        selectedColor: i.selectedColor,
+      })),
       totalItems: data.totalItems,
       totalPrice: parseFloat(data.subtotal),
     });
@@ -59,15 +64,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false));
     if (user) {
       getFavorites()
-        .then((ids) => setWishlist(new Set(ids)))
-        .catch(() => setWishlist(new Set()));
+        .then((items) => setWishlist(new Map(items.map((f) => [f.productId, f.selectedColor]))))
+        .catch(() => setWishlist(new Map()));
     } else {
-      void Promise.resolve().then(() => setWishlist(new Set()));
+      void Promise.resolve().then(() => setWishlist(new Map()));
     }
   }, [user]);
 
-  const addItem = useCallback(async (productId: string) => {
-    const data = await addToCart(productId);
+  const addItem = useCallback(async (productId: string, selectedColor?: string | null) => {
+    const data = await addToCart(productId, 1, selectedColor);
     applyCart(data);
   }, []);
 
@@ -87,23 +92,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleWishlist = useCallback(
-    (productId: string) => {
+    (productId: string, selectedColor?: string | null) => {
       if (!user) return;
       // Optimistic update
       setWishlist((prev) => {
-        const next = new Set(prev);
+        const next = new Map(prev);
         if (next.has(productId)) next.delete(productId);
-        else next.add(productId);
+        else next.set(productId, selectedColor ?? null);
         return next;
       });
-      void toggleFavorite(productId)
-        .then((ids) => setWishlist(new Set(ids)))
+      void toggleFavorite(productId, selectedColor)
+        .then((items) => setWishlist(new Map(items.map((f) => [f.productId, f.selectedColor]))))
         .catch(() => {
           // Revert on error
           setWishlist((prev) => {
-            const next = new Set(prev);
+            const next = new Map(prev);
             if (next.has(productId)) next.delete(productId);
-            else next.add(productId);
+            else next.set(productId, selectedColor ?? null);
             return next;
           });
         });

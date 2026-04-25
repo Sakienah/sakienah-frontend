@@ -8,7 +8,33 @@ import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 
-function WishlistCard({ product }: { product: Product }) {
+function ColorBadge({ color }: { color: string }) {
+  const hex = color === 'bruin' ? '#7B4F2E' : color === 'rood' ? '#9B2626' : '#888';
+  const label = color === 'bruin' ? 'Bruin' : color === 'rood' ? 'Rood' : color;
+  return (
+    <span className="flex items-center" style={{ gap: 6, marginBottom: 8 }}>
+      <span
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: '50%',
+          background: hex,
+          display: 'inline-block',
+          flexShrink: 0,
+        }}
+      />
+      <span style={{ fontSize: 11, color: '#888' }}>{label}</span>
+    </span>
+  );
+}
+
+function WishlistCard({
+  product,
+  selectedColor,
+}: {
+  product: Product;
+  selectedColor: string | null;
+}) {
   const [added, setAdded] = useState(false);
   const { addItem, toggleWishlist } = useCart();
   const { user } = useAuth();
@@ -85,10 +111,11 @@ function WishlistCard({ product }: { product: Product }) {
         )}
         <p
           className="font-display"
-          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 10 }}
+          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
         >
           {product.name}
         </p>
+        {selectedColor && <ColorBadge color={selectedColor} />}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
             € {parseFloat(product.price).toFixed(2).replace('.', ',')}
@@ -99,7 +126,7 @@ function WishlistCard({ product }: { product: Product }) {
                 router.push('/login');
                 return;
               }
-              void addItem(product.id);
+              void addItem(product.id, selectedColor);
               setAdded(true);
               setTimeout(() => setAdded(false), 1400);
             }}
@@ -183,7 +210,11 @@ export function WishlistPage({ allProducts }: { allProducts: Product[] }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
       {wishedProducts.map((product) => (
-        <WishlistCard key={product.id} product={product} />
+        <WishlistCard
+          key={product.id}
+          product={product}
+          selectedColor={wishlist.get(product.id) ?? null}
+        />
       ))}
     </div>
   );
