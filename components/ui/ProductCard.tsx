@@ -195,26 +195,46 @@ export function ProductCard({
           <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
             {formatPrice(product.price)}
           </span>
-          <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            style={{
-              background: added ? '#c9a84c' : '#0a0a0a',
-              color: added ? '#0a0a0a' : '#fff',
-              border: 'none',
-              cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
-              opacity: product.stock === 0 ? 0.5 : 1,
-              fontSize: 10,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              padding: '12px 20px',
-              fontWeight: 600,
-              transition: 'all 0.25s',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {added ? '✓ Toegevoegd' : '+ Winkelwagen'}
-          </button>
+          {product.options?.colors?.length ? (
+            <Link
+              href={`/products/${product.slug}`}
+              style={{
+                background: '#0a0a0a',
+                color: '#fff',
+                fontSize: 10,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                padding: '12px 20px',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                textDecoration: 'none',
+                display: 'inline-block',
+              }}
+            >
+              Kies kleur →
+            </Link>
+          ) : (
+            <button
+              onClick={handleAddToCart}
+              disabled={product.stock === 0}
+              style={{
+                background: added ? '#c9a84c' : '#0a0a0a',
+                color: added ? '#0a0a0a' : '#fff',
+                border: 'none',
+                cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
+                opacity: product.stock === 0 ? 0.5 : 1,
+                fontSize: 10,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                padding: '12px 20px',
+                fontWeight: 600,
+                transition: 'all 0.25s',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {added ? '✓ Toegevoegd' : '+ Winkelwagen'}
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -146,12 +146,20 @@ export function addToCart(
   return proxyMutate<CartResponse>('POST', '/cart/add', { productId, quantity, selectedColor });
 }
 
-export function updateCartItem(productId: string, quantity: number): Promise<CartResponse> {
-  return proxyMutate<CartResponse>('PATCH', '/cart/update', { productId, quantity });
+export function updateCartItem(
+  productId: string,
+  quantity: number,
+  selectedColor?: string | null,
+): Promise<CartResponse> {
+  return proxyMutate<CartResponse>('PATCH', '/cart/update', { productId, quantity, selectedColor });
 }
 
-export function removeCartItem(productId: string): Promise<CartResponse> {
-  return proxyMutate<CartResponse>('DELETE', `/cart/item/${productId}`);
+export function removeCartItem(
+  productId: string,
+  selectedColor?: string | null,
+): Promise<CartResponse> {
+  const query = selectedColor ? `?selectedColor=${encodeURIComponent(selectedColor)}` : '';
+  return proxyMutate<CartResponse>('DELETE', `/cart/item/${productId}${query}`);
 }
 
 export function clearCart(): Promise<CartResponse> {
@@ -160,6 +168,7 @@ export function clearCart(): Promise<CartResponse> {
 
 // Checkout
 export type CheckoutPayload = {
+  email: string;
   address: { street: string; city: string; postalCode: string };
   paymentMethod: string;
   notes?: string;

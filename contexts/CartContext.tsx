@@ -26,8 +26,12 @@ type CartContextValue = {
   totalPrice: number;
   loading: boolean;
   addItem: (productId: string, selectedColor?: string | null) => Promise<void>;
-  removeItem: (productId: string) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number) => Promise<void>;
+  removeItem: (productId: string, selectedColor?: string | null) => Promise<void>;
+  updateQuantity: (
+    productId: string,
+    quantity: number,
+    selectedColor?: string | null,
+  ) => Promise<void>;
   clearCart: () => Promise<void>;
   wishlist: Map<string, string | null>;
   toggleWishlist: (productId: string, selectedColor?: string | null) => void;
@@ -76,15 +80,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     applyCart(data);
   }, []);
 
-  const removeItem = useCallback(async (productId: string) => {
-    const data = await removeCartItem(productId);
+  const removeItem = useCallback(async (productId: string, selectedColor?: string | null) => {
+    const data = await removeCartItem(productId, selectedColor);
     applyCart(data);
   }, []);
 
-  const updateQuantity = useCallback(async (productId: string, quantity: number) => {
-    const data = await updateCartItem(productId, quantity);
-    applyCart(data);
-  }, []);
+  const updateQuantity = useCallback(
+    async (productId: string, quantity: number, selectedColor?: string | null) => {
+      const data = await updateCartItem(productId, quantity, selectedColor);
+      applyCart(data);
+    },
+    [],
+  );
 
   const clearCart = useCallback(async () => {
     const data = await apiClearCart();

@@ -79,7 +79,7 @@ export function CartPage() {
       <div style={{ background: '#fff', border: '1px solid #F0EBE3' }}>
         {items.map(({ product, quantity, selectedColor }) => (
           <div
-            key={product.id}
+            key={`${product.id}-${selectedColor ?? ''}`}
             className="flex items-center"
             style={{ gap: 24, padding: '28px 32px', borderBottom: '1px solid #F0EBE3' }}
           >
@@ -146,7 +146,7 @@ export function CartPage() {
                 style={{ border: '1px solid #E8E0D5', display: 'inline-flex' }}
               >
                 <button
-                  onClick={() => updateQuantity(product.id, quantity - 1)}
+                  onClick={() => updateQuantity(product.id, quantity - 1, selectedColor)}
                   style={{
                     width: 36,
                     height: 36,
@@ -166,7 +166,7 @@ export function CartPage() {
                   {quantity}
                 </span>
                 <button
-                  onClick={() => updateQuantity(product.id, quantity + 1)}
+                  onClick={() => updateQuantity(product.id, quantity + 1, selectedColor)}
                   style={{
                     width: 36,
                     height: 36,
@@ -193,7 +193,7 @@ export function CartPage() {
                 {formatPrice(parseFloat(product.price) * quantity)}
               </span>
               <button
-                onClick={() => removeItem(product.id)}
+                onClick={() => removeItem(product.id, selectedColor)}
                 style={{
                   background: 'none',
                   border: 'none',

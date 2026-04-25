@@ -33,6 +33,7 @@ export function CheckoutFlow() {
     setError(null);
     try {
       const result = await postCheckout({
+        email: form.email,
         address: { street: form.address, city: form.city, postalCode: form.postalCode },
         paymentMethod: form.payment,
       });

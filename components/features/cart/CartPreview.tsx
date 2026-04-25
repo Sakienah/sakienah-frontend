@@ -50,8 +50,8 @@ export function CartPreview({ onClose }: Props) {
       ) : (
         <>
           <ul className="divide-y divide-zinc-50 max-h-72 overflow-y-auto">
-            {items.map(({ product, quantity }) => (
-              <li key={product.id} className="flex gap-3 px-5 py-4">
+            {items.map(({ product, quantity, selectedColor }) => (
+              <li key={`${product.id}-${selectedColor ?? ''}`} className="flex gap-3 px-5 py-4">
                 <div className="w-14 h-14 rounded-lg bg-[#FAF7F2] flex-shrink-0 overflow-hidden relative">
                   {product.images[0] ? (
                     <Image
@@ -72,14 +72,14 @@ export function CartPreview({ onClose }: Props) {
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     <button
-                      onClick={() => updateQuantity(product.id, quantity - 1)}
+                      onClick={() => updateQuantity(product.id, quantity - 1, selectedColor)}
                       className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
                     >
                       <Minus size={10} />
                     </button>
                     <span className="text-xs font-medium w-4 text-center">{quantity}</span>
                     <button
-                      onClick={() => updateQuantity(product.id, quantity + 1)}
+                      onClick={() => updateQuantity(product.id, quantity + 1, selectedColor)}
                       className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
                     >
                       <Plus size={10} />
@@ -87,7 +87,7 @@ export function CartPreview({ onClose }: Props) {
                   </div>
                 </div>
                 <button
-                  onClick={() => removeItem(product.id)}
+                  onClick={() => removeItem(product.id, selectedColor)}
                   className="text-zinc-300 hover:text-black transition-colors self-start mt-0.5"
                 >
                   <X size={14} />
