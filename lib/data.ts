@@ -1,8 +1,8 @@
 export const trustItems = [
-  { icon: '🚚', label: 'Gratis verzending', sub: 'v.a. € 50' },
-  { icon: '↩', label: '30 dagen retour', sub: 'Geen gedoe' },
-  { icon: '🔒', label: 'Veilig betalen', sub: 'iDEAL & meer' },
-  { icon: '⭐', label: 'Premium kwaliteit', sub: 'Op elk product' },
+  { label: 'Gratis verzending', sub: 'Vanaf €50' },
+  { label: '30 dagen retour', sub: 'Geen vragen' },
+  { label: 'Veilig betalen', sub: 'iDEAL & meer' },
+  { label: 'Islamitisch gecureerd', sub: 'Met zorg geselecteerd' },
 ];
 
 export const reviews = [

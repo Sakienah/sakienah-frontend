@@ -41,7 +41,7 @@ export function CTABanner() {
         <p
           style={{
             fontSize: 12,
-            color: 'rgba(255,255,255,0.35)',
+            color: 'rgb(255, 255, 255)',
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
           }}
