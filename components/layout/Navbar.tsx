@@ -41,10 +41,20 @@ export function Navbar() {
       >
         <Link
           href="/"
-          className="font-display text-[22px] font-semibold text-[#0a0a0a]"
+          className="font-display text-[22px] font-semibold text-[#0a0a0a] flex items-center gap-1.5"
           style={{ letterSpacing: '-0.01em' }}
         >
           Sakienah
+          <span
+            style={{
+              width: 6,
+              height: 6,
+              background: '#c9a84c',
+              transform: 'rotate(45deg)',
+              flexShrink: 0,
+              display: 'inline-block',
+            }}
+          />
         </Link>
 
         <nav className="hidden md:flex" style={{ gap: 44 }}>
