@@ -324,6 +324,7 @@ export default function ContactPage() {
                     border: '1px solid rgba(201,168,76,0.18)',
                     padding: '28px 32px',
                     textAlign: 'center',
+                    background: '#FAF7F2',
                   }}
                 >
                   <div
