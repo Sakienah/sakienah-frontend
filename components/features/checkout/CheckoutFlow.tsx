@@ -167,7 +167,14 @@ export function CheckoutFlow() {
             <GeomPattern opacity={0.04} id="geom-checkout-card" />
             <div className="relative z-10">
               {step === 0 && <StepGateway onContinue={handleGateway} />}
-              {step === 1 && <StepInfo form={form} update={update} onNext={() => setStep(2)} />}
+              {step === 1 && (
+                <StepInfo
+                  form={form}
+                  update={update}
+                  onNext={() => setStep(2)}
+                  isGuest={mode === 'guest'}
+                />
+              )}
               {step === 2 && (
                 <StepPayment
                   form={form}

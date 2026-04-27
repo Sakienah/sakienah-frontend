@@ -226,6 +226,17 @@ export function postGuestCheckout(payload: GuestCheckoutPayload): Promise<OrderR
   });
 }
 
+export async function checkEmailExists(email: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${PROXY}/auth/check-email?email=${encodeURIComponent(email)}`);
+    if (!res.ok) return false;
+    const data = (await res.json()) as { exists: boolean };
+    return data.exists;
+  } catch {
+    return false;
+  }
+}
+
 // Orders
 export type OrderItem = {
   productId: string;
