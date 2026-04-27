@@ -160,20 +160,26 @@ export function CheckoutFlow() {
             alignItems: 'start',
           }}
         >
-          <div style={{ background: '#fff', border: '1px solid #F0EBE3', padding: 40 }}>
-            {step === 0 && <StepGateway onContinue={handleGateway} />}
-            {step === 1 && <StepInfo form={form} update={update} onNext={() => setStep(2)} />}
-            {step === 2 && (
-              <StepPayment
-                form={form}
-                update={update}
-                onBack={() => setStep(1)}
-                onPlaceOrder={() => void handlePlaceOrder()}
-                submitting={submitting}
-                error={error}
-                grandTotal={grandTotal}
-              />
-            )}
+          <div
+            style={{ background: '#fff', border: '1px solid #F0EBE3', padding: 40 }}
+            className="relative overflow-hidden"
+          >
+            <GeomPattern opacity={0.04} id="geom-checkout-card" />
+            <div className="relative z-10">
+              {step === 0 && <StepGateway onContinue={handleGateway} />}
+              {step === 1 && <StepInfo form={form} update={update} onNext={() => setStep(2)} />}
+              {step === 2 && (
+                <StepPayment
+                  form={form}
+                  update={update}
+                  onBack={() => setStep(1)}
+                  onPlaceOrder={() => void handlePlaceOrder()}
+                  submitting={submitting}
+                  error={error}
+                  grandTotal={grandTotal}
+                />
+              )}
+            </div>
           </div>
           {step !== 0 && (
             <OrderSummary

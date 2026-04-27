@@ -21,7 +21,7 @@ export function CheckoutHeader({ step, allDone = false }: Props) {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern opacity={0.07} />
+      <GeomPattern opacity={0.07} id="geom-checkout-header" />
       <div className="max-w-[1280px] mx-auto relative z-10">
         <p
           style={{
