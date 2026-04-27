@@ -12,7 +12,7 @@ export function FinalCTA() {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern opacity={0.08} />
+      <GeomPattern dark />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <p
           style={{

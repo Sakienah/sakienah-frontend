@@ -32,35 +32,21 @@ export async function HeroSection() {
           overflow: 'hidden',
         }}
       >
-        {/* Geom pattern */}
-        <svg
+        {/* Zellij pattern — invert→sepia→goud, screen blend op donker */}
+        <div
+          aria-hidden
           style={{
             position: 'absolute',
             inset: 0,
-            width: '100%',
-            height: '100%',
+            backgroundImage: "url('/brand_assets/background.png')",
+            backgroundRepeat: 'repeat',
+            backgroundSize: '320px auto',
+            opacity: 0.2,
+            filter: 'invert(1) sepia(1) saturate(5) hue-rotate(5deg) brightness(0.8)',
+            mixBlendMode: 'screen',
             pointerEvents: 'none',
           }}
-          aria-hidden
-        >
-          <defs>
-            <pattern
-              id="geom-hero-l"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <g stroke="#c9a84c" strokeWidth="0.5" fill="none" opacity="0.6">
-                <path d="M40 10 L70 40 L40 70 L10 40 Z" />
-                <path d="M40 24 L56 40 L40 56 L24 40 Z" />
-                <path d="M40 0 L40 10 M40 70 L40 80 M0 40 L10 40 M70 40 L80 40" strokeWidth="0.3" />
-              </g>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#geom-hero-l)" />
-        </svg>
+        />
         {/* Arabic watermark */}
         <div
           className="font-arabic select-none pointer-events-none absolute"
@@ -203,34 +189,20 @@ export async function HeroSection() {
           position: 'relative',
         }}
       >
-        <svg
+        {/* Zellij pattern — sepia→goud, multiply blend op crème */}
+        <div
+          aria-hidden
           style={{
             position: 'absolute',
             inset: 0,
-            width: '100%',
-            height: '100%',
+            backgroundImage: "url('/brand_assets/background.png')",
+            backgroundRepeat: 'repeat',
+            backgroundSize: '320px auto',
+            opacity: 0.22,
+            mixBlendMode: 'multiply',
             pointerEvents: 'none',
           }}
-          aria-hidden
-        >
-          <defs>
-            <pattern
-              id="geom-hero-r"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <g stroke="#c9a84c" strokeWidth="0.5" fill="none" opacity="0.9">
-                <path d="M40 10 L70 40 L40 70 L10 40 Z" />
-                <path d="M40 24 L56 40 L40 56 L24 40 Z" />
-                <path d="M40 0 L40 10 M40 70 L40 80 M0 40 L10 40 M70 40 L80 40" strokeWidth="0.3" />
-              </g>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#geom-hero-r)" />
-        </svg>
+        />
         <div
           className="font-arabic select-none absolute"
           style={{

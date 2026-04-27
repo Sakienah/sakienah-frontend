@@ -10,7 +10,7 @@ export async function BestsellersSection() {
     <section
       style={{ background: '#FAF7F2', padding: '96px 0', position: 'relative', overflow: 'hidden' }}
     >
-      <GeomPattern opacity={0.05} />
+      <GeomPattern />
       <div className="max-w-[1280px] mx-auto relative z-10" style={{ padding: '0 40px' }}>
         <div className="flex items-end justify-between" style={{ marginBottom: 56 }}>
           <div>

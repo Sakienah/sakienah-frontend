@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { GeomPattern } from '@/components/ui/GeomPattern';
 import { SectionTitle } from '../ui/SectionTitle';
 
 const features = [
@@ -126,8 +127,9 @@ export function FeatureGrid() {
   const bottom = features.find((f) => f.position === 'bottom')!;
 
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24 bg-white relative overflow-hidden">
+      <GeomPattern />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <SectionTitle
           title="Waarom Sakienah"
           subtitle="Elk detail is doordacht om jouw gebedsmoment zo comfortabel mogelijk te maken."
