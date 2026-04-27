@@ -1,9 +1,9 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ProductDetail } from '@/components/features/product/ProductDetail';
+import { ProductImageGallery } from '@/components/features/product/ProductImageGallery';
 import { getProduct } from '@/lib/api';
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -11,8 +11,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = await getProduct(slug).catch(() => null);
 
   if (!product) notFound();
-
-  const image = product.images[0];
 
   return (
     <>
@@ -40,40 +38,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         {/* Main content */}
         <div style={{ background: '#fff', padding: '56px 40px 80px' }}>
           <div className="max-w-[1280px] mx-auto">
-            <div style={{ display: 'grid', gridTemplateColumns: '55% 45%', gap: 72 }}>
-              {/* Image */}
-              <div
-                style={{
-                  aspectRatio: '4/5',
-                  background: '#FAF7F2',
-                  overflow: 'hidden',
-                  position: 'relative',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 20,
-                    border: '1px solid rgba(201,168,76,0.2)',
-                    zIndex: 10,
-                    pointerEvents: 'none',
-                  }}
-                />
-                {image ? (
-                  <Image
-                    src={image}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="(max-width: 768px) 100vw, 55vw"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span style={{ color: '#ccc', fontSize: 14 }}>Geen foto beschikbaar</span>
-                  </div>
-                )}
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '44% 56%', gap: 64 }}>
+              {/* Image gallery */}
+              <ProductImageGallery images={product.images} name={product.name} />
 
               {/* Info + actions */}
               <ProductDetail product={product} />
