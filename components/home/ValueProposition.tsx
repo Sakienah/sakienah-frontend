@@ -12,7 +12,7 @@ const values = [
   {
     arabic: 'هدية',
     title: 'Perfect cadeau',
-    desc: 'Voor Ramadan, Eid of gewoon zomaar — elk product mooi verpakt en klaar om te geven.',
+    desc: 'Het ideale cadeau voor Ramadan, Eid of gewoon zomaar — geef iemand iets waarvoor jij ook nog een beloning kunt ontvangen.',
   },
 ];
 

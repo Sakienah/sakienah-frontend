@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { StarRating } from './StarRating';
 import { useProductActions } from '@/hooks/useProductActions';
@@ -23,18 +24,38 @@ export function ProductCard({
   const { added, wishlisted, handleAddToCart, handleToggleWishlist } = useProductActions(
     product.id,
   );
+  const router = useRouter();
   const image = product.images[0];
 
   return (
     <div
+      onClick={() => router.push(`/products/${product.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      style={{ background: '#fff', overflow: 'hidden', cursor: 'pointer', position: 'relative' }}
+      style={{
+        background: '#fff',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        position: 'relative',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        boxShadow: hovered ? '0 16px 40px rgba(0,0,0,0.13)' : '0 2px 8px rgba(0,0,0,0.05)',
+      }}
     >
       {/* Image */}
       <div style={{ aspectRatio, overflow: 'hidden', position: 'relative' }}>
         {image ? (
-          <Image src={image} alt={product.name} fill className="object-cover" sizes={sizes} />
+          <Image
+            src={image}
+            alt={product.name}
+            fill
+            className="object-cover"
+            sizes={sizes}
+            style={{
+              transition: 'transform 0.4s ease',
+              transform: hovered ? 'scale(1.04)' : 'scale(1)',
+            }}
+          />
         ) : (
           <div
             style={{
@@ -51,34 +72,6 @@ export function ProductCard({
             </span>
           </div>
         )}
-
-        {/* Hover overlay */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(10,10,10,0.6)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingBottom: 28,
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.28s',
-          }}
-        >
-          <Link
-            href={`/products/${product.slug}`}
-            style={{
-              fontSize: 11,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              fontWeight: 600,
-            }}
-          >
-            Bekijk product →
-          </Link>
-        </div>
 
         {/* Badges */}
         {product.stock === 0 && (
@@ -119,7 +112,10 @@ export function ProductCard({
 
         {/* Wishlist button */}
         <button
-          onClick={handleToggleWishlist}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggleWishlist();
+          }}
           style={{
             position: 'absolute',
             top: 12,
@@ -159,21 +155,7 @@ export function ProductCard({
           gap: 16,
         }}
       >
-        <Link href={`/products/${product.slug}`} style={{ flex: 1 }}>
-          {product.category && (
-            <p
-              className="font-arabic"
-              style={{
-                fontSize: 15,
-                color: '#c9a84c',
-                direction: 'rtl',
-                marginBottom: 4,
-                opacity: 0.85,
-              }}
-            >
-              {product.category.name}
-            </p>
-          )}
+        <div style={{ flex: 1 }}>
           <p
             className="font-display"
             style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
@@ -184,7 +166,7 @@ export function ProductCard({
             <StarRating count={5} />
             <span style={{ fontSize: 11, color: '#aaa' }}>4.9</span>
           </div>
-        </Link>
+        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
           {product.comparePrice && (
@@ -198,6 +180,7 @@ export function ProductCard({
           {product.options?.colors?.length ? (
             <Link
               href={`/products/${product.slug}`}
+              onClick={(e) => e.stopPropagation()}
               style={{
                 background: '#0a0a0a',
                 color: '#fff',
@@ -215,7 +198,10 @@ export function ProductCard({
             </Link>
           ) : (
             <button
-              onClick={handleAddToCart}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart();
+              }}
               disabled={product.stock === 0}
               style={{
                 background: added ? '#c9a84c' : '#0a0a0a',

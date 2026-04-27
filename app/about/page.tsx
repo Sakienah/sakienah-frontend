@@ -111,9 +111,9 @@ export default function AboutPage() {
                   collectie die de islamitische levensstijl verrijkt.
                 </p>
                 <p style={{ fontSize: 15, color: '#666', lineHeight: 1.9, marginBottom: 40 }}>
-                  Elk product wordt zorgvuldig geselecteerd: van gebedskleding en Koranstandaarden
-                  tot geurige abaya&apos;s en islamitische kunst. Wij geloven dat schoonheid en
-                  geloof hand in hand gaan.
+                  Sakienah biedt vergemakkelijking aan voor onze zoete aanbiddingen. We willen
+                  kwalitatief producten leveren om het verrichten van aanbidding nog comfortabeler
+                  te maken.
                 </p>
                 {/* Signature */}
                 <div className="flex items-center" style={{ gap: 16 }}>

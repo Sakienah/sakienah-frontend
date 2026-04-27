@@ -36,7 +36,7 @@ export async function BestsellersSection() {
                 lineHeight: 1.1,
               }}
             >
-              Meest Gekocht
+              Wat Wij Aanbieden
             </h2>
           </div>
           <Link

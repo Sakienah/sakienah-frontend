@@ -10,11 +10,11 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroProductCards({ products }: { products: Product[] }) {
   return (
-    <>
+    <div style={{ width: '100%', maxWidth: 340 }}>
       {products.map((p) => (
         <HeroProductCard key={p.id} product={p} />
       ))}
-    </>
+    </div>
   );
 }
 
@@ -32,7 +32,7 @@ function HeroProductCard({ product }: { product: Product }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         width: '100%',
-        maxWidth: 300,
+        maxWidth: '100%',
         background: '#fff',
         position: 'relative',
         boxShadow: hovered ? '0 20px 60px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.06)',
@@ -94,20 +94,6 @@ function HeroProductCard({ product }: { product: Product }) {
       </Link>
 
       <div style={{ padding: '16px 18px 20px' }}>
-        {product.category && (
-          <p
-            className="font-arabic"
-            style={{
-              fontSize: 14,
-              color: '#c9a84c',
-              direction: 'rtl',
-              marginBottom: 4,
-              opacity: 0.8,
-            }}
-          >
-            {product.category.name}
-          </p>
-        )}
         <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 8 }}>
           {product.name}
         </p>

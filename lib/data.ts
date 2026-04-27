@@ -7,21 +7,21 @@ export const trustItems = [
 
 export const reviews = [
   {
-    text: 'Prachtige kwaliteit. Mijn man was erg blij met het cadeau — de verpakking alleen al was geweldig.',
+    text: 'Ik heb het besteld en ik vind het super fijn. Ik gebruik het voor lezingen of als ik Koran wil lezen.',
     author: 'Fatima M.',
-    product: 'Gebedsset Cadeau Box',
+    product: 'Gebedskleed met rugsteun',
     rating: 5,
   },
   {
-    text: 'Snel geleverd en precies zoals beschreven. Eindelijk een winkel die echt begrijpt wat wij zoeken.',
+    text: 'De korantafel is superhandig, ik kan hem telkens verstellen afhankelijk van waar ik ben en hij is makkelijk mee te nemen.',
     author: 'Ahmed K.',
-    product: 'Koran Standaard Walnoot',
+    product: 'Verstelbare Korantafel',
     rating: 5,
   },
   {
-    text: 'Eindelijk een islamitische winkel met premium producten. Zal zeker vaker bestellen bij Sakienah.',
+    text: 'Top kwaliteit en snel geleverd. Eindelijk een winkel die echt begrijpt wat wij als moslims zoeken.',
     author: 'Youssef B.',
-    product: 'Premium Gebedskleed',
+    product: 'Gebedskleed met rugsteun',
     rating: 5,
   },
 ];

@@ -58,33 +58,6 @@ export function ProductDetail({ product }: { product: Product }) {
     <>
       {/* Info panel */}
       <div style={{ paddingTop: 8 }}>
-        {product.category && (
-          <p
-            style={{
-              fontSize: 10,
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              marginBottom: 8,
-            }}
-          >
-            {product.category.name}
-          </p>
-        )}
-        {product.category && (
-          <div
-            className="font-arabic"
-            style={{
-              fontSize: 32,
-              color: '#c9a84c',
-              direction: 'rtl',
-              marginBottom: 8,
-              opacity: 0.85,
-            }}
-          >
-            {product.category.name}
-          </div>
-        )}
         <h1
           className="font-display"
           style={{

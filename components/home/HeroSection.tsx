@@ -4,7 +4,8 @@ import { HeroProductCards } from './HeroProductCards';
 
 export async function HeroSection() {
   const products = await getProducts().catch(() => []);
-  const featured = products.slice(0, 2);
+  const dealProduct = products.find((p) => p.comparePrice) ?? products[0];
+  const featured = dealProduct ? [dealProduct] : [];
 
   return (
     <section
@@ -23,7 +24,10 @@ export async function HeroSection() {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '140px 64px 80px',
+          paddingTop: 140,
+          paddingBottom: 80,
+          paddingRight: 64,
+          paddingLeft: 'max(40px, calc((100vw - 1280px) / 2 + 40px))',
           position: 'relative',
           overflow: 'hidden',
         }}

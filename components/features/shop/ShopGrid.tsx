@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
@@ -19,14 +18,17 @@ function ShopProductCard({ product }: { product: Product }) {
 
   return (
     <div
+      onClick={() => router.push(`/products/${product.slug}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
         background: '#fff',
         border: '1px solid #F0EBE3',
-        boxShadow: hovered ? '0 12px 40px rgba(0,0,0,0.09)' : 'none',
-        transition: 'box-shadow 0.3s',
         overflow: 'hidden',
+        cursor: 'pointer',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
+        boxShadow: hovered ? '0 16px 40px rgba(0,0,0,0.13)' : '0 2px 8px rgba(0,0,0,0.05)',
       }}
     >
       <div
@@ -44,38 +46,16 @@ function ShopProductCard({ product }: { product: Product }) {
             fill
             className="object-cover"
             sizes="(max-width:768px) 50vw, 33vw"
+            style={{
+              transition: 'transform 0.4s ease',
+              transform: hovered ? 'scale(1.04)' : 'scale(1)',
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="text-[10px] text-gold/60 font-mono">geen foto</span>
           </div>
         )}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'rgba(10,10,10,0.6)',
-            display: 'flex',
-            alignItems: 'flex-end',
-            justifyContent: 'center',
-            paddingBottom: 24,
-            opacity: hovered ? 1 : 0,
-            transition: 'opacity 0.3s',
-          }}
-        >
-          <Link
-            href={`/products/${product.slug}`}
-            style={{
-              fontSize: 10,
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              fontWeight: 600,
-            }}
-          >
-            Bekijk product →
-          </Link>
-        </div>
         {product.stock === 0 && (
           <span
             style={{
@@ -94,7 +74,8 @@ function ShopProductCard({ product }: { product: Product }) {
           </span>
         )}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             if (!user) {
               router.push('/login');
               return;
@@ -131,35 +112,19 @@ function ShopProductCard({ product }: { product: Product }) {
       </div>
 
       <div style={{ padding: '18px 20px 22px' }}>
-        {product.category && (
-          <p
-            className="font-arabic"
-            style={{
-              fontSize: 14,
-              color: '#c9a84c',
-              direction: 'rtl',
-              marginBottom: 3,
-              opacity: 0.8,
-            }}
-          >
-            {product.category.name}
-          </p>
-        )}
         <p
           className="font-display"
-          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
+          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 12 }}
         >
           {product.name}
         </p>
-        {product.category && (
-          <p style={{ fontSize: 11, color: '#bbb', marginBottom: 12 }}>{product.category.name}</p>
-        )}
         <div className="flex items-center justify-between">
           <span style={{ fontSize: 16, fontWeight: 700, color: '#c9a84c' }}>
             € {parseFloat(product.price).toFixed(2).replace('.', ',')}
           </span>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               if (!user) {
                 router.push('/login');
                 return;
