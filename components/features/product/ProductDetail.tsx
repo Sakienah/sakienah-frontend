@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Product } from '@/types';
+import type { Product, ProductVariant } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -18,17 +18,27 @@ function Stars() {
   );
 }
 
-export function ProductDetail({ product }: { product: Product }) {
+type Props = {
+  product: Product;
+  selectedVariant: ProductVariant | null;
+  onVariantChange: (variant: ProductVariant) => void;
+};
+
+export function ProductDetail({ product, selectedVariant, onVariantChange }: Props) {
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState('beschrijving');
   const [added, setAdded] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
-  const colors = product.options?.colors ?? [];
-  const [selectedColor, setSelectedColor] = useState(colors[0]?.value ?? null);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
   const { user } = useAuth();
   const router = useRouter();
   const wished = isWishlisted(product.id);
+
+  const hasVariants = product.variants && product.variants.length > 0;
+
+  // Effectieve stock en SKU: variant-niveau als er varianten zijn
+  const effectiveStock = selectedVariant ? selectedVariant.stock : product.stock;
+  const effectiveSku = selectedVariant?.sku ?? product.sku;
 
   useEffect(() => {
     const onScroll = () => setStickyVisible(window.scrollY > 500);
@@ -37,7 +47,12 @@ export function ProductDetail({ product }: { product: Product }) {
   }, []);
 
   const handleAdd = () => {
-    void addItem(product.id, selectedColor);
+    void addItem(
+      product.id,
+      selectedVariant ? undefined : undefined,
+      selectedVariant?.id ?? undefined,
+      selectedVariant?.colorValue ?? undefined,
+    );
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };
@@ -112,8 +127,8 @@ export function ProductDetail({ product }: { product: Product }) {
           </p>
         )}
 
-        {/* Color picker */}
-        {colors.length > 0 && (
+        {/* Variant kleurkiezer */}
+        {hasVariants && (
           <div style={{ marginBottom: 28 }}>
             <p
               style={{
@@ -126,28 +141,28 @@ export function ProductDetail({ product }: { product: Product }) {
             >
               Kleur —{' '}
               <span style={{ color: '#0a0a0a', fontWeight: 600 }}>
-                {colors.find((c) => c.value === selectedColor)?.name}
+                {selectedVariant?.colorName}
               </span>
             </p>
             <div className="flex" style={{ gap: 10 }}>
-              {colors.map((color) => {
-                const hex =
-                  color.value === 'bruin' ? '#7B4F2E' : color.value === 'rood' ? '#9B2626' : '#888';
-                const isSelected = selectedColor === color.value;
+              {product.variants.map((variant) => {
+                const isSelected = selectedVariant?.id === variant.id;
                 return (
                   <button
-                    key={color.value}
-                    onClick={() => setSelectedColor(color.value)}
-                    title={color.name}
+                    key={variant.id}
+                    onClick={() => onVariantChange(variant)}
+                    title={variant.colorName}
+                    disabled={variant.stock === 0}
                     style={{
                       width: 34,
                       height: 34,
                       borderRadius: '50%',
-                      background: hex,
+                      background: variant.colorHex,
                       border: isSelected ? '2px solid #c9a84c' : '2px solid transparent',
                       outline: isSelected ? '2px solid #c9a84c' : '2px solid #E8E0D5',
                       outlineOffset: 2,
-                      cursor: 'pointer',
+                      cursor: variant.stock === 0 ? 'not-allowed' : 'pointer',
+                      opacity: variant.stock === 0 ? 0.35 : 1,
                       transition: 'outline 0.15s',
                     }}
                   />
@@ -200,13 +215,13 @@ export function ProductDetail({ product }: { product: Product }) {
           </div>
           <button
             onClick={handleAdd}
-            disabled={product.stock === 0}
+            disabled={effectiveStock === 0}
             style={{
               flex: 1,
               background: added ? '#c9a84c' : '#0a0a0a',
               color: added ? '#0a0a0a' : '#fff',
               border: 'none',
-              cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
+              cursor: effectiveStock === 0 ? 'not-allowed' : 'pointer',
               fontSize: 12,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -214,10 +229,10 @@ export function ProductDetail({ product }: { product: Product }) {
               padding: '0 28px',
               height: 52,
               transition: 'all 0.25s',
-              opacity: product.stock === 0 ? 0.4 : 1,
+              opacity: effectiveStock === 0 ? 0.4 : 1,
             }}
           >
-            {product.stock === 0
+            {effectiveStock === 0
               ? 'Uitverkocht'
               : added
                 ? '✓ Toegevoegd aan winkelwagen'
@@ -229,7 +244,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 router.push('/login');
                 return;
               }
-              toggleWishlist(product.id, selectedColor);
+              toggleWishlist(product.id, selectedVariant?.colorValue ?? undefined);
             }}
             style={{
               width: 52,
@@ -276,9 +291,9 @@ export function ProductDetail({ product }: { product: Product }) {
           className="flex justify-between items-center mt-4"
           style={{ padding: '12px 16px', background: '#FAF7F2', border: '1px solid #F0EBE3' }}
         >
-          <span style={{ fontSize: 11, color: '#777' }}>SKU: {product.sku || '—'}</span>
+          <span style={{ fontSize: 11, color: '#777' }}>SKU: {effectiveSku || '—'}</span>
           <span style={{ fontSize: 11, color: '#4CAF78', fontWeight: 600 }}>
-            ● {product.stock > 0 ? 'Op voorraad' : 'Uitverkocht'}
+            ● {effectiveStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
           </span>
         </div>
       </div>

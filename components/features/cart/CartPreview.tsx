@@ -50,50 +50,75 @@ export function CartPreview({ onClose }: Props) {
       ) : (
         <>
           <ul className="divide-y divide-zinc-50 max-h-72 overflow-y-auto">
-            {items.map(({ product, quantity, selectedColor }) => (
-              <li key={`${product.id}-${selectedColor ?? ''}`} className="flex gap-3 px-5 py-4">
-                <div className="w-14 h-14 rounded-lg bg-[#FAF7F2] flex-shrink-0 overflow-hidden relative">
-                  {product.images[0] ? (
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                      sizes="56px"
-                    />
-                  ) : (
-                    <div className="w-full h-full" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-black truncate">{product.name}</p>
-                  <p className="text-xs text-[#B8975A] font-semibold mt-0.5">
-                    {formatPrice(parseFloat(product.price))}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <button
-                      onClick={() => updateQuantity(product.id, quantity - 1, selectedColor)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
-                    >
-                      <Minus size={10} />
-                    </button>
-                    <span className="text-xs font-medium w-4 text-center">{quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(product.id, quantity + 1, selectedColor)}
-                      className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
-                    >
-                      <Plus size={10} />
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeItem(product.id, selectedColor)}
-                  className="text-zinc-300 hover:text-black transition-colors self-start mt-0.5"
+            {items.map(({ product, variant, quantity, variantId, selectedColor }) => {
+              const image = variant?.images[0] ?? product.images[0];
+              return (
+                <li
+                  key={`${product.id}-${variantId ?? selectedColor ?? ''}`}
+                  className="flex gap-3 px-5 py-4"
                 >
-                  <X size={14} />
-                </button>
-              </li>
-            ))}
+                  <div className="w-14 h-14 rounded-lg bg-[#FAF7F2] flex-shrink-0 overflow-hidden relative">
+                    {image ? (
+                      <Image
+                        src={image}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        sizes="56px"
+                      />
+                    ) : (
+                      <div className="w-full h-full" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-black truncate">{product.name}</p>
+                    {variant && (
+                      <span className="flex items-center gap-1 mt-0.5">
+                        <span
+                          style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            background: variant.colorHex,
+                            display: 'inline-block',
+                            flexShrink: 0,
+                          }}
+                        />
+                        <span className="text-xs text-zinc-400">{variant.colorName}</span>
+                      </span>
+                    )}
+                    <p className="text-xs text-[#B8975A] font-semibold mt-0.5">
+                      {formatPrice(parseFloat(product.price))}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        onClick={() =>
+                          updateQuantity(product.id, quantity - 1, variantId, selectedColor)
+                        }
+                        className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
+                      >
+                        <Minus size={10} />
+                      </button>
+                      <span className="text-xs font-medium w-4 text-center">{quantity}</span>
+                      <button
+                        onClick={() =>
+                          updateQuantity(product.id, quantity + 1, variantId, selectedColor)
+                        }
+                        className="w-5 h-5 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-500 hover:border-black hover:text-black transition-colors"
+                      >
+                        <Plus size={10} />
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => removeItem(product.id, selectedColor, variantId)}
+                    className="text-zinc-300 hover:text-black transition-colors self-start mt-0.5"
+                  >
+                    <X size={14} />
+                  </button>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="px-5 py-4 border-t border-zinc-100">

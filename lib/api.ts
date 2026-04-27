@@ -120,7 +120,17 @@ export async function changePassword(
 export type CartItemResponse = {
   id: string;
   quantity: number;
+  variantId: string | null;
   selectedColor: string | null;
+  variant: {
+    id: string;
+    colorName: string;
+    colorValue: string;
+    colorHex: string;
+    sku: string | null;
+    stock: number;
+    images: string[];
+  } | null;
   product: {
     id: string;
     name: string;
@@ -148,24 +158,40 @@ export function getCart(): Promise<CartResponse> {
 export function addToCart(
   productId: string,
   quantity = 1,
+  variantId?: string | null,
   selectedColor?: string | null,
 ): Promise<CartResponse> {
-  return proxyMutate<CartResponse>('POST', '/cart/add', { productId, quantity, selectedColor });
+  return proxyMutate<CartResponse>('POST', '/cart/add', {
+    productId,
+    quantity,
+    variantId,
+    selectedColor,
+  });
 }
 
 export function updateCartItem(
   productId: string,
   quantity: number,
+  variantId?: string | null,
   selectedColor?: string | null,
 ): Promise<CartResponse> {
-  return proxyMutate<CartResponse>('PATCH', '/cart/update', { productId, quantity, selectedColor });
+  return proxyMutate<CartResponse>('PATCH', '/cart/update', {
+    productId,
+    quantity,
+    variantId,
+    selectedColor,
+  });
 }
 
 export function removeCartItem(
   productId: string,
+  variantId?: string | null,
   selectedColor?: string | null,
 ): Promise<CartResponse> {
-  const query = selectedColor ? `?selectedColor=${encodeURIComponent(selectedColor)}` : '';
+  const params = new URLSearchParams();
+  if (variantId) params.set('variantId', variantId);
+  if (selectedColor) params.set('selectedColor', selectedColor);
+  const query = params.toString() ? `?${params.toString()}` : '';
   return proxyMutate<CartResponse>('DELETE', `/cart/item/${productId}${query}`);
 }
 

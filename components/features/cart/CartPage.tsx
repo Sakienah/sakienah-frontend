@@ -8,26 +8,6 @@ function formatPrice(n: number) {
   return `€ ${n.toFixed(2).replace('.', ',')}`;
 }
 
-function ColorBadge({ color }: { color: string }) {
-  const hex = color === 'bruin' ? '#7B4F2E' : color === 'rood' ? '#9B2626' : '#888';
-  const label = color === 'bruin' ? 'Bruin' : color === 'rood' ? 'Rood' : color;
-  return (
-    <span className="flex items-center" style={{ gap: 6, marginTop: 6 }}>
-      <span
-        style={{
-          width: 10,
-          height: 10,
-          borderRadius: '50%',
-          background: hex,
-          display: 'inline-block',
-          flexShrink: 0,
-        }}
-      />
-      <span style={{ fontSize: 11, color: '#888' }}>{label}</span>
-    </span>
-  );
-}
-
 export function CartPage() {
   const { items, totalItems, totalPrice, removeItem, updateQuantity } = useCart();
 
@@ -77,124 +57,150 @@ export function CartPage() {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 48 }}>
       {/* Items */}
       <div style={{ background: '#fff', border: '1px solid #F0EBE3' }}>
-        {items.map(({ product, quantity, selectedColor }) => (
-          <div
-            key={`${product.id}-${selectedColor ?? ''}`}
-            className="flex items-center"
-            style={{ gap: 24, padding: '28px 32px', borderBottom: '1px solid #F0EBE3' }}
-          >
-            {/* Image */}
+        {items.map(({ product, variant, quantity, variantId, selectedColor }) => {
+          const image = variant?.images[0] ?? product.images[0];
+          return (
             <div
-              style={{
-                width: 100,
-                height: 120,
-                background: '#EDE8DF',
-                flexShrink: 0,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
+              key={`${product.id}-${variantId ?? selectedColor ?? ''}`}
+              className="flex items-center"
+              style={{ gap: 24, padding: '28px 32px', borderBottom: '1px solid #F0EBE3' }}
             >
-              {product.images[0] ? (
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  sizes="100px"
-                />
-              ) : null}
-            </div>
-
-            {/* Info */}
-            <div style={{ flex: 1 }}>
-              <p
-                className="font-display"
-                style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
-              >
-                {product.name}
-              </p>
-              {selectedColor && <ColorBadge color={selectedColor} />}
-              {product.category && (
-                <p
-                  style={{
-                    fontSize: 12,
-                    color: '#aaa',
-                    marginBottom: 16,
-                    marginTop: selectedColor ? 8 : 0,
-                  }}
-                >
-                  {product.category.name}
-                </p>
-              )}
-              {/* Qty */}
+              {/* Image */}
               <div
-                className="flex items-center"
-                style={{ border: '1px solid #E8E0D5', display: 'inline-flex' }}
+                style={{
+                  width: 100,
+                  height: 120,
+                  background: '#EDE8DF',
+                  flexShrink: 0,
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
               >
-                <button
-                  onClick={() => updateQuantity(product.id, quantity - 1, selectedColor)}
-                  style={{
-                    width: 36,
-                    height: 36,
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: 16,
-                    color: '#0a0a0a',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+                {image ? (
+                  <Image
+                    src={image}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    sizes="100px"
+                  />
+                ) : null}
+              </div>
+
+              {/* Info */}
+              <div style={{ flex: 1 }}>
+                <p
+                  className="font-display"
+                  style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
                 >
-                  −
-                </button>
-                <span style={{ width: 36, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>
-                  {quantity}
+                  {product.name}
+                </p>
+                {variant && (
+                  <span className="flex items-center" style={{ gap: 6, marginTop: 6 }}>
+                    <span
+                      style={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: '50%',
+                        background: variant.colorHex,
+                        display: 'inline-block',
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span style={{ fontSize: 11, color: '#888' }}>{variant.colorName}</span>
+                  </span>
+                )}
+                {product.category && (
+                  <p
+                    style={{
+                      fontSize: 12,
+                      color: '#aaa',
+                      marginBottom: 16,
+                      marginTop: variant ? 8 : 0,
+                    }}
+                  >
+                    {product.category.name}
+                  </p>
+                )}
+                {/* Qty */}
+                <div
+                  className="flex items-center"
+                  style={{ border: '1px solid #E8E0D5', display: 'inline-flex' }}
+                >
+                  <button
+                    onClick={() =>
+                      updateQuantity(product.id, quantity - 1, variantId, selectedColor)
+                    }
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: 16,
+                      color: '#0a0a0a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    −
+                  </button>
+                  <span style={{ width: 36, textAlign: 'center', fontSize: 13, fontWeight: 600 }}>
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() =>
+                      updateQuantity(product.id, quantity + 1, variantId, selectedColor)
+                    }
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: 16,
+                      color: '#0a0a0a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Price + remove */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                  gap: 12,
+                }}
+              >
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#c9a84c' }}>
+                  {formatPrice(parseFloat(product.price) * quantity)}
                 </span>
                 <button
-                  onClick={() => updateQuantity(product.id, quantity + 1, selectedColor)}
+                  onClick={() => removeItem(product.id, selectedColor, variantId)}
                   style={{
-                    width: 36,
-                    height: 36,
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    fontSize: 16,
-                    color: '#0a0a0a',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    fontSize: 11,
+                    color: '#ccc',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
                   }}
                 >
-                  +
+                  Verwijder
                 </button>
               </div>
             </div>
-
-            {/* Price + remove */}
-            <div
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}
-            >
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#c9a84c' }}>
-                {formatPrice(parseFloat(product.price) * quantity)}
-              </span>
-              <button
-                onClick={() => removeItem(product.id, selectedColor)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: 11,
-                  color: '#ccc',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                }}
-              >
-                Verwijder
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Summary */}

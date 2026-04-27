@@ -1,0 +1,29 @@
+'use client';
+
+import { useState } from 'react';
+import type { Product, ProductVariant } from '@/types';
+import { ProductImageGallery } from './ProductImageGallery';
+import { ProductDetail } from './ProductDetail';
+
+export function ProductView({ product }: { product: Product }) {
+  const firstVariant = product.variants?.[0] ?? null;
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(firstVariant);
+
+  const images =
+    selectedVariant && selectedVariant.images.length > 0 ? selectedVariant.images : product.images;
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '44% 56%', gap: 64 }}>
+      <ProductImageGallery
+        images={images}
+        name={product.name}
+        key={selectedVariant?.id ?? 'base'}
+      />
+      <ProductDetail
+        product={product}
+        selectedVariant={selectedVariant}
+        onVariantChange={setSelectedVariant}
+      />
+    </div>
+  );
+}

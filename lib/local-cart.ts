@@ -3,6 +3,7 @@ const STORAGE_KEY = 'sakienah_cart';
 export type LocalCartItem = {
   productId: string;
   quantity: number;
+  variantId: string | null;
   selectedColor: string | null;
 };
 
@@ -23,16 +24,18 @@ function saveLocalCart(items: LocalCartItem[]): void {
 export function addToLocalCart(
   productId: string,
   quantity: number,
+  variantId: string | null,
   selectedColor: string | null,
 ): LocalCartItem[] {
   const items = getLocalCart();
   const existing = items.find(
-    (i) => i.productId === productId && i.selectedColor === selectedColor,
+    (i) =>
+      i.productId === productId && i.variantId === variantId && i.selectedColor === selectedColor,
   );
   if (existing) {
     existing.quantity += quantity;
   } else {
-    items.push({ productId, quantity, selectedColor });
+    items.push({ productId, quantity, variantId, selectedColor });
   }
   saveLocalCart(items);
   return items;
@@ -41,12 +44,14 @@ export function addToLocalCart(
 export function updateLocalCart(
   productId: string,
   quantity: number,
+  variantId: string | null,
   selectedColor: string | null,
 ): LocalCartItem[] {
   const items = getLocalCart();
-  if (quantity === 0) return removeFromLocalCart(productId, selectedColor);
+  if (quantity === 0) return removeFromLocalCart(productId, variantId, selectedColor);
   const existing = items.find(
-    (i) => i.productId === productId && i.selectedColor === selectedColor,
+    (i) =>
+      i.productId === productId && i.variantId === variantId && i.selectedColor === selectedColor,
   );
   if (existing) existing.quantity = quantity;
   saveLocalCart(items);
@@ -55,10 +60,16 @@ export function updateLocalCart(
 
 export function removeFromLocalCart(
   productId: string,
+  variantId: string | null,
   selectedColor: string | null,
 ): LocalCartItem[] {
   const items = getLocalCart().filter(
-    (i) => !(i.productId === productId && i.selectedColor === selectedColor),
+    (i) =>
+      !(
+        i.productId === productId &&
+        i.variantId === variantId &&
+        i.selectedColor === selectedColor
+      ),
   );
   saveLocalCart(items);
   return items;

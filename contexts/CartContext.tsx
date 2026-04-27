@@ -24,7 +24,9 @@ import {
 
 export type CartItem = {
   product: CartItemResponse['product'];
+  variant: CartItemResponse['variant'];
   quantity: number;
+  variantId: string | null;
   selectedColor: string | null;
 };
 
@@ -33,11 +35,21 @@ type CartContextValue = {
   totalItems: number;
   totalPrice: number;
   loading: boolean;
-  addItem: (productId: string, selectedColor?: string | null) => Promise<void>;
-  removeItem: (productId: string, selectedColor?: string | null) => Promise<void>;
+  addItem: (
+    productId: string,
+    selectedColor?: string | null,
+    variantId?: string,
+    colorValue?: string,
+  ) => Promise<void>;
+  removeItem: (
+    productId: string,
+    selectedColor?: string | null,
+    variantId?: string | null,
+  ) => Promise<void>;
   updateQuantity: (
     productId: string,
     quantity: number,
+    variantId?: string | null,
     selectedColor?: string | null,
   ) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -59,13 +71,19 @@ async function resolveLocalCart(): Promise<CartData> {
     localItems.map((item) => getProductById(item.productId).catch(() => null)),
   );
 
-  const items: CartItem[] = localItems
-    .map((item, i) =>
-      products[i]
-        ? { product: products[i]!, quantity: item.quantity, selectedColor: item.selectedColor }
-        : null,
-    )
-    .filter((x): x is CartItem => x !== null);
+  const items: CartItem[] = localItems.flatMap((item, i) =>
+    products[i]
+      ? [
+          {
+            product: products[i]!,
+            variant: null as CartItem['variant'],
+            quantity: item.quantity,
+            variantId: item.variantId,
+            selectedColor: item.selectedColor,
+          } satisfies CartItem,
+        ]
+      : [],
+  );
 
   const totalItems = items.reduce((s, i) => s + i.quantity, 0);
   const totalPrice = items.reduce((s, i) => s + Number(i.product.price) * i.quantity, 0);
@@ -76,7 +94,9 @@ function applyCartResponse(data: CartResponse): CartData {
   return {
     items: data.items.map((i) => ({
       product: i.product,
+      variant: i.variant,
       quantity: i.quantity,
+      variantId: i.variantId,
       selectedColor: i.selectedColor,
     })),
     totalItems: data.totalItems,
@@ -101,13 +121,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (!user) {
           setCartData(await resolveLocalCart());
         } else {
-          // Merge any local cart from before login
           if (wasLoggedOut) {
             const localItems = getLocalCart();
             if (localItems.length > 0) {
               await Promise.all(
                 localItems.map((item) =>
-                  addToCart(item.productId, item.quantity, item.selectedColor).catch(() => null),
+                  addToCart(
+                    item.productId,
+                    item.quantity,
+                    item.variantId,
+                    item.selectedColor,
+                  ).catch(() => null),
                 ),
               );
               clearLocalCart();
@@ -132,36 +156,52 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   const addItem = useCallback(
-    async (productId: string, selectedColor?: string | null) => {
+    async (
+      productId: string,
+      selectedColor?: string | null,
+      variantId?: string,
+      colorValue?: string,
+    ) => {
+      const resolvedColor = colorValue ?? selectedColor ?? null;
+      const resolvedVariantId = variantId ?? null;
       if (!user) {
-        addToLocalCart(productId, 1, selectedColor ?? null);
+        addToLocalCart(productId, 1, resolvedVariantId, resolvedColor);
         setCartData(await resolveLocalCart());
       } else {
-        setCartData(applyCartResponse(await addToCart(productId, 1, selectedColor)));
+        setCartData(
+          applyCartResponse(await addToCart(productId, 1, resolvedVariantId, resolvedColor)),
+        );
       }
     },
     [user],
   );
 
   const removeItem = useCallback(
-    async (productId: string, selectedColor?: string | null) => {
+    async (productId: string, selectedColor?: string | null, variantId?: string | null) => {
       if (!user) {
-        removeFromLocalCart(productId, selectedColor ?? null);
+        removeFromLocalCart(productId, variantId ?? null, selectedColor ?? null);
         setCartData(await resolveLocalCart());
       } else {
-        setCartData(applyCartResponse(await removeCartItem(productId, selectedColor)));
+        setCartData(applyCartResponse(await removeCartItem(productId, variantId, selectedColor)));
       }
     },
     [user],
   );
 
   const updateQuantity = useCallback(
-    async (productId: string, quantity: number, selectedColor?: string | null) => {
+    async (
+      productId: string,
+      quantity: number,
+      variantId?: string | null,
+      selectedColor?: string | null,
+    ) => {
       if (!user) {
-        updateLocalCart(productId, quantity, selectedColor ?? null);
+        updateLocalCart(productId, quantity, variantId ?? null, selectedColor ?? null);
         setCartData(await resolveLocalCart());
       } else {
-        setCartData(applyCartResponse(await updateCartItem(productId, quantity, selectedColor)));
+        setCartData(
+          applyCartResponse(await updateCartItem(productId, quantity, variantId, selectedColor)),
+        );
       }
     },
     [user],

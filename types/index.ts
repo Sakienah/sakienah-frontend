@@ -24,6 +24,18 @@ export type ProductOptions = {
   colors?: ProductColor[];
 };
 
+export type ProductVariant = {
+  id: string;
+  productId: string;
+  colorName: string;
+  colorValue: string;
+  colorHex: string;
+  sku: string | null;
+  stock: number;
+  images: string[];
+  isActive: boolean;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -35,6 +47,7 @@ export type Product = {
   stock: number;
   images: string[];
   options: ProductOptions | null;
+  variants: ProductVariant[];
   isActive: boolean;
   categoryId: string | null;
   category: Category | null;
