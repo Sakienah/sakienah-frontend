@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PROTECTED_ROUTES = ['/account', '/checkout', '/wishlist'];
+const PROTECTED_ROUTES = ['/account', '/wishlist'];
 const COOKIE_NAME = 'sakienah_token';
 const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 

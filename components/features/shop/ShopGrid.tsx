@@ -125,10 +125,6 @@ function ShopProductCard({ product }: { product: Product }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              if (!user) {
-                router.push('/login');
-                return;
-              }
               void addItem(product.id);
               setAdded(true);
               setTimeout(() => setAdded(false), 1400);

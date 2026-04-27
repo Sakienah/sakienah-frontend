@@ -1,4 +1,5 @@
-export type Step = 1 | 2 | 3;
+export type Step = 0 | 1 | 2 | 3;
+export type CheckoutMode = 'guest' | 'account';
 
 export type FormData = {
   firstName: string;

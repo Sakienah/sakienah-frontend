@@ -3,18 +3,22 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import { postCheckout, type OrderResponse } from '@/lib/api';
-import { type Step, type FormData, defaultForm } from './types';
+import { postCheckout, postGuestCheckout, type OrderResponse } from '@/lib/api';
+import { type Step, type CheckoutMode, type FormData, defaultForm } from './types';
 import { CheckoutHeader } from './CheckoutHeader';
 import { OrderSummary } from './OrderSummary';
+import { StepGateway } from './StepGateway';
 import { StepInfo } from './StepInfo';
 import { StepPayment } from './StepPayment';
 import { StepConfirmation } from './StepConfirmation';
 
 export function CheckoutFlow() {
+  const { user } = useAuth();
   const { items, totalPrice, clearCart } = useCart();
-  const [step, setStep] = useState<Step>(1);
+  const [step, setStep] = useState<Step>(user ? 1 : 0);
+  const [mode, setMode] = useState<CheckoutMode>(user ? 'account' : 'guest');
   const [form, setForm] = useState<FormData>(defaultForm);
   const [placed, setPlaced] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -28,15 +32,37 @@ export function CheckoutFlow() {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
+  function handleGateway(selectedMode: CheckoutMode) {
+    setMode(selectedMode);
+    setStep(1);
+  }
+
   async function handlePlaceOrder() {
     setSubmitting(true);
     setError(null);
     try {
-      const result = await postCheckout({
-        email: form.email,
-        address: { street: form.address, city: form.city, postalCode: form.postalCode },
-        paymentMethod: form.payment,
-      });
+      let result: OrderResponse;
+      if (mode === 'guest') {
+        result = await postGuestCheckout({
+          email: form.email,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          phone: form.phone || undefined,
+          items: items.map((i) => ({
+            productId: i.product.id,
+            quantity: i.quantity,
+            selectedColor: i.selectedColor,
+          })),
+          address: { street: form.address, city: form.city, postalCode: form.postalCode },
+          paymentMethod: form.payment,
+        });
+      } else {
+        result = await postCheckout({
+          email: form.email,
+          address: { street: form.address, city: form.city, postalCode: form.postalCode },
+          paymentMethod: form.payment,
+        });
+      }
       setOrder(result);
       await clearCart();
       setPlaced(true);
@@ -129,12 +155,13 @@ export function CheckoutFlow() {
           className="max-w-[1280px] mx-auto"
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 380px',
+            gridTemplateColumns: step === 0 ? '1fr' : '1fr 380px',
             gap: 48,
             alignItems: 'start',
           }}
         >
           <div style={{ background: '#fff', border: '1px solid #F0EBE3', padding: 40 }}>
+            {step === 0 && <StepGateway onContinue={handleGateway} />}
             {step === 1 && <StepInfo form={form} update={update} onNext={() => setStep(2)} />}
             {step === 2 && (
               <StepPayment
@@ -148,12 +175,14 @@ export function CheckoutFlow() {
               />
             )}
           </div>
-          <OrderSummary
-            items={items}
-            totalPrice={totalPrice}
-            shipping={shipping}
-            grandTotal={grandTotal}
-          />
+          {step !== 0 && (
+            <OrderSummary
+              items={items}
+              totalPrice={totalPrice}
+              shipping={shipping}
+              grandTotal={grandTotal}
+            />
+          )}
         </div>
       </div>
     </>

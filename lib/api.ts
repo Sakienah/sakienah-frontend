@@ -65,6 +65,13 @@ export function getProduct(slug: string): Promise<Product> {
   return apiFetch<Product>(`/products/${slug}`);
 }
 
+export function getProductById(id: string): Promise<CartItemResponse['product']> {
+  return fetch(`${PROXY}/products/by-id/${id}`).then((r) => {
+    if (!r.ok) throw new Error(`Product niet gevonden: ${id}`);
+    return r.json() as Promise<CartItemResponse['product']>;
+  });
+}
+
 export const getCategories = cache(async (): Promise<Category[]> => {
   return apiFetch<Category[]>('/products/categories');
 });
@@ -186,6 +193,37 @@ export type OrderResponse = {
 
 export function postCheckout(payload: CheckoutPayload): Promise<OrderResponse> {
   return proxyMutate<OrderResponse>('POST', '/orders/checkout', payload);
+}
+
+export type GuestCheckoutItem = {
+  productId: string;
+  quantity: number;
+  selectedColor?: string | null;
+};
+
+export type GuestCheckoutPayload = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  items: GuestCheckoutItem[];
+  address: { street: string; city: string; postalCode: string };
+  paymentMethod: string;
+  notes?: string;
+};
+
+export function postGuestCheckout(payload: GuestCheckoutPayload): Promise<OrderResponse> {
+  return fetch(`${PROXY}/orders/guest-checkout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  }).then(async (r) => {
+    if (!r.ok) {
+      const d = (await r.json().catch(() => ({}))) as { message?: string };
+      throw new Error(d.message ?? `Fout: ${r.status}`);
+    }
+    return r.json() as Promise<OrderResponse>;
+  });
 }
 
 // Orders

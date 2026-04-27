@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthLayout } from './AuthLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginUser } from '@/lib/api';
@@ -13,6 +13,7 @@ const labelClass = 'block font-sans text-[10px] tracking-[0.13em] uppercase text
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', wachtwoord: '' });
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export function LoginForm() {
     try {
       const user = await loginUser(form.email, form.wachtwoord);
       login(user);
-      router.push('/account');
+      router.push(searchParams.get('from') ?? '/account');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Inloggen mislukt.');
     } finally {

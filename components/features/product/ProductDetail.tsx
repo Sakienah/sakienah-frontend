@@ -37,10 +37,6 @@ export function ProductDetail({ product }: { product: Product }) {
   }, []);
 
   const handleAdd = () => {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
     void addItem(product.id, selectedColor);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);

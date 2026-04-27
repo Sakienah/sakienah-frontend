@@ -12,10 +12,6 @@ export function ProductActions({ product }: { product: Product }) {
   const wished = isWishlisted(product.id);
 
   function handleAddToCart() {
-    if (!user) {
-      router.push('/login');
-      return;
-    }
     void addItem(product.id);
   }
 
