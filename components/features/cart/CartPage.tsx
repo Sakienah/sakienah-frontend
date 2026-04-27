@@ -107,20 +107,6 @@ export function CartPage() {
 
             {/* Info */}
             <div style={{ flex: 1 }}>
-              {product.category && (
-                <p
-                  className="font-arabic"
-                  style={{
-                    fontSize: 14,
-                    color: '#c9a84c',
-                    opacity: 0.8,
-                    direction: 'rtl',
-                    marginBottom: 2,
-                  }}
-                >
-                  {product.category.name}
-                </p>
-              )}
               <p
                 className="font-display"
                 style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
