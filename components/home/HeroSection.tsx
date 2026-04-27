@@ -38,7 +38,7 @@ export async function HeroSection() {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: "url('/brand_assets/background.png')",
+            backgroundImage: "url('/brand_assets/background.webp')",
             backgroundRepeat: 'repeat',
             backgroundSize: '320px auto',
             opacity: 0.2,
@@ -195,12 +195,13 @@ export async function HeroSection() {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: "url('/brand_assets/background.png')",
+            backgroundImage: "url('/brand_assets/background.webp')",
             backgroundRepeat: 'repeat',
             backgroundSize: '320px auto',
             opacity: 0.22,
             mixBlendMode: 'multiply',
             pointerEvents: 'none',
+            transform: 'scaleX(-1)',
           }}
         />
         <div

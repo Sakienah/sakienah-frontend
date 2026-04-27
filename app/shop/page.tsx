@@ -25,7 +25,7 @@ export default async function ShopPage() {
             textAlign: 'center',
           }}
         >
-          <GeomPattern opacity={0.07} />
+          <GeomPattern dark />
           <div style={{ position: 'relative', zIndex: 10 }}>
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <span

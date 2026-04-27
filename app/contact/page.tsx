@@ -235,7 +235,7 @@ export default function ContactPage() {
             overflow: 'hidden',
           }}
         >
-          <GeomPattern opacity={0.07} />
+          <GeomPattern dark />
           <div style={{ position: 'relative', zIndex: 10 }}>
             <p
               style={{
@@ -259,8 +259,16 @@ export default function ContactPage() {
         </div>
 
         {/* Content */}
-        <div style={{ background: '#fff', padding: '80px 40px' }}>
-          <div className="max-w-[1100px] mx-auto">
+        <div
+          style={{
+            background: '#fff',
+            padding: '80px 40px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <GeomPattern flip />
+          <div className="max-w-[1100px] mx-auto relative z-10">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80 }}>
               {/* Left */}
               <div>

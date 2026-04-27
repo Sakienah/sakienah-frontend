@@ -29,7 +29,7 @@ export function ValueProposition() {
     <section
       style={{ background: '#FAF7F2', padding: '96px 0', position: 'relative', overflow: 'hidden' }}
     >
-      <GeomPattern />
+      <GeomPattern flip />
       <style>{`
         .waarde-card-home {
           background: #fff;

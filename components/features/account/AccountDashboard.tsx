@@ -30,8 +30,9 @@ export function AccountDashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center px-6">
-        <div className="text-center bg-white border border-[#F0EBE3] p-[60px] max-w-[420px] w-full">
+      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center px-6 relative overflow-hidden">
+        <GeomPattern />
+        <div className="text-center bg-white border border-[#F0EBE3] p-[60px] max-w-[420px] w-full relative z-10">
           <div className="font-arabic text-[40px] text-[#c9a84c] mb-4" style={{ direction: 'rtl' }}>
             مرحباً
           </div>
@@ -66,7 +67,7 @@ export function AccountDashboard() {
     <div className="pt-[106px]">
       {/* Header */}
       <div className="bg-[#0a0a0a] px-10 py-14 relative overflow-hidden">
-        <GeomPattern opacity={0.07} />
+        <GeomPattern dark />
         <div className="max-w-[1200px] mx-auto relative z-10 flex items-center justify-between flex-wrap gap-5">
           <div>
             <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-[#c9a84c] font-semibold mb-2.5">
@@ -107,8 +108,9 @@ export function AccountDashboard() {
       </div>
 
       {/* Tabs + content */}
-      <div className="bg-[#FAF7F2] px-10 pb-20">
-        <div className="max-w-[1200px] mx-auto">
+      <div className="bg-[#FAF7F2] px-10 pb-20 relative overflow-hidden">
+        <GeomPattern flip />
+        <div className="max-w-[1200px] mx-auto relative z-10">
           <div className="flex gap-0 border-b border-[#E8E0D5] mb-10 overflow-x-auto">
             {TABS.map(({ id, label }) => (
               <button

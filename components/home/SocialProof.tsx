@@ -81,7 +81,7 @@ export function SocialProof() {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern />
+      <GeomPattern flip />
       <style>{`
         @keyframes revIn  { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes revOut { from { opacity: 1; transform: translateY(0); }    to { opacity: 0; transform: translateY(-14px); } }
