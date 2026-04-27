@@ -11,7 +11,7 @@ export function CTABanner() {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern opacity={0.07} />
+      <GeomPattern dark />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <div
           className="font-arabic"

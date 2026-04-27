@@ -1,3 +1,4 @@
+import { GeomPattern } from '@/components/ui/GeomPattern';
 import { SectionTitle } from '../ui/SectionTitle';
 
 const steps = [
@@ -20,8 +21,9 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="py-24 bg-[#FAF7F2]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24 bg-[#FAF7F2] relative overflow-hidden">
+      <GeomPattern />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <SectionTitle
           title="Hoe het werkt"
           subtitle="Drie eenvoudige stappen naar het ultieme gebedscomfort."

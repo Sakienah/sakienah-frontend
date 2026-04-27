@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Product, Category } from '@/types';
+import { GeomPattern } from '@/components/ui/GeomPattern';
 import { ShopGrid } from './ShopGrid';
 
 export function ShopPage({
@@ -151,8 +152,16 @@ export function ShopPage({
       </div>
 
       {/* Grid */}
-      <div style={{ background: '#FAF7F2', padding: '48px 40px 96px' }}>
-        <div className="max-w-[1280px] mx-auto">
+      <div
+        style={{
+          background: '#FAF7F2',
+          padding: '48px 40px 96px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <GeomPattern flip />
+        <div className="max-w-[1280px] mx-auto relative z-10">
           {filtered.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '80px 0', color: '#aaa', fontSize: 14 }}>
               Geen producten gevonden.

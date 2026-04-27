@@ -6,31 +6,11 @@ const values = [
   {
     arabic: 'إيمان',
     name: 'Imaan',
-    sub: 'Geloof',
-    desc: 'Elk product is geselecteerd met geloof als kompas — de basis van alles wat wij doen.',
-    num: '01',
+    desc: 'Elk product is geselecteerd met het geloof als fundament.',
   },
-  {
-    arabic: 'إخلاص',
-    name: 'Ikhlaas',
-    sub: 'Oprechtheid',
-    desc: 'Oprechtheid in alles wat wij doen en aanbieden, zonder verborgen agenda.',
-    num: '02',
-  },
-  {
-    arabic: 'جودة',
-    name: 'Jawda',
-    sub: 'Kwaliteit',
-    desc: 'Premium kwaliteit zonder concessies. Wij selecteren alleen het allerbeste.',
-    num: '03',
-  },
-  {
-    arabic: 'أمانة',
-    name: 'Amana',
-    sub: 'Vertrouwen',
-    desc: 'Vertrouwen als fundament van onze relatie met elke klant die ons kiest.',
-    num: '04',
-  },
+  { arabic: 'إخلاص', name: 'Ikhlaas', desc: 'Eerlijkheid en oprechtheid in alles wat we doen.' },
+  { arabic: 'جودة', name: 'Jawda', desc: 'Alleen producten van de hoogste kwaliteit.' },
+  { arabic: 'أمانة', name: 'Amana', desc: 'Vertrouwen als basis van elke klantrelatie.' },
 ];
 
 export default function AboutPage() {
@@ -50,7 +30,7 @@ export default function AboutPage() {
             overflow: 'hidden',
           }}
         >
-          <GeomPattern opacity={0.07} />
+          <GeomPattern dark />
           <div className="max-w-[1280px] mx-auto relative z-10 text-center">
             <p
               style={{
@@ -86,8 +66,16 @@ export default function AboutPage() {
         </div>
 
         {/* Story */}
-        <div style={{ background: '#fff', padding: '96px 40px' }}>
-          <div className="max-w-[1280px] mx-auto">
+        <div
+          style={{
+            background: '#fff',
+            padding: '96px 40px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <GeomPattern flip />
+          <div className="max-w-[1280px] mx-auto relative z-10">
             <div
               style={{
                 display: 'grid',
@@ -183,9 +171,9 @@ export default function AboutPage() {
             overflow: 'hidden',
           }}
         >
-          <GeomPattern opacity={0.06} />
+          <GeomPattern flip />
           <style>{`
-            .waarde-card {
+            .waarde-card-about {
               background: #fff;
               border: 1px solid rgba(201,168,76,0.22);
               padding: 48px 32px 44px;
@@ -198,24 +186,24 @@ export default function AboutPage() {
               box-shadow: 0 2px 24px rgba(201,168,76,0.07), 0 1px 4px rgba(0,0,0,0.04);
               transition: box-shadow 0.3s, transform 0.3s;
             }
-            .waarde-card:hover {
+            .waarde-card-about:hover {
               box-shadow: 0 8px 48px rgba(201,168,76,0.14), 0 2px 8px rgba(0,0,0,0.06);
               transform: translateY(-3px);
             }
-            .waarde-card::before {
+            .waarde-card-about::before {
               content: '';
               position: absolute;
               top: 0; left: 0; right: 0; height: 2px;
               background: linear-gradient(90deg, transparent 0%, #c9a84c 30%, #e8d090 50%, #c9a84c 70%, transparent 100%);
             }
-            .corner-tl, .corner-tr, .corner-bl, .corner-br {
+            .wca-corner-tl, .wca-corner-tr, .wca-corner-bl, .wca-corner-br {
               position: absolute;
               width: 16px; height: 16px;
             }
-            .corner-tl { top: 10px; left: 10px; border-top: 1px solid rgba(201,168,76,0.5); border-left: 1px solid rgba(201,168,76,0.5); }
-            .corner-tr { top: 10px; right: 10px; border-top: 1px solid rgba(201,168,76,0.5); border-right: 1px solid rgba(201,168,76,0.5); }
-            .corner-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-left: 1px solid rgba(201,168,76,0.5); }
-            .corner-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-right: 1px solid rgba(201,168,76,0.5); }
+            .wca-corner-tl { top: 10px; left: 10px; border-top: 1px solid rgba(201,168,76,0.5); border-left: 1px solid rgba(201,168,76,0.5); }
+            .wca-corner-tr { top: 10px; right: 10px; border-top: 1px solid rgba(201,168,76,0.5); border-right: 1px solid rgba(201,168,76,0.5); }
+            .wca-corner-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-left: 1px solid rgba(201,168,76,0.5); }
+            .wca-corner-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-right: 1px solid rgba(201,168,76,0.5); }
           `}</style>
           <div className="max-w-[1280px] mx-auto relative z-10">
             <div style={{ textAlign: 'center', marginBottom: 56 }}>
@@ -226,7 +214,7 @@ export default function AboutPage() {
                   textTransform: 'uppercase',
                   color: '#c9a84c',
                   fontWeight: 600,
-                  marginBottom: 14,
+                  marginBottom: 12,
                 }}
               >
                 Onze waarden
@@ -234,7 +222,7 @@ export default function AboutPage() {
               <h2
                 className="font-display"
                 style={{
-                  fontSize: 40,
+                  fontSize: 38,
                   fontWeight: 600,
                   color: '#0a0a0a',
                   letterSpacing: '-0.02em',
@@ -244,12 +232,12 @@ export default function AboutPage() {
               </h2>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-              {values.map(({ arabic, name, sub, desc, num }) => (
-                <div key={name} className="waarde-card">
-                  <div className="corner-tl" />
-                  <div className="corner-tr" />
-                  <div className="corner-bl" />
-                  <div className="corner-br" />
+              {values.map(({ arabic, name, desc }, i) => (
+                <div key={name} className="waarde-card-about">
+                  <div className="wca-corner-tl" />
+                  <div className="wca-corner-tr" />
+                  <div className="wca-corner-bl" />
+                  <div className="wca-corner-br" />
 
                   {/* Number */}
                   <div
@@ -263,7 +251,7 @@ export default function AboutPage() {
                       zIndex: 1,
                     }}
                   >
-                    {num}
+                    {String(i + 1).padStart(2, '0')}
                   </div>
 
                   {/* Decorative dots */}
@@ -386,7 +374,7 @@ export default function AboutPage() {
                       zIndex: 1,
                     }}
                   >
-                    {sub}
+                    {name}
                   </p>
 
                   {/* Description */}
@@ -432,7 +420,7 @@ export default function AboutPage() {
             overflow: 'hidden',
           }}
         >
-          <GeomPattern opacity={0.06} />
+          <GeomPattern dark flip />
           <div className="max-w-[720px] mx-auto relative z-10">
             <p
               className="font-arabic"

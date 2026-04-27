@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { reviews } from '@/lib/data';
+import { GeomPattern } from '@/components/ui/GeomPattern';
 
 function Stars({ count = 5 }: { count?: number }) {
   return (
@@ -80,6 +81,7 @@ export function SocialProof() {
         overflow: 'hidden',
       }}
     >
+      <GeomPattern flip />
       <style>{`
         @keyframes revIn  { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes revOut { from { opacity: 1; transform: translateY(0); }    to { opacity: 0; transform: translateY(-14px); } }

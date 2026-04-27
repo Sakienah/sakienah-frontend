@@ -20,7 +20,7 @@ function CartHeader() {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern opacity={0.07} />
+      <GeomPattern dark />
       <div
         className="max-w-[1280px] mx-auto relative z-10"
         style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}
@@ -59,8 +59,16 @@ export default function CartPage() {
       <Navbar />
       <main className="min-h-screen">
         <CartHeader />
-        <div style={{ background: '#FAF7F2', padding: '48px 40px 96px' }}>
-          <div className="max-w-[1280px] mx-auto">
+        <div
+          style={{
+            background: '#FAF7F2',
+            padding: '48px 40px 96px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <GeomPattern flip />
+          <div className="max-w-[1280px] mx-auto relative z-10">
             <CartContent />
           </div>
         </div>
