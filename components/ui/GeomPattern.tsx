@@ -2,14 +2,17 @@ export function GeomPattern({
   dark = false,
   flip = false,
   opacity,
+  id,
 }: {
   dark?: boolean;
   flip?: boolean;
   opacity?: number;
+  id?: string;
 }) {
   return (
     <div
       aria-hidden
+      id={id}
       style={{
         position: 'absolute',
         inset: 0,
