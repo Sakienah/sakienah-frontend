@@ -307,6 +307,7 @@ export type OrderItem = {
   quantity: number;
   unitPrice: string;
   total: string;
+  variantLabel: string | null;
   selectedColor: string | null;
   product: { name: string; slug: string; images: string[] };
 };

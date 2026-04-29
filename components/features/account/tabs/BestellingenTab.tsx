@@ -41,8 +41,8 @@ export function BestellingenTab({ orders }: { orders: OrderSummary[] }) {
               <div className="font-sans text-[12px] text-[#555] leading-relaxed">
                 {o.items
                   .map((item) =>
-                    item.selectedColor
-                      ? `${item.product.name} (${item.selectedColor === 'bruin' ? 'Bruin' : item.selectedColor === 'rood' ? 'Rood' : item.selectedColor})`
+                    item.variantLabel
+                      ? `${item.product.name} (${item.variantLabel})`
                       : item.product.name,
                   )
                   .join(', ')}

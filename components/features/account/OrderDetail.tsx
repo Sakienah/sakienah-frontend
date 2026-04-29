@@ -19,9 +19,7 @@ const STATUS_STEPS = [
 
 const CANCELLED_STATUSES = new Set(['CANCELLED', 'REFUNDED']);
 
-function ColorBadge({ color }: { color: string }) {
-  const hex = color === 'bruin' ? '#7B4F2E' : color === 'rood' ? '#9B2626' : '#888';
-  const label = color === 'bruin' ? 'Bruin' : color === 'rood' ? 'Rood' : color;
+function ColorBadge({ label, hex }: { label: string; hex: string | null }) {
   return (
     <span className="inline-flex items-center" style={{ gap: 5, marginTop: 3 }}>
       <span
@@ -29,7 +27,7 @@ function ColorBadge({ color }: { color: string }) {
           width: 8,
           height: 8,
           borderRadius: '50%',
-          background: hex,
+          background: hex ?? '#888',
           display: 'inline-block',
           flexShrink: 0,
         }}
@@ -287,7 +285,9 @@ export function OrderDetail({ orderId }: { orderId: string }) {
                 <div className="font-sans text-[14px] font-semibold text-[#0a0a0a] truncate">
                   {item.product.name}
                 </div>
-                {item.selectedColor && <ColorBadge color={item.selectedColor} />}
+                {item.variantLabel && (
+                  <ColorBadge label={item.variantLabel} hex={item.selectedColor} />
+                )}
                 <div className="font-sans text-[12px] text-[#aaa] mt-0.5">
                   {item.quantity} × {formatPrice(item.unitPrice)}
                 </div>
