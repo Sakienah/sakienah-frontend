@@ -194,11 +194,13 @@ export function ProductCard({
         >
           {visibleVariants.map((variant) => {
             const isSelected = selectedVariant?.id === variant.id;
+            const outOfStock = variant.stock === 0;
             return (
               <button
                 key={variant.id}
                 onClick={(e) => handleSwatchClick(e, variant)}
                 title={variant.colorName}
+                disabled={outOfStock}
                 style={{
                   width: 20,
                   height: 20,
@@ -206,7 +208,8 @@ export function ProductCard({
                   background: variant.colorHex,
                   border: '2px solid #fff',
                   boxShadow: isSelected ? '0 0 0 2px #0a0a0a' : '0 0 0 1.5px rgba(0,0,0,0.15)',
-                  cursor: 'pointer',
+                  cursor: outOfStock ? 'not-allowed' : 'pointer',
+                  opacity: outOfStock ? 0.35 : 1,
                   padding: 0,
                   flexShrink: 0,
                   transition: 'box-shadow 0.15s',
