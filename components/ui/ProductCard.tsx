@@ -4,9 +4,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import type { Product } from '@/types';
+import type { Product, ProductVariant } from '@/types';
 import { StarRating } from './StarRating';
-import { useProductActions } from '@/hooks/useProductActions';
+import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { formatPrice } from '@/lib/utils';
 
 type Props = {
@@ -21,11 +22,50 @@ export function ProductCard({
   sizes = '(max-width:768px) 100vw, 50vw',
 }: Props) {
   const [hovered, setHovered] = useState(false);
-  const { added, wishlisted, handleAddToCart, handleToggleWishlist } = useProductActions(
-    product.id,
-  );
+  const [added, setAdded] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+  const { addItem, toggleWishlist, isWishlisted } = useCart();
+  const { user } = useAuth();
   const router = useRouter();
+
   const image = product.images[0];
+  const wishlisted = isWishlisted(product.id);
+  const hasVariants = product.variants.length > 0;
+  const canAdd = !hasVariants || selectedVariant !== null;
+  const isOutOfStock = product.stock === 0;
+  const discountPct = product.comparePrice
+    ? Math.round((1 - parseFloat(product.price) / parseFloat(product.comparePrice)) * 100)
+    : null;
+
+  const visibleVariants = product.variants.slice(0, 6);
+  const extraCount = product.variants.length - 6;
+
+  async function handleAddToCart(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (!canAdd || isOutOfStock) return;
+    await addItem(
+      product.id,
+      selectedVariant?.colorName ?? null,
+      selectedVariant?.id,
+      selectedVariant?.colorHex ?? undefined,
+    );
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  }
+
+  function handleToggleWishlist(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    toggleWishlist(product.id, selectedVariant?.colorName ?? null);
+  }
+
+  function handleSwatchClick(e: React.MouseEvent, variant: ProductVariant) {
+    e.stopPropagation();
+    setSelectedVariant((prev) => (prev?.id === variant.id ? null : variant));
+  }
 
   return (
     <div
@@ -34,16 +74,19 @@ export function ProductCard({
       onMouseLeave={() => setHovered(false)}
       style={{
         background: '#fff',
+        border: '1px solid #F0EBE3',
         overflow: 'hidden',
         cursor: 'pointer',
         position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
         transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
         boxShadow: hovered ? '0 16px 40px rgba(0,0,0,0.13)' : '0 2px 8px rgba(0,0,0,0.05)',
       }}
     >
       {/* Image */}
-      <div style={{ aspectRatio, overflow: 'hidden', position: 'relative' }}>
+      <div style={{ aspectRatio, overflow: 'hidden', position: 'relative', flexShrink: 0 }}>
         {image ? (
           <Image
             src={image}
@@ -73,13 +116,13 @@ export function ProductCard({
           </div>
         )}
 
-        {/* Badges */}
-        {product.stock === 0 && (
+        {/* Badge */}
+        {isOutOfStock && (
           <span
             style={{
               position: 'absolute',
-              top: 16,
-              left: 16,
+              top: 14,
+              left: 14,
               background: '#0a0a0a',
               color: '#c9a84c',
               fontSize: 9,
@@ -91,12 +134,12 @@ export function ProductCard({
             Uitverkocht
           </span>
         )}
-        {product.comparePrice && (
+        {discountPct && !isOutOfStock && (
           <span
             style={{
               position: 'absolute',
-              top: 16,
-              right: 56,
+              top: 14,
+              left: 14,
               background: '#c9a84c',
               color: '#0a0a0a',
               fontSize: 9,
@@ -106,16 +149,13 @@ export function ProductCard({
               fontWeight: 700,
             }}
           >
-            Sale
+            -{discountPct}%
           </span>
         )}
 
-        {/* Wishlist button */}
+        {/* Wishlist */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleToggleWishlist();
-          }}
+          onClick={handleToggleWishlist}
           style={{
             position: 'absolute',
             top: 12,
@@ -145,83 +185,124 @@ export function ProductCard({
         </button>
       </div>
 
-      {/* Product info */}
-      <div
-        style={{
-          padding: '22px 24px 26px',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 16,
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <p
-            className="font-display"
-            style={{ fontSize: 18, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
-          >
-            {product.name}
-          </p>
-          <div className="flex items-center" style={{ gap: 8 }}>
-            <StarRating count={5} />
-            <span style={{ fontSize: 11, color: '#aaa' }}>4.9</span>
-          </div>
+      {/* Color swatches */}
+      {hasVariants && (
+        <div
+          style={{ padding: '12px 18px 0', display: 'flex', alignItems: 'center', gap: 6 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {visibleVariants.map((variant) => {
+            const isSelected = selectedVariant?.id === variant.id;
+            return (
+              <button
+                key={variant.id}
+                onClick={(e) => handleSwatchClick(e, variant)}
+                title={variant.colorName}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  background: variant.colorHex,
+                  border: '2px solid #fff',
+                  boxShadow: isSelected ? '0 0 0 2px #0a0a0a' : '0 0 0 1.5px rgba(0,0,0,0.15)',
+                  cursor: 'pointer',
+                  padding: 0,
+                  flexShrink: 0,
+                  transition: 'box-shadow 0.15s',
+                }}
+                aria-label={variant.colorName}
+                aria-pressed={isSelected}
+              />
+            );
+          })}
+          {extraCount > 0 && (
+            <span style={{ fontSize: 11, color: '#888', fontWeight: 500 }}>+{extraCount}</span>
+          )}
         </div>
+      )}
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+      {/* Info */}
+      <div style={{ padding: hasVariants ? '10px 18px 0' : '20px 18px 0', flex: 1 }}>
+        <p
+          className="font-display"
+          style={{ fontSize: 17, fontWeight: 500, color: '#0a0a0a', marginBottom: 5 }}
+        >
+          {product.name}
+        </p>
+        <div className="flex items-center" style={{ gap: 6, marginBottom: 8 }}>
+          <StarRating count={5} />
+          <span style={{ fontSize: 11, color: '#aaa' }}>4.9</span>
+          {product.category && (
+            <span style={{ fontSize: 11, color: '#ccc' }}> · {product.category.name}</span>
+          )}
+        </div>
+        <div className="flex items-center" style={{ gap: 8, marginBottom: 14 }}>
+          <span style={{ fontSize: 17, fontWeight: 700, color: '#c9a84c' }}>
+            {formatPrice(product.price)}
+          </span>
           {product.comparePrice && (
             <span style={{ fontSize: 12, color: '#ccc', textDecoration: 'line-through' }}>
               {formatPrice(product.comparePrice)}
             </span>
           )}
-          <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
-            {formatPrice(product.price)}
-          </span>
-          {product.options?.colors?.length ? (
-            <Link
-              href={`/products/${product.slug}`}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: '#0a0a0a',
-                color: '#fff',
-                fontSize: 10,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                padding: '12px 20px',
-                fontWeight: 600,
-                whiteSpace: 'nowrap',
-                textDecoration: 'none',
-                display: 'inline-block',
-              }}
-            >
-              Kies kleur →
-            </Link>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddToCart();
-              }}
-              disabled={product.stock === 0}
-              style={{
-                background: added ? '#c9a84c' : '#0a0a0a',
-                color: added ? '#0a0a0a' : '#fff',
-                border: 'none',
-                cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
-                opacity: product.stock === 0 ? 0.5 : 1,
-                fontSize: 10,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                padding: '12px 20px',
-                fontWeight: 600,
-                transition: 'all 0.25s',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {added ? '✓ Toegevoegd' : '+ Winkelwagen'}
-            </button>
+          {discountPct && (
+            <span style={{ fontSize: 11, color: '#c9a84c', fontWeight: 600 }}>
+              {discountPct}% korting
+            </span>
           )}
         </div>
+      </div>
+
+      {/* Buttons */}
+      <div
+        style={{ padding: '0 18px 20px', display: 'flex', gap: 8 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Link
+          href={`/products/${product.slug}`}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            flex: 1,
+            textAlign: 'center',
+            fontSize: 10,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            fontWeight: 600,
+            padding: '11px 0',
+            border: '1px solid #D9D3C9',
+            color: '#0a0a0a',
+            textDecoration: 'none',
+            display: 'block',
+          }}
+        >
+          Bekijk
+        </Link>
+        <button
+          onClick={handleAddToCart}
+          disabled={isOutOfStock}
+          style={{
+            flex: 1.4,
+            background: added ? '#c9a84c' : canAdd && !isOutOfStock ? '#0a0a0a' : '#C8C1B8',
+            color: added ? '#0a0a0a' : '#fff',
+            border: 'none',
+            cursor: isOutOfStock || !canAdd ? 'not-allowed' : 'pointer',
+            fontSize: 10,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            padding: '11px 0',
+            fontWeight: 600,
+            transition: 'background 0.25s, color 0.25s',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {added
+            ? '✓ Toegevoegd'
+            : isOutOfStock
+              ? 'Uitverkocht'
+              : hasVariants && !selectedVariant
+                ? 'Kies kleur'
+                : '+ Winkelwagen'}
+        </button>
       </div>
     </div>
   );

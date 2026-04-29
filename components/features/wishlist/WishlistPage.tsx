@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { ShopProductCard } from '@/components/features/shop/ShopGrid';
+import { ProductCard } from '@/components/ui/ProductCard';
 
 export function WishlistPage({ allProducts }: { allProducts: Product[] }) {
   const { wishlist } = useCart();
@@ -67,7 +67,7 @@ export function WishlistPage({ allProducts }: { allProducts: Product[] }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
       {wishedProducts.map((product) => (
-        <ShopProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );
