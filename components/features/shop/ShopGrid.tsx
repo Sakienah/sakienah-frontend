@@ -7,7 +7,7 @@ import type { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 
-function ShopProductCard({ product }: { product: Product }) {
+export function ShopProductCard({ product }: { product: Product }) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(false);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
