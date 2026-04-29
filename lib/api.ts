@@ -87,14 +87,25 @@ export function registerUser(data: {
   email: string;
   wachtwoord: string;
   nieuwsbrief: boolean;
-}): Promise<User> {
-  return authPost<User>('/api/auth/register', {
+}): Promise<{ requiresVerification: true }> {
+  return authPost<{ requiresVerification: true }>('/api/auth/register', {
     voornaam: data.voornaam,
     achternaam: data.achternaam,
     email: data.email,
     password: data.wachtwoord,
     nieuwsbrief: data.nieuwsbrief,
   });
+}
+
+export async function verifyEmail(token: string): Promise<User> {
+  const res = await fetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.message ?? 'Verificatie mislukt.');
+  return data as User;
+}
+
+export function resendVerification(email: string): Promise<{ message: string }> {
+  return proxyMutate<{ message: string }>('POST', '/auth/resend-verification', { email });
 }
 
 export async function updateProfile(data: {

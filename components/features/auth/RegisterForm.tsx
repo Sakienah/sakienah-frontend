@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AuthLayout } from './AuthLayout';
-import { useAuth } from '@/contexts/AuthContext';
 import { registerUser } from '@/lib/api';
 
 const labelClass = 'font-sans text-[10px] tracking-[0.13em] uppercase';
@@ -63,7 +62,6 @@ function Field({
 
 export function RegisterForm() {
   const router = useRouter();
-  const { login } = useAuth();
   const [form, setForm] = useState<FormState>({
     voornaam: '',
     achternaam: '',
@@ -95,15 +93,14 @@ export function RegisterForm() {
     setLoading(true);
     setApiError('');
     try {
-      const user = await registerUser({
+      await registerUser({
         voornaam: form.voornaam,
         achternaam: form.achternaam,
         email: form.email,
         wachtwoord: form.wachtwoord,
         nieuwsbrief: form.nieuwsbrief,
       });
-      login(user);
-      router.push('/account');
+      router.push(`/verify-email-sent?email=${encodeURIComponent(form.email)}`);
     } catch (err) {
       setApiError(err instanceof Error ? err.message : 'Registratie mislukt.');
     } finally {
