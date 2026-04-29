@@ -242,6 +242,7 @@ export type CheckoutPayload = {
   email: string;
   address: { street: string; city: string; postalCode: string };
   paymentMethod: string;
+  couponCode?: string;
   notes?: string;
 };
 
@@ -250,10 +251,36 @@ export type OrderResponse = {
   orderNumber: string;
   status: string;
   subtotal: string;
+  discountCode?: string;
+  discountAmount?: string;
   shippingCost: string;
   total: string;
   createdAt: string;
 };
+
+export type CouponValidationResult = {
+  couponId: string;
+  discountType: 'PERCENTAGE' | 'FIXED';
+  discountValue: number;
+  discountAmount: number;
+};
+
+export async function validateCoupon(
+  code: string,
+  email: string,
+  subtotal: number,
+): Promise<CouponValidationResult> {
+  const res = await fetch(`${PROXY}/coupons/validate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, email, subtotal }),
+  });
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? 'Ongeldige kortingscode.');
+  }
+  return res.json() as Promise<CouponValidationResult>;
+}
 
 export function postCheckout(payload: CheckoutPayload): Promise<OrderResponse> {
   return proxyMutate<OrderResponse>('POST', '/orders/checkout', payload);
@@ -273,6 +300,7 @@ export type GuestCheckoutPayload = {
   items: GuestCheckoutItem[];
   address: { street: string; city: string; postalCode: string };
   paymentMethod: string;
+  couponCode?: string;
   notes?: string;
 };
 

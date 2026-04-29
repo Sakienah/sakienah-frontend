@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
 import type { CartItem } from '@/contexts/CartContext';
@@ -5,11 +7,32 @@ import type { CartItem } from '@/contexts/CartContext';
 type Props = {
   items: CartItem[];
   totalPrice: number;
+  discountAmount?: number;
+  couponCode?: string;
   shipping: number;
   grandTotal: number;
+  couponInput: string;
+  onCouponInputChange: (val: string) => void;
+  onApplyCoupon: () => void;
+  onRemoveCoupon: () => void;
+  couponError: string | null;
+  couponLoading: boolean;
 };
 
-export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props) {
+export function OrderSummary({
+  items,
+  totalPrice,
+  discountAmount,
+  couponCode,
+  shipping,
+  grandTotal,
+  couponInput,
+  onCouponInputChange,
+  onApplyCoupon,
+  onRemoveCoupon,
+  couponError,
+  couponLoading,
+}: Props) {
   return (
     <div
       style={{
@@ -55,7 +78,6 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
                 <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 2 }}>
                   {product.name}
                 </p>
-                {/* Kleur voor variant product */}
                 {variant && (
                   <span className="flex items-center" style={{ gap: 5, marginTop: 3 }}>
                     <span
@@ -71,7 +93,6 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
                     <span style={{ fontSize: 10, color: '#aaa' }}>{variant.colorName}</span>
                   </span>
                 )}
-                {/* Bundle inhoud */}
                 {isBundle && (product.bundleItems?.length ?? 0) > 0 && (
                   <div style={{ marginTop: 4 }}>
                     {product.bundleItems!.map((bi) => {
@@ -116,6 +137,82 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
           );
         })}
       </div>
+
+      {/* Kortingscode invoer */}
+      <div style={{ borderTop: '1px solid #F0EBE3', paddingTop: 16, marginBottom: 16 }}>
+        {couponCode ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: '#F0FBF4',
+              border: '1px solid #4CAF78',
+              padding: '10px 14px',
+            }}
+          >
+            <span style={{ fontSize: 12, color: '#2d7a4f', fontWeight: 600 }}>✓ {couponCode}</span>
+            <button
+              onClick={onRemoveCoupon}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 11,
+                color: '#999',
+                padding: 0,
+              }}
+            >
+              Verwijderen
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                type="text"
+                value={couponInput}
+                onChange={(e) => onCouponInputChange(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === 'Enter' && void onApplyCoupon()}
+                placeholder="Kortingscode"
+                style={{
+                  flex: 1,
+                  border: '1px solid #E8E0D5',
+                  padding: '10px 12px',
+                  fontSize: 13,
+                  outline: 'none',
+                  color: '#0a0a0a',
+                  background: '#fff',
+                  letterSpacing: '0.05em',
+                }}
+              />
+              <button
+                onClick={() => void onApplyCoupon()}
+                disabled={couponLoading || !couponInput.trim()}
+                style={{
+                  background: couponLoading || !couponInput.trim() ? '#ccc' : '#0a0a0a',
+                  color: '#c9a84c',
+                  border: 'none',
+                  cursor: couponLoading || !couponInput.trim() ? 'not-allowed' : 'pointer',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  padding: '10px 16px',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {couponLoading ? '...' : 'Toepassen'}
+              </button>
+            </div>
+            {couponError && (
+              <p style={{ fontSize: 12, color: '#c0392b', marginTop: 6 }}>{couponError}</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Prijsoverzicht */}
       <div style={{ borderTop: '1px solid #F0EBE3', paddingTop: 16 }}>
         <div
           style={{
@@ -129,6 +226,20 @@ export function OrderSummary({ items, totalPrice, shipping, grandTotal }: Props)
           <span>Subtotaal</span>
           <span>{formatPrice(totalPrice)}</span>
         </div>
+        {discountAmount !== undefined && discountAmount > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginBottom: 8,
+              fontSize: 13,
+              color: '#4CAF78',
+            }}
+          >
+            <span>Korting</span>
+            <span>− {formatPrice(discountAmount)}</span>
+          </div>
+        )}
         <div
           style={{
             display: 'flex',

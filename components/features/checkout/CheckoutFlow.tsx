@@ -5,7 +5,13 @@ import Link from 'next/link';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import { postCheckout, postGuestCheckout, type OrderResponse } from '@/lib/api';
+import {
+  postCheckout,
+  postGuestCheckout,
+  validateCoupon,
+  type OrderResponse,
+  type CouponValidationResult,
+} from '@/lib/api';
 import { type Step, type CheckoutMode, type FormData, defaultForm } from './types';
 import { CheckoutHeader } from './CheckoutHeader';
 import { OrderSummary } from './OrderSummary';
@@ -24,12 +30,40 @@ export function CheckoutFlow() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<OrderResponse | null>(null);
+  const [coupon, setCoupon] = useState<CouponValidationResult | null>(null);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
 
-  const shipping = totalPrice >= 50 ? 0 : 4.95;
-  const grandTotal = totalPrice + shipping;
+  const discountAmount = coupon?.discountAmount ?? 0;
+  const discountedSubtotal = totalPrice - discountAmount;
+  const shipping = discountedSubtotal >= 50 ? 0 : 4.95;
+  const grandTotal = discountedSubtotal + shipping;
 
   function update(field: keyof FormData, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  async function handleApplyCoupon() {
+    const email = form.email || user?.email;
+    if (!couponCode.trim() || !email) return;
+    setCouponLoading(true);
+    setCouponError(null);
+    try {
+      const result = await validateCoupon(couponCode.trim(), email, totalPrice);
+      setCoupon(result);
+    } catch (e) {
+      setCoupon(null);
+      setCouponError(e instanceof Error ? e.message : 'Ongeldige kortingscode.');
+    } finally {
+      setCouponLoading(false);
+    }
+  }
+
+  function handleRemoveCoupon() {
+    setCoupon(null);
+    setCouponCode('');
+    setCouponError(null);
   }
 
   function handleGateway(selectedMode: CheckoutMode) {
@@ -55,12 +89,14 @@ export function CheckoutFlow() {
           })),
           address: { street: form.address, city: form.city, postalCode: form.postalCode },
           paymentMethod: form.payment,
+          couponCode: coupon ? couponCode.trim() : undefined,
         });
       } else {
         result = await postCheckout({
           email: form.email,
           address: { street: form.address, city: form.city, postalCode: form.postalCode },
           paymentMethod: form.payment,
+          couponCode: coupon ? couponCode.trim() : undefined,
         });
       }
       setOrder(result);
@@ -200,8 +236,16 @@ export function CheckoutFlow() {
             <OrderSummary
               items={items}
               totalPrice={totalPrice}
+              discountAmount={discountAmount > 0 ? discountAmount : undefined}
+              couponCode={coupon ? couponCode.trim() : undefined}
               shipping={shipping}
               grandTotal={grandTotal}
+              onApplyCoupon={handleApplyCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
+              couponInput={couponCode}
+              onCouponInputChange={setCouponCode}
+              couponError={couponError}
+              couponLoading={couponLoading}
             />
           )}
         </div>
