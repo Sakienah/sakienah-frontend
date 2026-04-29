@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useAuth } from '@/contexts/AuthContext';
 import { getOrderById } from '@/lib/api';
 import type { OrderSummary } from '@/lib/api';
@@ -176,16 +177,18 @@ export function OrderDetail({ orderId }: { orderId: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center">
-        <div className="font-arabic text-[48px] text-[#c9a84c] opacity-40">سكينة</div>
+      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center relative overflow-hidden">
+        <GeomPattern />
+        <div className="font-arabic text-[48px] text-[#c9a84c] opacity-40 relative z-10">سكينة</div>
       </div>
     );
   }
 
   if (error || !order) {
     return (
-      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center px-6">
-        <div className="text-center bg-white border border-[#F0EBE3] p-[60px] max-w-[420px] w-full">
+      <div className="min-h-screen pt-[106px] bg-[#FAF7F2] flex items-center justify-center px-6 relative overflow-hidden">
+        <GeomPattern />
+        <div className="text-center bg-white border border-[#F0EBE3] p-[60px] max-w-[420px] w-full relative z-10">
           <h2 className="font-display text-[24px] text-[#0a0a0a] mb-3">Bestelling niet gevonden</h2>
           <p className="font-sans text-[13px] text-[#aaa] mb-8">
             {error || 'Deze bestelling bestaat niet of je hebt er geen toegang toe.'}
@@ -202,9 +205,11 @@ export function OrderDetail({ orderId }: { orderId: string }) {
   }
 
   return (
-    <div className="pt-[106px] bg-[#FAF7F2] min-h-screen">
+    <div className="pt-[106px] bg-[#FAF7F2] min-h-screen relative overflow-hidden">
+      <GeomPattern />
       {/* Header */}
-      <div className="bg-[#0a0a0a] px-10 py-10">
+      <div className="bg-[#0a0a0a] px-10 py-10 relative overflow-hidden">
+        <GeomPattern dark />
         <div className="max-w-[900px] mx-auto flex items-center justify-between flex-wrap gap-4">
           <div>
             <Link
@@ -239,7 +244,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
         </div>
       </div>
 
-      <div className="max-w-[900px] mx-auto px-10 py-12 flex flex-col gap-8">
+      <div className="max-w-[900px] mx-auto px-10 py-12 flex flex-col gap-8 relative z-10">
         {/* Statustimelijn */}
         <div className="bg-white border border-[#F0EBE3] p-8">
           <div className="flex items-center justify-between mb-7 flex-wrap gap-3">

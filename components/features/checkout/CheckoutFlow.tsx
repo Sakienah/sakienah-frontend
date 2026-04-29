@@ -87,7 +87,7 @@ export function CheckoutFlow() {
             overflow: 'hidden',
           }}
         >
-          <GeomPattern opacity={0.07} />
+          <GeomPattern dark />
           <div className="max-w-[1280px] mx-auto relative z-10">
             <p
               style={{
@@ -150,9 +150,17 @@ export function CheckoutFlow() {
   return (
     <>
       <CheckoutHeader step={step} />
-      <div style={{ background: '#FAF7F2', padding: '48px 40px 96px' }}>
+      <div
+        style={{
+          background: '#FAF7F2',
+          padding: '48px 40px 96px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <GeomPattern flip />
         <div
-          className="max-w-[1280px] mx-auto"
+          className="max-w-[1280px] mx-auto relative z-10"
           style={{
             display: 'grid',
             gridTemplateColumns: step === 0 ? '1fr' : '1fr 380px',
@@ -164,7 +172,7 @@ export function CheckoutFlow() {
             style={{ background: '#fff', border: '1px solid #F0EBE3', padding: 40 }}
             className="relative overflow-hidden"
           >
-            <GeomPattern opacity={0.04} id="geom-checkout-card" />
+            <GeomPattern opacity={0.06} id="geom-checkout-card" />
             <div className="relative z-10">
               {step === 0 && <StepGateway onContinue={handleGateway} />}
               {step === 1 && (

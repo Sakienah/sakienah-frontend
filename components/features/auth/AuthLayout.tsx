@@ -9,11 +9,12 @@ type AuthLayoutProps = {
 
 export function AuthLayout({ title, arabicTitle, subtitle, children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pt-[106px] flex flex-col">
+    <div className="min-h-screen bg-[#FAF7F2] pt-[106px] flex flex-col relative overflow-hidden">
+      <GeomPattern flip />
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-[480px]">
           <div className="bg-white border border-[#F0EBE3] px-12 py-[52px] relative overflow-hidden">
-            <GeomPattern opacity={0.04} />
+            <GeomPattern opacity={0.06} />
             <div className="relative z-10">
               <div className="text-center mb-9">
                 <div className="font-display text-[26px] font-semibold text-[#0a0a0a] mb-1">
