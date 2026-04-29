@@ -79,7 +79,9 @@ async function resolveLocalCart(): Promise<CartData> {
       ? [
           {
             product: products[i]!,
-            variant: null as CartItem['variant'],
+            variant: item.variantId
+              ? (products[i]!.variants?.find((v) => v.id === item.variantId) ?? null)
+              : null,
             quantity: item.quantity,
             variantId: item.variantId,
             selectedColor: item.selectedColor,

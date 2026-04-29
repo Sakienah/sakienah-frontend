@@ -128,6 +128,14 @@ export async function changePassword(
 }
 
 // Cart
+export type CartBundleItemProduct = {
+  id: string;
+  name: string;
+  images: string[];
+  stock: number;
+  variants: Array<{ id: string; colorName: string; colorHex: string; stock: number }>;
+};
+
 export type CartItemResponse = {
   id: string;
   quantity: number;
@@ -152,6 +160,22 @@ export type CartItemResponse = {
     images: string[];
     stock: number;
     category: { id: string; name: string; slug: string } | null;
+    bundleItems: Array<{
+      id: string;
+      productId: string;
+      quantity: number;
+      sortOrder: number;
+      product: CartBundleItemProduct;
+    }>;
+    variants?: Array<{
+      id: string;
+      colorName: string;
+      colorValue: string;
+      colorHex: string;
+      sku: string | null;
+      stock: number;
+      images: string[];
+    }>;
   };
 };
 

@@ -57,8 +57,11 @@ export function CartPage() {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 48 }}>
       {/* Items */}
       <div style={{ background: '#fff', border: '1px solid #F0EBE3' }}>
-        {items.map(({ product, variant, quantity, variantId, selectedColor }) => {
+        {items.map(({ product, variant, quantity, variantId, selectedColor, bundleSelections }) => {
           const image = variant?.images[0] ?? product.images[0];
+          const isBundle = (product.bundleItems?.length ?? 0) > 0;
+          const itemStock = variant ? variant.stock : product.stock;
+          const isOutOfStock = !isBundle && itemStock < quantity;
           return (
             <div
               key={`${product.id}-${variantId ?? selectedColor ?? ''}`}
@@ -110,13 +113,63 @@ export function CartPage() {
                     <span style={{ fontSize: 11, color: '#888' }}>{variant.colorName}</span>
                   </span>
                 )}
+                {/* Bundle inhoud */}
+                {isBundle && (product.bundleItems?.length ?? 0) > 0 && (
+                  <div style={{ marginTop: 8, marginBottom: 4 }}>
+                    <p
+                      style={{
+                        fontSize: 10,
+                        color: '#bbb',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        marginBottom: 6,
+                      }}
+                    >
+                      Inhoud deal
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      {product.bundleItems!.map((bi) => {
+                        const sel =
+                          bundleSelections?.find((s) => s.productId === bi.productId) ?? null;
+                        return (
+                          <span key={bi.id} className="flex items-center" style={{ gap: 6 }}>
+                            <span style={{ fontSize: 11, color: '#555' }}>
+                              {bi.quantity > 1 ? `${bi.quantity}× ` : ''}
+                              {bi.product.name}
+                            </span>
+                            {sel && (
+                              <>
+                                <span
+                                  style={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    background: sel.colorHex,
+                                    display: 'inline-block',
+                                    flexShrink: 0,
+                                  }}
+                                />
+                                <span style={{ fontSize: 10, color: '#888' }}>{sel.colorName}</span>
+                              </>
+                            )}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                {isOutOfStock && (
+                  <p style={{ fontSize: 11, color: '#E74C3C', fontWeight: 600, marginTop: 6 }}>
+                    Niet op voorraad
+                  </p>
+                )}
                 {product.category && (
                   <p
                     style={{
                       fontSize: 12,
                       color: '#aaa',
                       marginBottom: 16,
-                      marginTop: variant ? 8 : 0,
+                      marginTop: variant || isBundle ? 8 : 0,
                     }}
                   >
                     {product.category.name}

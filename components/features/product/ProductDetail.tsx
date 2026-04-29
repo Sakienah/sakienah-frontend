@@ -55,7 +55,22 @@ export function ProductDetail({
   // Effectieve stock en SKU: variant-niveau als er varianten zijn
   const effectiveStock = selectedVariant ? selectedVariant.stock : product.stock;
   const effectiveSku = selectedVariant?.sku ?? product.sku;
-  const canAdd = isBundle ? allBundleSelectionsReady : effectiveStock > 0;
+
+  // Voor een bundle: minimum stock van alle losse items (na kleurkeuze)
+  const bundleMinStock =
+    isBundle && allBundleSelectionsReady
+      ? Math.min(
+          ...(product.bundleItems ?? []).map((bi) => {
+            if (bi.product.variants.length > 0) {
+              const sel = bundleSelections.get(bi.productId);
+              return sel ? sel.stock : 0;
+            }
+            return bi.product.stock;
+          }),
+        )
+      : 0;
+
+  const canAdd = isBundle ? allBundleSelectionsReady && bundleMinStock > 0 : effectiveStock > 0;
 
   useEffect(() => {
     const onScroll = () => setStickyVisible(window.scrollY > 500);
@@ -376,12 +391,18 @@ export function ProductDetail({
               transition: 'all 0.25s',
             }}
           >
-            {effectiveStock === 0
-              ? 'Uitverkocht'
-              : added
-                ? '✓ Toegevoegd aan winkelwagen'
-                : isBundle && !allBundleSelectionsReady
-                  ? 'Kies kleuren hierboven'
+            {isBundle
+              ? !allBundleSelectionsReady
+                ? 'Kies kleuren hierboven'
+                : bundleMinStock === 0
+                  ? 'Niet op voorraad'
+                  : added
+                    ? '✓ Toegevoegd aan winkelwagen'
+                    : 'Voeg toe aan winkelwagen'
+              : effectiveStock === 0
+                ? 'Niet op voorraad'
+                : added
+                  ? '✓ Toegevoegd aan winkelwagen'
                   : 'Voeg toe aan winkelwagen'}
           </button>
           <button
@@ -438,8 +459,27 @@ export function ProductDetail({
           style={{ padding: '12px 16px', background: '#FAF7F2', border: '1px solid #F0EBE3' }}
         >
           <span style={{ fontSize: 11, color: '#777' }}>SKU: {effectiveSku || '—'}</span>
-          <span style={{ fontSize: 11, color: '#4CAF78', fontWeight: 600 }}>
-            ● {effectiveStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              color: isBundle
+                ? allBundleSelectionsReady && bundleMinStock === 0
+                  ? '#E74C3C'
+                  : '#4CAF78'
+                : effectiveStock > 0
+                  ? '#4CAF78'
+                  : '#E74C3C',
+            }}
+          >
+            ●{' '}
+            {isBundle
+              ? allBundleSelectionsReady && bundleMinStock === 0
+                ? 'Niet op voorraad'
+                : 'Op voorraad'
+              : effectiveStock > 0
+                ? 'Op voorraad'
+                : 'Niet op voorraad'}
           </span>
         </div>
       </div>
