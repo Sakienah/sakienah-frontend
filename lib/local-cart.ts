@@ -1,3 +1,5 @@
+import type { BundleSelection } from '@/types';
+
 const STORAGE_KEY = 'sakienah_cart';
 
 export type LocalCartItem = {
@@ -5,6 +7,7 @@ export type LocalCartItem = {
   quantity: number;
   variantId: string | null;
   selectedColor: string | null;
+  bundleSelections: BundleSelection[] | null;
 };
 
 export function getLocalCart(): LocalCartItem[] {
@@ -26,6 +29,7 @@ export function addToLocalCart(
   quantity: number,
   variantId: string | null,
   selectedColor: string | null,
+  bundleSelections?: BundleSelection[] | null,
 ): LocalCartItem[] {
   const items = getLocalCart();
   const existing = items.find(
@@ -34,8 +38,15 @@ export function addToLocalCart(
   );
   if (existing) {
     existing.quantity += quantity;
+    if (bundleSelections) existing.bundleSelections = bundleSelections;
   } else {
-    items.push({ productId, quantity, variantId, selectedColor });
+    items.push({
+      productId,
+      quantity,
+      variantId,
+      selectedColor,
+      bundleSelections: bundleSelections ?? null,
+    });
   }
   saveLocalCart(items);
   return items;

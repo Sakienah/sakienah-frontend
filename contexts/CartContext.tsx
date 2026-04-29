@@ -21,6 +21,7 @@ import {
   removeFromLocalCart,
   clearLocalCart,
 } from '@/lib/local-cart';
+import type { BundleSelection } from '@/types';
 
 export type CartItem = {
   product: CartItemResponse['product'];
@@ -28,6 +29,7 @@ export type CartItem = {
   quantity: number;
   variantId: string | null;
   selectedColor: string | null;
+  bundleSelections: BundleSelection[] | null;
 };
 
 type CartContextValue = {
@@ -40,6 +42,7 @@ type CartContextValue = {
     selectedColor?: string | null,
     variantId?: string,
     colorValue?: string,
+    bundleSelections?: BundleSelection[],
   ) => Promise<void>;
   removeItem: (
     productId: string,
@@ -80,6 +83,7 @@ async function resolveLocalCart(): Promise<CartData> {
             quantity: item.quantity,
             variantId: item.variantId,
             selectedColor: item.selectedColor,
+            bundleSelections: item.bundleSelections ?? null,
           } satisfies CartItem,
         ]
       : [],
@@ -98,6 +102,7 @@ function applyCartResponse(data: CartResponse): CartData {
       quantity: i.quantity,
       variantId: i.variantId,
       selectedColor: i.selectedColor,
+      bundleSelections: i.bundleSelections ?? null,
     })),
     totalItems: data.totalItems,
     totalPrice: parseFloat(data.subtotal),
@@ -161,15 +166,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       selectedColor?: string | null,
       variantId?: string,
       colorValue?: string,
+      bundleSelections?: BundleSelection[],
     ) => {
       const resolvedColor = colorValue ?? selectedColor ?? null;
       const resolvedVariantId = variantId ?? null;
       if (!user) {
-        addToLocalCart(productId, 1, resolvedVariantId, resolvedColor);
+        addToLocalCart(productId, 1, resolvedVariantId, resolvedColor, bundleSelections);
         setCartData(await resolveLocalCart());
       } else {
         setCartData(
-          applyCartResponse(await addToCart(productId, 1, resolvedVariantId, resolvedColor)),
+          applyCartResponse(
+            await addToCart(productId, 1, resolvedVariantId, resolvedColor, bundleSelections),
+          ),
         );
       }
     },

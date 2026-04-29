@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import type { Product, Category, User } from '@/types';
+import type { Product, Category, User, BundleSelection } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 const PROXY = '/api/proxy';
@@ -133,6 +133,7 @@ export type CartItemResponse = {
   quantity: number;
   variantId: string | null;
   selectedColor: string | null;
+  bundleSelections: BundleSelection[] | null;
   variant: {
     id: string;
     colorName: string;
@@ -171,12 +172,14 @@ export function addToCart(
   quantity = 1,
   variantId?: string | null,
   selectedColor?: string | null,
+  bundleSelections?: BundleSelection[],
 ): Promise<CartResponse> {
   return proxyMutate<CartResponse>('POST', '/cart/add', {
     productId,
     quantity,
     variantId,
     selectedColor,
+    bundleSelections,
   });
 }
 

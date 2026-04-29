@@ -36,6 +36,22 @@ export type ProductVariant = {
   isActive: boolean;
 };
 
+export type BundleSelection = {
+  productId: string;
+  variantId: string;
+  colorName: string;
+  colorHex: string;
+};
+
+export type BundleItem = {
+  id: string;
+  bundleId: string;
+  productId: string;
+  quantity: number;
+  sortOrder: number;
+  product: Product;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -48,6 +64,7 @@ export type Product = {
   images: string[];
   options: ProductOptions | null;
   variants: ProductVariant[];
+  bundleItems: BundleItem[];
   isActive: boolean;
   categoryId: string | null;
   category: Category | null;

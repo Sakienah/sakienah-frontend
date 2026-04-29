@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import type { Product, ProductVariant } from '@/types';
+import type { Product, ProductVariant, BundleSelection } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -22,9 +23,17 @@ type Props = {
   product: Product;
   selectedVariant: ProductVariant | null;
   onVariantChange: (variant: ProductVariant) => void;
+  bundleSelections?: Map<string, ProductVariant>;
+  onBundleSelectionChange?: (selections: Map<string, ProductVariant>) => void;
 };
 
-export function ProductDetail({ product, selectedVariant, onVariantChange }: Props) {
+export function ProductDetail({
+  product,
+  selectedVariant,
+  onVariantChange,
+  bundleSelections = new Map(),
+  onBundleSelectionChange = () => {},
+}: Props) {
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState('beschrijving');
   const [added, setAdded] = useState(false);
@@ -34,11 +43,19 @@ export function ProductDetail({ product, selectedVariant, onVariantChange }: Pro
   const router = useRouter();
   const wished = isWishlisted(product.id);
 
-  const hasVariants = product.variants && product.variants.length > 0;
+  const isBundle = (product.bundleItems ?? []).length > 0;
+  const hasVariants = !isBundle && product.variants && product.variants.length > 0;
+
+  const bundleItemsNeedingColor = (product.bundleItems ?? []).filter(
+    (item) => item.product.variants.length > 0,
+  );
+  const allBundleSelectionsReady =
+    !isBundle || bundleItemsNeedingColor.every((item) => bundleSelections.has(item.productId));
 
   // Effectieve stock en SKU: variant-niveau als er varianten zijn
   const effectiveStock = selectedVariant ? selectedVariant.stock : product.stock;
   const effectiveSku = selectedVariant?.sku ?? product.sku;
+  const canAdd = isBundle ? allBundleSelectionsReady : effectiveStock > 0;
 
   useEffect(() => {
     const onScroll = () => setStickyVisible(window.scrollY > 500);
@@ -47,12 +64,24 @@ export function ProductDetail({ product, selectedVariant, onVariantChange }: Pro
   }, []);
 
   const handleAdd = () => {
-    void addItem(
-      product.id,
-      selectedVariant ? undefined : undefined,
-      selectedVariant?.id ?? undefined,
-      selectedVariant?.colorValue ?? undefined,
-    );
+    if (isBundle) {
+      const selections: BundleSelection[] = Array.from(bundleSelections.entries()).map(
+        ([productId, variant]) => ({
+          productId,
+          variantId: variant.id,
+          colorName: variant.colorName,
+          colorHex: variant.colorHex,
+        }),
+      );
+      void addItem(product.id, null, undefined, undefined, selections);
+    } else {
+      void addItem(
+        product.id,
+        undefined,
+        selectedVariant?.id ?? undefined,
+        selectedVariant?.colorValue ?? undefined,
+      );
+    }
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };
@@ -125,6 +154,122 @@ export function ProductDetail({ product, selectedVariant, onVariantChange }: Pro
           <p style={{ fontSize: 14, color: '#666', lineHeight: 1.8, marginBottom: 24 }}>
             {product.description.split('\n\n')[0]}
           </p>
+        )}
+
+        {/* Bundle inhoud */}
+        {isBundle && (
+          <div style={{ marginBottom: 28 }}>
+            <p
+              style={{
+                fontSize: 11,
+                letterSpacing: '0.15em',
+                textTransform: 'uppercase',
+                color: '#aaa',
+                marginBottom: 14,
+              }}
+            >
+              Wat zit in deze deal
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {(product.bundleItems ?? []).map((item) => {
+                const hasItemVariants = item.product.variants.length > 0;
+                const selected = bundleSelections.get(item.productId) ?? null;
+                return (
+                  <div
+                    key={item.id}
+                    style={{
+                      display: 'flex',
+                      gap: 14,
+                      alignItems: 'flex-start',
+                      padding: '14px 16px',
+                      background: '#FAF7F2',
+                      border: '1px solid #F0EBE3',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 52,
+                        height: 52,
+                        flexShrink: 0,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        background: '#EDE8DF',
+                      }}
+                    >
+                      {item.product.images[0] && (
+                        <Image
+                          src={item.product.images[0]}
+                          alt={item.product.name}
+                          fill
+                          className="object-cover"
+                          sizes="52px"
+                        />
+                      )}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p
+                        style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 4 }}
+                      >
+                        {item.quantity > 1 ? `${item.quantity}× ` : ''}
+                        {item.product.name}
+                      </p>
+                      {hasItemVariants ? (
+                        <>
+                          <p style={{ fontSize: 11, color: '#aaa', marginBottom: 8 }}>
+                            Kleur:{' '}
+                            <span style={{ color: '#0a0a0a', fontWeight: 600 }}>
+                              {selected?.colorName ?? 'Kies een kleur'}
+                            </span>
+                          </p>
+                          <div className="flex" style={{ gap: 8 }}>
+                            {item.product.variants.map((v) => {
+                              const isSel = selected?.id === v.id;
+                              return (
+                                <button
+                                  key={v.id}
+                                  onClick={() => {
+                                    const next = new Map(bundleSelections);
+                                    if (isSel) next.delete(item.productId);
+                                    else next.set(item.productId, v);
+                                    onBundleSelectionChange(next);
+                                  }}
+                                  title={v.colorName}
+                                  style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: '50%',
+                                    background: v.colorHex,
+                                    border: '2px solid #fff',
+                                    boxShadow: isSel
+                                      ? '0 0 0 2px #c9a84c'
+                                      : '0 0 0 1.5px rgba(0,0,0,0.15)',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    transition: 'box-shadow 0.15s',
+                                  }}
+                                  aria-label={v.colorName}
+                                  aria-pressed={isSel}
+                                />
+                              );
+                            })}
+                          </div>
+                        </>
+                      ) : (
+                        <span style={{ fontSize: 11, color: '#c9a84c', fontWeight: 600 }}>
+                          ✓ Inbegrepen
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {!allBundleSelectionsReady && (
+              <p style={{ fontSize: 11, color: '#b07000', marginTop: 10 }}>
+                Kies een kleur voor alle onderdelen om toe te voegen.
+              </p>
+            )}
+          </div>
         )}
 
         {/* Variant kleurkiezer */}
@@ -215,13 +360,13 @@ export function ProductDetail({ product, selectedVariant, onVariantChange }: Pro
           </div>
           <button
             onClick={handleAdd}
-            disabled={effectiveStock === 0}
+            disabled={!canAdd}
             style={{
               flex: 1,
-              background: added ? '#c9a84c' : '#0a0a0a',
+              background: added ? '#c9a84c' : canAdd ? '#0a0a0a' : '#C8C1B8',
               color: added ? '#0a0a0a' : '#fff',
               border: 'none',
-              cursor: effectiveStock === 0 ? 'not-allowed' : 'pointer',
+              cursor: !canAdd ? 'not-allowed' : 'pointer',
               fontSize: 12,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -229,14 +374,15 @@ export function ProductDetail({ product, selectedVariant, onVariantChange }: Pro
               padding: '0 28px',
               height: 52,
               transition: 'all 0.25s',
-              opacity: effectiveStock === 0 ? 0.4 : 1,
             }}
           >
             {effectiveStock === 0
               ? 'Uitverkocht'
               : added
                 ? '✓ Toegevoegd aan winkelwagen'
-                : 'Voeg toe aan winkelwagen'}
+                : isBundle && !allBundleSelectionsReady
+                  ? 'Kies kleuren hierboven'
+                  : 'Voeg toe aan winkelwagen'}
           </button>
           <button
             onClick={() => {

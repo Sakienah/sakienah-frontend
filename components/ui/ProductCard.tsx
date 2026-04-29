@@ -30,7 +30,8 @@ export function ProductCard({
 
   const image = product.images[0];
   const wishlisted = isWishlisted(product.id);
-  const hasVariants = product.variants.length > 0;
+  const isBundle = (product.bundleItems ?? []).length > 0;
+  const hasVariants = !isBundle && product.variants.length > 0;
   const canAdd = !hasVariants || selectedVariant !== null;
   const isOutOfStock = product.stock === 0;
   const discountPct = product.comparePrice
@@ -277,32 +278,56 @@ export function ProductCard({
         >
           Bekijk
         </Link>
-        <button
-          onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          style={{
-            flex: 1.4,
-            background: added ? '#c9a84c' : canAdd && !isOutOfStock ? '#0a0a0a' : '#C8C1B8',
-            color: added ? '#0a0a0a' : '#fff',
-            border: 'none',
-            cursor: isOutOfStock || !canAdd ? 'not-allowed' : 'pointer',
-            fontSize: 10,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            padding: '11px 0',
-            fontWeight: 600,
-            transition: 'background 0.25s, color 0.25s',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {added
-            ? '✓ Toegevoegd'
-            : isOutOfStock
-              ? 'Uitverkocht'
-              : hasVariants && !selectedVariant
-                ? 'Kies kleur'
-                : '+ Winkelwagen'}
-        </button>
+        {isBundle ? (
+          <Link
+            href={`/products/${product.slug}`}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              flex: 1.4,
+              textAlign: 'center',
+              background: '#0a0a0a',
+              color: '#fff',
+              border: 'none',
+              fontSize: 10,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '11px 0',
+              fontWeight: 600,
+              textDecoration: 'none',
+              display: 'block',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Stel samen →
+          </Link>
+        ) : (
+          <button
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            style={{
+              flex: 1.4,
+              background: added ? '#c9a84c' : canAdd && !isOutOfStock ? '#0a0a0a' : '#C8C1B8',
+              color: added ? '#0a0a0a' : '#fff',
+              border: 'none',
+              cursor: isOutOfStock || !canAdd ? 'not-allowed' : 'pointer',
+              fontSize: 10,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '11px 0',
+              fontWeight: 600,
+              transition: 'background 0.25s, color 0.25s',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {added
+              ? '✓ Toegevoegd'
+              : isOutOfStock
+                ? 'Uitverkocht'
+                : hasVariants && !selectedVariant
+                  ? 'Kies kleur'
+                  : '+ Winkelwagen'}
+          </button>
+        )}
       </div>
     </div>
   );
