@@ -13,7 +13,7 @@ export function ProductView({ product }: { product: Product }) {
     selectedVariant && selectedVariant.images.length > 0 ? selectedVariant.images : product.images;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '44% 56%', gap: 64 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '44fr 56fr', gap: 64 }}>
       <ProductImageGallery
         images={images}
         name={product.name}
