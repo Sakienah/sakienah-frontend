@@ -214,7 +214,7 @@ export function CheckoutFlow() {
         <div
           style={{
             background: '#FAF7F2',
-            padding: '80px 40px',
+            padding: '80px var(--px-page)',
             textAlign: 'center',
             color: '#aaa',
           }}
