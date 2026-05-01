@@ -19,16 +19,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <ProductBreadcrumb productName={product.name} />
 
         <div
+          className="px-4 md:px-10 py-10 md:py-20"
           style={{
             background: '#FAF7F2',
-            padding: '56px 40px 80px',
             position: 'relative',
             overflow: 'hidden',
           }}
         >
           <GeomPattern />
           <div className="max-w-[1280px] mx-auto relative z-10">
-            <div style={{ background: '#fff', border: '1px solid #F0EBE3', padding: '48px 48px' }}>
+            <div
+              className="p-6 md:p-12"
+              style={{ background: '#fff', border: '1px solid #F0EBE3' }}
+            >
               <ProductView product={product} />
             </div>
           </div>

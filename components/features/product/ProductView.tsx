@@ -15,7 +15,7 @@ export function ProductView({ product }: { product: Product }) {
     selectedVariant && selectedVariant.images.length > 0 ? selectedVariant.images : product.images;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '44fr 56fr', gap: 64 }}>
+    <div className="grid grid-cols-1 lg:grid-cols-[44fr_56fr] gap-8 lg:gap-16">
       <ProductImageGallery
         images={images}
         name={product.name}

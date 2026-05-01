@@ -333,7 +333,7 @@ export function ProductDetail({
         )}
 
         {/* Qty + Add */}
-        <div className="flex items-center" style={{ gap: 14, marginBottom: 20 }}>
+        <div className="flex flex-wrap items-center gap-3 mb-5">
           <div className="flex items-center" style={{ border: '1px solid #E8E0D5' }}>
             <button
               onClick={() => setQty((q) => Math.max(1, q - 1))}
@@ -589,7 +589,7 @@ export function ProductDetail({
             right: 0,
             background: '#fff',
             borderTop: '1px solid #E8E0D5',
-            padding: '16px 40px',
+            padding: 'clamp(12px, 3vw, 16px) clamp(16px, 5vw, 40px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
