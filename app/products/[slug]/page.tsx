@@ -15,7 +15,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <Navbar />
-      <main className="flex-1 bg-[#FAF7F2]" style={{ paddingTop: 'clamp(100px, 14vw, 106px)' }}>
+      <main className="flex-1 bg-[#FAF7F2]" style={{ paddingTop: 'clamp(110px, 15vw, 106px)' }}>
         <ProductBreadcrumb productName={product.name} />
 
         <div
