@@ -14,6 +14,7 @@ export function ShopPage({
 }) {
   const [filter, setFilter] = useState('Alles');
   const [hovered, setHovered] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const allItems = ['Alles', ...categories.map((c) => c.name)];
   const filtered =
     filter === 'Alles'
@@ -22,12 +23,12 @@ export function ShopPage({
 
   return (
     <>
-      {/* Filter bar — TrustBar stijl */}
+      {/* Desktop filter bar (md+) — TrustBar style, unchanged */}
       <div
+        className="hidden md:flex"
         style={{
           background: '#0f0d0a',
           borderBottom: '1px solid rgba(201,168,76,0.12)',
-          display: 'flex',
           position: 'relative',
         }}
       >
@@ -78,7 +79,6 @@ export function ShopPage({
                   gap: 3,
                 }}
               >
-                {/* Number */}
                 <span
                   style={{
                     position: 'absolute',
@@ -95,8 +95,6 @@ export function ShopPage({
                 >
                   0{i + 1}
                 </span>
-
-                {/* Animated bottom line */}
                 <div
                   style={{
                     position: 'absolute',
@@ -108,7 +106,6 @@ export function ShopPage({
                     transition: 'width 0.4s ease',
                   }}
                 />
-
                 <div
                   style={{
                     fontFamily: 'var(--font-playfair)',
@@ -126,7 +123,7 @@ export function ShopPage({
           );
         })}
 
-        {/* Producten teller */}
+        {/* Product count */}
         <div
           style={{
             display: 'flex',
@@ -151,14 +148,91 @@ export function ShopPage({
         </div>
       </div>
 
+      {/* Mobile filter bar */}
+      <div
+        className="flex md:hidden items-center justify-between px-4 py-3 relative"
+        style={{
+          background: '#0f0d0a',
+          borderBottom: '1px solid rgba(201,168,76,0.12)',
+        }}
+      >
+        <div className="relative">
+          <button
+            onClick={() => setDropdownOpen((o) => !o)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '10px 16px',
+              background: 'rgba(201,168,76,0.1)',
+              border: '1px solid rgba(201,168,76,0.3)',
+              color: '#c9a84c',
+              fontSize: 13,
+              cursor: 'pointer',
+              fontFamily: 'var(--font-playfair)',
+            }}
+          >
+            <span>{filter}</span>
+            <span style={{ fontSize: 10 }}>▼</span>
+          </button>
+          {dropdownOpen && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setDropdownOpen(false)} />
+              <div
+                className="absolute left-0 top-full mt-1 z-20"
+                style={{
+                  background: '#0f0d0a',
+                  border: '1px solid rgba(201,168,76,0.2)',
+                  minWidth: 180,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                }}
+              >
+                {allItems.map((name) => (
+                  <button
+                    key={name}
+                    onClick={() => {
+                      setFilter(name);
+                      setDropdownOpen(false);
+                    }}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'none',
+                      border: 'none',
+                      textAlign: 'left',
+                      color: filter === name ? '#c9a84c' : 'rgba(255,255,255,0.8)',
+                      fontSize: 14,
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-playfair)',
+                      borderBottom: '1px solid rgba(201,168,76,0.08)',
+                    }}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+        <span
+          style={{
+            fontSize: 11,
+            color: '#c9a84c',
+            opacity: 0.7,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            fontFamily: 'var(--font-sans)',
+          }}
+        >
+          {filtered.length} stuks
+        </span>
+      </div>
+
       {/* Grid */}
       <div
-        style={{
-          background: '#FAF7F2',
-          padding: '48px 40px 96px',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+        className="px-4 md:px-10 py-12 md:py-24 relative overflow-hidden"
+        style={{ background: '#FAF7F2' }}
       >
         <GeomPattern flip />
         <div className="max-w-[1280px] mx-auto relative z-10">
