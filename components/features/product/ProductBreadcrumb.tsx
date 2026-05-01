@@ -12,7 +12,7 @@ export function ProductBreadcrumb({ productName }: { productName: string }) {
       style={{
         background: '#0f0d0a',
         borderBottom: '1px solid rgba(201,168,76,0.12)',
-        padding: '14px 40px',
+        padding: 'clamp(10px, 3vw, 14px) clamp(1rem, 5vw, 2.5rem)',
         position: 'relative',
       }}
     >
@@ -31,7 +31,11 @@ export function ProductBreadcrumb({ productName }: { productName: string }) {
       <div className="max-w-[1280px] mx-auto" style={{ position: 'relative' }}>
         <div
           className="flex items-center"
-          style={{ gap: 12, fontSize: 14, letterSpacing: '0.06em' }}
+          style={{
+            gap: 'clamp(8px, 2vw, 12px)',
+            fontSize: 'clamp(12px, 3vw, 14px)',
+            letterSpacing: '0.06em',
+          }}
         >
           <Link
             href="/"

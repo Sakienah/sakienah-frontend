@@ -486,33 +486,43 @@ export function ProductDetail({
 
       {/* Tabs */}
       <div style={{ maxWidth: 1280, marginTop: 64 }}>
-        <div className="flex" style={{ borderBottom: '1px solid #F0EBE3', marginBottom: 40 }}>
-          {[
-            ['beschrijving', 'Beschrijving'],
-            ['kenmerken', 'Kenmerken'],
-            ['reviews', 'Reviews'],
-          ].map(([t, l]) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                padding: '16px 28px',
-                background: 'none',
-                border: 'none',
-                borderBottom: `2px solid ${tab === t ? '#c9a84c' : 'transparent'}`,
-                color: tab === t ? '#0a0a0a' : '#aaa',
-                cursor: 'pointer',
-                fontWeight: tab === t ? 600 : 400,
-                marginBottom: -1,
-                transition: 'all 0.2s',
-              }}
-            >
-              {l}
-            </button>
-          ))}
+        <div className="relative">
+          {/* Gradient overlays for scroll indication */}
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white to-transparent pointer-events-none z-10 md:hidden" />
+          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white to-transparent pointer-events-none z-10 md:hidden" />
+
+          <div
+            className="flex overflow-x-auto scrollbar-hide"
+            style={{ borderBottom: '1px solid #F0EBE3', marginBottom: 40 }}
+          >
+            {[
+              ['beschrijving', 'Beschrijving'],
+              ['kenmerken', 'Kenmerken'],
+              ['reviews', 'Reviews'],
+            ].map(([t, l]) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className="flex-shrink-0"
+                style={{
+                  fontSize: 11,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  padding: '16px clamp(16px, 4vw, 28px)',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: `2px solid ${tab === t ? '#c9a84c' : 'transparent'}`,
+                  color: tab === t ? '#0a0a0a' : '#aaa',
+                  cursor: 'pointer',
+                  fontWeight: tab === t ? 600 : 400,
+                  marginBottom: -1,
+                  transition: 'all 0.2s',
+                }}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
         </div>
         {tab === 'beschrijving' && (
           <div style={{ maxWidth: 680 }}>
