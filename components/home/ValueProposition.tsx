@@ -68,7 +68,7 @@ export function ValueProposition() {
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <p
             style={{
-              fontSize: 10,
+              fontSize: 'var(--text-xs)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#c9a84c',
@@ -208,7 +208,7 @@ export function ValueProposition() {
               <h3
                 className="font-display"
                 style={{
-                  fontSize: 22,
+                  fontSize: 'var(--text-lg)',
                   fontWeight: 600,
                   color: '#0a0a0a',
                   letterSpacing: '-0.01em',
@@ -239,7 +239,7 @@ export function ValueProposition() {
               {/* Description */}
               <p
                 style={{
-                  fontSize: 13,
+                  fontSize: 'var(--text-sm)',
                   color: '#888',
                   lineHeight: 1.82,
                   position: 'relative',

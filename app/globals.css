@@ -4,11 +4,16 @@
   --background: #ffffff;
   --foreground: #000000;
 
-  /* Fluid typography */
+  /* Fluid typography - systematisch */
   --text-hero: clamp(2rem, 4vw + 1rem, 4rem);
   --text-h2: clamp(1.75rem, 2vw + 1.25rem, 2.75rem);
   --text-h1-page: clamp(1.75rem, 5vw, 3.25rem);
-  --px-page: clamp(1rem, 5vw, 2.5rem);
+  --text-xl: clamp(2.5rem, 5vw, 4.5rem);
+  --text-lg: clamp(1.25rem, 2vw, 1.75rem);
+  --text-base: clamp(1rem, 1vw, 1.125rem);
+  --text-sm: clamp(0.8125rem, 0.5vw, 0.9375rem);
+  --text-xs: clamp(0.625rem, 0.25vw, 0.75rem);
+  --text-page: clamp(1rem, 5vw, 2.5rem);
 }
 
 /* Trust bar responsive */

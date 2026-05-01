@@ -114,7 +114,7 @@ export function TrustBar() {
               top: 8,
               left: 12,
               fontFamily: 'var(--font-playfair)',
-              fontSize: 10,
+              fontSize: 'var(--text-xs)',
               color: '#c9a84c',
               opacity: hovered === i ? 0.9 : 0.5,
               fontStyle: 'italic',
@@ -176,7 +176,7 @@ export function TrustBar() {
             <div
               style={{
                 fontFamily: 'var(--font-playfair)',
-                fontSize: 13,
+                fontSize: 'var(--text-sm)',
                 fontStyle: hovered === i ? 'italic' : 'normal',
                 fontWeight: 400,
                 color: hovered === i ? '#fff' : 'rgba(255,255,255,0.9)',
@@ -189,7 +189,7 @@ export function TrustBar() {
             <div
               style={{
                 fontFamily: 'var(--font-sans)',
-                fontSize: 10,
+                fontSize: 'var(--text-xs)',
                 color: '#c9a84c',
                 opacity: hovered === i ? 1 : 0.65,
                 letterSpacing: '0.12em',

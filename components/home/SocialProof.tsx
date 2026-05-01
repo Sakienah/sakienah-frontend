@@ -119,7 +119,7 @@ export function SocialProof() {
         <div style={{ textAlign: 'center', marginBottom: 64 }}>
           <p
             style={{
-              fontSize: 10,
+              fontSize: 'var(--text-xs)',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#c9a84c',
@@ -143,7 +143,7 @@ export function SocialProof() {
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Stars count={5} />
-            <span style={{ fontSize: 12, color: '#aaa', marginLeft: 4 }}>
+            <span style={{ fontSize: 'var(--text-sm)', color: '#aaa', marginLeft: 4 }}>
               4.9 gemiddeld · 500+ reviews
             </span>
           </div>
@@ -157,7 +157,7 @@ export function SocialProof() {
             <p
               className="font-display"
               style={{
-                fontSize: 14,
+                fontSize: 'var(--text-sm)',
                 fontStyle: 'italic',
                 color: '#777',
                 lineHeight: 1.75,
@@ -166,7 +166,9 @@ export function SocialProof() {
             >
               &ldquo;{leftR.text}&rdquo;
             </p>
-            <p style={{ fontSize: 11, color: '#c9a84c', fontWeight: 600 }}>{leftR.author}</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: '#c9a84c', fontWeight: 600 }}>
+              {leftR.author}
+            </p>
           </div>
 
           {/* Center featured card */}
@@ -265,7 +267,7 @@ export function SocialProof() {
               <p
                 className="font-display"
                 style={{
-                  fontSize: 21,
+                  fontSize: 'var(--text-lg)',
                   fontStyle: 'italic',
                   color: '#222',
                   lineHeight: 1.75,
@@ -330,7 +332,7 @@ export function SocialProof() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: 16,
+                    fontSize: 'var(--text-base)',
                     color: '#c9a84c',
                     fontWeight: 600,
                   }}
@@ -339,7 +341,7 @@ export function SocialProof() {
                 </div>
                 <p
                   style={{
-                    fontSize: 13,
+                    fontSize: 'var(--text-sm)',
                     fontWeight: 600,
                     color: '#0a0a0a',
                     letterSpacing: '0.04em',
@@ -349,7 +351,7 @@ export function SocialProof() {
                 </p>
                 <p
                   style={{
-                    fontSize: 10,
+                    fontSize: 'var(--text-xs)',
                     color: 'rgba(201,168,76,0.7)',
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -367,7 +369,7 @@ export function SocialProof() {
             <p
               className="font-display"
               style={{
-                fontSize: 14,
+                fontSize: 'var(--text-sm)',
                 fontStyle: 'italic',
                 color: '#777',
                 lineHeight: 1.75,
@@ -376,7 +378,9 @@ export function SocialProof() {
             >
               &ldquo;{rightR.text}&rdquo;
             </p>
-            <p style={{ fontSize: 11, color: '#c9a84c', fontWeight: 600 }}>{rightR.author}</p>
+            <p style={{ fontSize: 'var(--text-xs)', color: '#c9a84c', fontWeight: 600 }}>
+              {rightR.author}
+            </p>
           </div>
         </div>
 

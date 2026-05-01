@@ -4,9 +4,11 @@ import { GeomPattern } from '@/components/ui/GeomPattern';
 export function FinalCTA() {
   return (
     <section
+      className="py-20 lg:py-24"
       style={{
         background: '#0a0a0a',
-        padding: '100px 40px',
+        paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
@@ -16,7 +18,7 @@ export function FinalCTA() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <p
           style={{
-            fontSize: 10,
+            fontSize: 'var(--text-xs)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: '#c9a84c',
@@ -29,7 +31,7 @@ export function FinalCTA() {
         <h2
           className="font-display text-white"
           style={{
-            fontSize: 52,
+            fontSize: 'var(--text-xl)',
             fontWeight: 600,
             letterSpacing: '-0.02em',
             marginBottom: 16,
@@ -42,7 +44,7 @@ export function FinalCTA() {
         </h2>
         <p
           style={{
-            fontSize: 15,
+            fontSize: 'var(--text-base)',
             color: 'rgb(255, 255, 255)',
             maxWidth: 420,
             margin: '0 auto 44px',
@@ -56,11 +58,11 @@ export function FinalCTA() {
           style={{
             background: '#c9a84c',
             color: '#0a0a0a',
-            fontSize: 11,
-            letterSpacing: '0.18em',
+            fontSize: 'var(--text-xs)',
+            letterSpacing: '0.15em',
             textTransform: 'uppercase',
-            fontWeight: 700,
-            padding: '18px 48px',
+            fontWeight: 600,
+            padding: '16px 36px',
           }}
         >
           Shop nu

@@ -17,7 +17,7 @@ export async function BestsellersSection() {
           <div>
             <p
               style={{
-                fontSize: 10,
+                fontSize: 'var(--text-xs)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#c9a84c',
@@ -44,7 +44,7 @@ export async function BestsellersSection() {
             href="/shop"
             className="transition-colors hover:text-gold"
             style={{
-              fontSize: 11,
+              fontSize: 'var(--text-xs)',
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               color: '#999',

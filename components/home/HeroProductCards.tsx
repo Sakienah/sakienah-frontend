@@ -94,15 +94,19 @@ function HeroProductCard({ product }: { product: Product }) {
       </Link>
 
       <div style={{ padding: '16px 18px 20px' }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0a', marginBottom: 8 }}>
+        <p
+          style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: '#0a0a0a', marginBottom: 8 }}
+        >
           {product.name}
         </p>
         <div className="flex items-center" style={{ gap: 10 }}>
-          <span style={{ fontSize: 15, fontWeight: 600, color: '#c9a84c' }}>
+          <span style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#c9a84c' }}>
             € {parseFloat(product.price).toFixed(2).replace('.', ',')}
           </span>
           {product.comparePrice && (
-            <span style={{ fontSize: 12, color: '#aaa', textDecoration: 'line-through' }}>
+            <span
+              style={{ fontSize: 'var(--text-sm)', color: '#aaa', textDecoration: 'line-through' }}
+            >
               € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
             </span>
           )}

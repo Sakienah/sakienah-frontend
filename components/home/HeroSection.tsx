@@ -53,7 +53,12 @@ export async function HeroSection() {
             />
             <span
               className="font-arabic"
-              style={{ fontSize: 18, color: '#c9a84c', opacity: 0.85, direction: 'rtl' }}
+              style={{
+                fontSize: 'var(--text-lg)',
+                color: '#c9a84c',
+                opacity: 0.85,
+                direction: 'rtl',
+              }}
             >
               بِسْمِ اللَّهِ
             </span>
@@ -64,7 +69,7 @@ export async function HeroSection() {
 
           <p
             className="uppercase font-semibold text-gold mb-5"
-            style={{ fontFamily: 'inherit', fontSize: 10, letterSpacing: '0.22em' }}
+            style={{ fontFamily: 'inherit', fontSize: 'var(--text-xs)', letterSpacing: '0.22em' }}
           >
             Islamitische Lifestyle Winkel
           </p>
@@ -97,7 +102,7 @@ export async function HeroSection() {
           <p
             className="text-white/55 mb-11"
             style={{
-              fontSize: 16,
+              fontSize: 'var(--text-base)',
               lineHeight: 1.75,
               maxWidth: 420,
               fontWeight: 300,
@@ -111,15 +116,16 @@ export async function HeroSection() {
           <div className="flex flex-wrap mb-13 justify-center lg:justify-start" style={{ gap: 14 }}>
             <Link
               href="/shop"
-              className="text-[11px] tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] hover:opacity-85 transition-opacity"
-              style={{ padding: '16px 36px' }}
+              className="tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] hover:opacity-85 transition-opacity"
+              style={{ fontSize: 'var(--text-xs)', padding: '16px 36px' }}
             >
               Shop collectie
             </Link>
             <Link
               href="/about"
-              className="text-[11px] tracking-[0.15em] uppercase font-medium hover:text-gold hover:border-gold transition-all"
+              className="tracking-[0.15em] uppercase font-medium hover:text-gold hover:border-gold transition-all"
               style={{
+                fontSize: 'var(--text-xs)',
                 padding: '16px 36px',
                 background: 'transparent',
                 color: 'rgba(255,255,255,0.7)',
@@ -136,7 +142,7 @@ export async function HeroSection() {
                 key={item}
                 className="flex items-center"
                 style={{
-                  fontSize: 11,
+                  fontSize: 'var(--text-xs)',
                   color: 'rgb(253, 253, 253)',
                   letterSpacing: '0.05em',
                   gap: 8,

@@ -3,9 +3,11 @@ import { GeomPattern } from '@/components/ui/GeomPattern';
 export function CTABanner() {
   return (
     <section
+      className="py-16 lg:py-20"
       style={{
         background: '#0a0a0a',
-        padding: '80px 40px',
+        paddingLeft: 'clamp(1.5rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1.5rem, 5vw, 2.5rem)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
@@ -16,7 +18,7 @@ export function CTABanner() {
         <div
           className="font-arabic"
           style={{
-            fontSize: 52,
+            fontSize: 'clamp(1.5rem, 4vw, 3.5rem)',
             color: '#c9a84c',
             direction: 'rtl',
             marginBottom: 16,
@@ -40,7 +42,7 @@ export function CTABanner() {
         </div>
         <p
           style={{
-            fontSize: 12,
+            fontSize: 'var(--text-sm)',
             color: 'rgb(255, 255, 255)',
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
