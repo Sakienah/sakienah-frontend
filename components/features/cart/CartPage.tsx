@@ -54,7 +54,7 @@ export function CartPage() {
   }
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 48 }}>
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 lg:gap-12">
       {/* Items */}
       <div style={{ background: '#fff', border: '1px solid #F0EBE3' }}>
         {items.map(({ product, variant, quantity, variantId, selectedColor, bundleSelections }) => {
@@ -65,16 +65,18 @@ export function CartPage() {
           return (
             <div
               key={`${product.id}-${variantId ?? selectedColor ?? ''}`}
-              className="flex items-center"
-              style={{ gap: 24, padding: '28px 32px', borderBottom: '1px solid #F0EBE3' }}
+              className="flex flex-col sm:flex-row sm:items-center"
+              style={{
+                gap: 16,
+                padding: 'clamp(16px,4vw,28px) clamp(16px,4vw,32px)',
+                borderBottom: '1px solid #F0EBE3',
+              }}
             >
               {/* Image */}
               <div
+                className="w-20 h-24 sm:w-[100px] sm:h-[120px] flex-shrink-0"
                 style={{
-                  width: 100,
-                  height: 120,
                   background: '#EDE8DF',
-                  flexShrink: 0,
                   position: 'relative',
                   overflow: 'hidden',
                 }}
@@ -258,13 +260,12 @@ export function CartPage() {
 
       {/* Summary */}
       <div
+        className="lg:sticky lg:top-[106px]"
         style={{
           background: '#fff',
           border: '1px solid #F0EBE3',
           padding: 32,
           alignSelf: 'start',
-          position: 'sticky',
-          top: 106,
         }}
       >
         <h2

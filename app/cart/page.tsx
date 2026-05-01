@@ -14,8 +14,8 @@ function CartHeader() {
         background: '#0a0a0a',
         paddingTop: 146,
         paddingBottom: 56,
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingLeft: 'var(--px-page)',
+        paddingRight: 'var(--px-page)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -60,9 +60,9 @@ export default function CartPage() {
       <main className="flex-1">
         <CartHeader />
         <div
+          className="px-4 md:px-10 py-12 md:py-24"
           style={{
             background: '#FAF7F2',
-            padding: '48px 40px 96px',
             position: 'relative',
             overflow: 'hidden',
           }}
