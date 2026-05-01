@@ -203,11 +203,22 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile: cart + hamburger */}
-          <div className="flex md:hidden items-center gap-5">
+          {/* Mobile: wishlist + cart + account + hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <Link href="/wishlist" className="text-[#0a0a0a] relative flex">
+              <WishlistIcon />
+              {wishlist.size > 0 && <Badge count={wishlist.size} />}
+            </Link>
             <Link href="/cart" className="text-[#0a0a0a] relative flex">
               <CartIcon />
               {totalItems > 0 && <Badge count={totalItems > 9 ? '9+' : totalItems} />}
+            </Link>
+            <Link
+              href="/account"
+              className="text-[#0a0a0a] flex items-center"
+              title={user ? user.naam : 'Inloggen'}
+            >
+              <AccountIcon />
             </Link>
             <button
               onClick={() => setMobileOpen(true)}
@@ -286,24 +297,21 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Bottom: account icons */}
-        <div className="flex items-center gap-6 px-6 py-6 border-t border-[#F0EBE3] shrink-0">
-          <Link href="/wishlist" className="text-[#0a0a0a] relative flex">
-            <WishlistIcon />
-            {wishlist.size > 0 && <Badge count={wishlist.size} />}
-          </Link>
-          <Link
-            href="/account"
-            className="text-[#0a0a0a] flex items-center gap-2"
-            title={user ? user.naam : 'Inloggen'}
-          >
-            <AccountIcon />
-            {user && (
-              <span className="text-[10px] tracking-[0.1em] uppercase font-medium text-[#c9a84c]">
-                {user.naam.split(' ')[0]}
-              </span>
-            )}
-          </Link>
+        {/* Bottom: account sectie */}
+        <div className="px-6 py-6 border-t border-[#F0EBE3] shrink-0">
+          {user ? (
+            <p className="text-[11px] tracking-[0.1em] uppercase text-[#c9a84c] font-medium">
+              {user.naam.split(' ')[0]}
+            </p>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className="text-[11px] tracking-[0.15em] uppercase font-medium text-[#0a0a0a]"
+            >
+              Inloggen
+            </Link>
+          )}
         </div>
       </aside>
     </>
