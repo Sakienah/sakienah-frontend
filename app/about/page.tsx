@@ -24,8 +24,8 @@ export default function AboutPage() {
             background: '#0a0a0a',
             paddingTop: 146,
             paddingBottom: 24,
-            paddingLeft: 40,
-            paddingRight: 40,
+            paddingLeft: 'var(--px-page)',
+            paddingRight: 'var(--px-page)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -67,23 +67,16 @@ export default function AboutPage() {
 
         {/* Story */}
         <div
+          className="px-4 md:px-10 py-16 md:py-24"
           style={{
             background: '#fff',
-            padding: '96px 40px',
             position: 'relative',
             overflow: 'hidden',
           }}
         >
           <GeomPattern flip />
           <div className="max-w-[1280px] mx-auto relative z-10">
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 64,
-                alignItems: 'center',
-              }}
-            >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>
                 <p
                   style={{
@@ -164,9 +157,9 @@ export default function AboutPage() {
 
         {/* Values */}
         <div
+          className="px-4 md:px-10 py-16 md:py-20"
           style={{
             background: '#FAF7F2',
-            padding: '80px 40px',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -231,7 +224,7 @@ export default function AboutPage() {
                 Waar wij voor staan
               </h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
               {values.map(({ arabic, name, desc }, i) => (
                 <div key={name} className="waarde-card-about">
                   <div className="wca-corner-tl" />
@@ -414,7 +407,10 @@ export default function AboutPage() {
         <div
           style={{
             background: '#0a0a0a',
-            padding: '80px 40px',
+            paddingLeft: 'var(--px-page)',
+            paddingRight: 'var(--px-page)',
+            paddingTop: 80,
+            paddingBottom: 80,
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
