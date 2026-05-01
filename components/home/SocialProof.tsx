@@ -74,9 +74,9 @@ export function SocialProof() {
 
   return (
     <section
+      className="py-16 lg:py-24"
       style={{
         background: '#FAF7F2',
-        padding: '100px 0',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -109,10 +109,8 @@ export function SocialProof() {
       />
 
       <div
+        className="max-w-[1280px] mx-auto px-4 md:px-10"
         style={{
-          maxWidth: 1280,
-          margin: '0 auto',
-          padding: '0 40px',
           position: 'relative',
           zIndex: 1,
         }}
@@ -134,7 +132,7 @@ export function SocialProof() {
           <h2
             className="font-display"
             style={{
-              fontSize: 44,
+              fontSize: 'var(--text-h2)',
               fontWeight: 600,
               color: '#0a0a0a',
               letterSpacing: '-0.02em',
@@ -152,16 +150,9 @@ export function SocialProof() {
         </div>
 
         {/* Layout: side | featured | side */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 2fr 1fr',
-            gap: 24,
-            alignItems: 'center',
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-6 items-center">
           {/* Left side card */}
-          <div className="rev-sidecard" style={{ opacity: animating ? 0.3 : 0.65 }}>
+          <div className="rev-sidecard hidden md:block" style={{ opacity: animating ? 0.3 : 0.65 }}>
             <Stars count={leftR.rating} />
             <p
               className="font-display"
@@ -371,7 +362,7 @@ export function SocialProof() {
           </div>
 
           {/* Right side card */}
-          <div className="rev-sidecard" style={{ opacity: animating ? 0.3 : 0.65 }}>
+          <div className="rev-sidecard hidden md:block" style={{ opacity: animating ? 0.3 : 0.65 }}>
             <Stars count={rightR.rating} />
             <p
               className="font-display"
