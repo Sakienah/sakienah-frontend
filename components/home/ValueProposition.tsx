@@ -27,7 +27,8 @@ const values = [
 export function ValueProposition() {
   return (
     <section
-      style={{ background: '#FAF7F2', padding: '96px 0', position: 'relative', overflow: 'hidden' }}
+      className="py-16 lg:py-24"
+      style={{ background: '#FAF7F2', position: 'relative', overflow: 'hidden' }}
     >
       <GeomPattern flip />
       <style>{`
@@ -63,7 +64,7 @@ export function ValueProposition() {
         .wch-corner-bl { bottom: 10px; left: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-left: 1px solid rgba(201,168,76,0.5); }
         .wch-corner-br { bottom: 10px; right: 10px; border-bottom: 1px solid rgba(201,168,76,0.5); border-right: 1px solid rgba(201,168,76,0.5); }
       `}</style>
-      <div className="max-w-[1280px] mx-auto" style={{ padding: '0 40px' }}>
+      <div className="max-w-[1280px] mx-auto px-4 md:px-10">
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <p
             style={{
@@ -79,12 +80,17 @@ export function ValueProposition() {
           </p>
           <h2
             className="font-display"
-            style={{ fontSize: 40, fontWeight: 600, color: '#0a0a0a', letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: 'var(--text-h2)',
+              fontWeight: 600,
+              color: '#0a0a0a',
+              letterSpacing: '-0.02em',
+            }}
           >
             Kwaliteit met intentie
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {values.map(({ arabic, title, sub, desc, num }) => (
             <div key={title} className="waarde-card-home">
               <div className="wch-corner-tl" />
