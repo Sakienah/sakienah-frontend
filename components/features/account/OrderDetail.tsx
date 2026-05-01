@@ -190,19 +190,20 @@ function StatusStepsMobile({ status }: { status: string }) {
           );
         })}
       </div>
-      <div className="flex w-full mt-1 px-1">
+      <div className="flex w-full mt-1.5 px-1">
         {STATUS_STEPS.map((step, i) => {
           const done = i <= currentIndex;
           const active = i === currentIndex;
           return (
-            <div key={step.key} className="flex-1 text-center">
+            <div key={step.key} className="flex-1 text-center" style={{ padding: '0 2px' }}>
               <span
                 className="font-sans uppercase"
                 style={{
                   color: done ? '#0a0a0a' : '#bbb',
                   fontWeight: active ? 600 : 400,
-                  fontSize: 8,
-                  letterSpacing: '0.03em',
+                  fontSize: 7,
+                  letterSpacing: '0.08em',
+                  display: 'inline-block',
                 }}
               >
                 {step.label}
