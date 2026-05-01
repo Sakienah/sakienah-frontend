@@ -66,7 +66,7 @@ export function AccountDashboard() {
   return (
     <div className="pt-[106px]">
       {/* Header */}
-      <div className="bg-[#0a0a0a] px-10 py-14 relative overflow-hidden">
+      <div className="bg-[#0a0a0a] px-4 md:px-10 py-10 md:py-14 relative overflow-hidden">
         <GeomPattern dark />
         <div className="max-w-[1200px] mx-auto relative z-10 flex items-center justify-between flex-wrap gap-5">
           <div>
@@ -108,7 +108,7 @@ export function AccountDashboard() {
       </div>
 
       {/* Tabs + content */}
-      <div className="bg-[#FAF7F2] px-10 pb-20 relative overflow-hidden">
+      <div className="bg-[#FAF7F2] px-4 md:px-10 pb-12 md:pb-20 relative overflow-hidden">
         <GeomPattern flip />
         <div className="max-w-[1200px] mx-auto relative z-10">
           <div className="flex gap-0 border-b border-[#E8E0D5] mb-10 overflow-x-auto">
