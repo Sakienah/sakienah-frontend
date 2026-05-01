@@ -206,23 +206,32 @@ export function OrderDetail({ orderId }: { orderId: string }) {
     <div className="pt-[106px] bg-[#FAF7F2] min-h-screen relative overflow-hidden">
       <GeomPattern />
       {/* Header */}
-      <div className="bg-[#0a0a0a] px-10 py-10 relative overflow-hidden">
+      <div
+        className="bg-[#0a0a0a] relative overflow-hidden"
+        style={{ padding: 'clamp(1.5rem, 5vw, 2.5rem) clamp(1rem, 5vw, 2.5rem)' }}
+      >
         <GeomPattern dark />
         <div className="max-w-[900px] mx-auto flex items-center justify-between flex-wrap gap-4">
           <div>
             <Link
               href="/account"
-              className="font-sans text-[10px] tracking-[0.15em] uppercase text-[#c9a84c] opacity-70 hover:opacity-100 transition-opacity"
+              className="font-sans tracking-[0.15em] uppercase text-[#c9a84c] opacity-70 hover:opacity-100 transition-opacity"
+              style={{ fontSize: 'var(--text-xs)' }}
             >
               ← Mijn account
             </Link>
             <h1
-              className="font-display text-[32px] font-semibold text-white mt-2"
-              style={{ letterSpacing: '-0.02em' }}
+              className="font-display font-semibold text-white mt-2"
+              style={{
+                letterSpacing: '-0.02em',
+                fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+              }}
             >
               Bestelling #{order.orderNumber}
             </h1>
-            <p className="font-sans text-[12px] text-[#aaa] mt-1">{formatDate(order.createdAt)}</p>
+            <p className="font-sans text-[#aaa] mt-1" style={{ fontSize: 'var(--text-sm)' }}>
+              {formatDate(order.createdAt)}
+            </p>
           </div>
           <button
             onClick={() => window.print()}

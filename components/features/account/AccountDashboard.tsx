@@ -66,22 +66,37 @@ export function AccountDashboard() {
   return (
     <div className="pt-[106px]">
       {/* Header */}
-      <div className="bg-[#0a0a0a] px-4 md:px-10 py-10 md:py-14 relative overflow-hidden">
+      <div
+        className="bg-[#0a0a0a] relative overflow-hidden"
+        style={{
+          padding: 'clamp(2.5rem, 6vw, 3.5rem) clamp(1rem, 5vw, 2.5rem)',
+        }}
+      >
         <GeomPattern dark />
         <div className="max-w-[1200px] mx-auto relative z-10 flex items-center justify-between flex-wrap gap-5">
           <div>
-            <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-[#c9a84c] font-semibold mb-2.5">
+            <p
+              className="font-sans tracking-[0.22em] uppercase text-[#c9a84c] font-semibold mb-2.5"
+              style={{ fontSize: 'var(--text-xs)' }}
+            >
               Mijn account
             </p>
             <h1
-              className="font-display text-[40px] font-semibold text-white"
-              style={{ letterSpacing: '-0.02em' }}
+              className="font-display font-semibold text-white"
+              style={{
+                letterSpacing: '-0.02em',
+                fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+              }}
             >
               Welkom, {voornaam}
             </h1>
             <div
-              className="font-arabic text-[18px] text-[#c9a84c] mt-1.5"
-              style={{ direction: 'rtl', opacity: 0.7 }}
+              className="font-arabic text-[#c9a84c] mt-1.5"
+              style={{
+                direction: 'rtl',
+                opacity: 0.7,
+                fontSize: 'clamp(1rem, 2vw, 1.125rem)',
+              }}
             >
               أهلاً وسهلاً
             </div>
@@ -108,25 +123,36 @@ export function AccountDashboard() {
       </div>
 
       {/* Tabs + content */}
-      <div className="bg-[#FAF7F2] px-4 md:px-10 pb-12 md:pb-20 relative overflow-hidden">
+      <div
+        className="bg-[#FAF7F2] relative overflow-hidden"
+        style={{
+          padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 5vw, 2.5rem) clamp(3rem, 8vw, 5rem)',
+        }}
+      >
         <GeomPattern flip />
         <div className="max-w-[1200px] mx-auto relative z-10">
-          <div className="flex gap-0 border-b border-[#E8E0D5] mb-10 overflow-x-auto">
-            {TABS.map(({ id, label }) => (
-              <button
-                key={id}
-                onClick={() => setTab(id)}
-                className="font-sans text-[11px] tracking-[0.12em] uppercase px-7 py-5 border-b-2 whitespace-nowrap transition-all -mb-px"
-                style={{
-                  borderBottomColor: tab === id ? '#c9a84c' : 'transparent',
-                  color: tab === id ? '#0a0a0a' : '#aaa',
-                  fontWeight: tab === id ? 600 : 400,
-                  background: 'none',
-                }}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="relative">
+            {/* Gradient overlays for scroll indication */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#FAF7F2] to-transparent pointer-events-none z-10 md:hidden" />
+            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#FAF7F2] to-transparent pointer-events-none z-10 md:hidden" />
+
+            <div className="flex gap-0 border-b border-[#E8E0D5] mb-10 overflow-x-auto scrollbar-hide">
+              {TABS.map(({ id, label }) => (
+                <button
+                  key={id}
+                  onClick={() => setTab(id)}
+                  className="font-sans text-[11px] tracking-[0.12em] uppercase px-4 sm:px-5 md:px-7 py-5 border-b-2 whitespace-nowrap transition-all -mb-px flex-shrink-0"
+                  style={{
+                    borderBottomColor: tab === id ? '#c9a84c' : 'transparent',
+                    color: tab === id ? '#0a0a0a' : '#aaa',
+                    fontWeight: tab === id ? 600 : 400,
+                    background: 'none',
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {tab === 'overzicht' && <OverzichtTab onTab={setTab} orders={orders} />}

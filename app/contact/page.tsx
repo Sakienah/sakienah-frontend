@@ -50,7 +50,10 @@ function ContactForm() {
   if (sent) {
     return (
       <div style={{ background: '#FAF7F2', padding: 40, textAlign: 'center' }}>
-        <div className="font-arabic" style={{ fontSize: 36, color: '#c9a84c', marginBottom: 16 }}>
+        <div
+          className="font-arabic"
+          style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', color: '#c9a84c', marginBottom: 16 }}
+        >
           شكرًا
         </div>
         <h3
@@ -226,10 +229,10 @@ export default function ContactPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 146,
-            paddingBottom: 48,
-            paddingLeft: 'var(--px-page)',
-            paddingRight: 'var(--px-page)',
+            paddingTop: 'clamp(120px, 20vw, 146px)',
+            paddingBottom: 'clamp(2rem, 6vw, 3rem)',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
@@ -239,7 +242,7 @@ export default function ContactPage() {
           <div style={{ position: 'relative', zIndex: 10 }}>
             <p
               style={{
-                fontSize: 10,
+                fontSize: 'var(--text-xs)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#c9a84c',
@@ -251,7 +254,11 @@ export default function ContactPage() {
             </p>
             <h1
               className="font-display text-white"
-              style={{ fontSize: 52, fontWeight: 600, letterSpacing: '-0.02em' }}
+              style={{
+                fontSize: 'clamp(2rem, 6vw, 3.25rem)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em',
+              }}
             >
               Contact
             </h1>
@@ -260,8 +267,10 @@ export default function ContactPage() {
 
         {/* Content */}
         <div
-          className="px-4 md:px-10 py-16 md:py-20"
+          className="py-16 md:py-20"
           style={{
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             background: '#fff',
             position: 'relative',
             overflow: 'hidden',

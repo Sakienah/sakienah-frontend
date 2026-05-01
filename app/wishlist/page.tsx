@@ -14,10 +14,10 @@ export default async function WishlistPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 146,
-            paddingBottom: 56,
-            paddingLeft: 40,
-            paddingRight: 40,
+            paddingTop: 'clamp(120px, 20vw, 146px)',
+            paddingBottom: 'clamp(40px, 8vw, 56px)',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -30,7 +30,7 @@ export default async function WishlistPage() {
             <div>
               <p
                 style={{
-                  fontSize: 10,
+                  fontSize: 'var(--text-xs)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: '#c9a84c',
@@ -42,7 +42,11 @@ export default async function WishlistPage() {
               </p>
               <h1
                 className="font-display text-white"
-                style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em' }}
+                style={{
+                  fontSize: 'clamp(2rem, 6vw, 2.75rem)',
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                }}
               >
                 Favorieten
               </h1>
@@ -53,7 +57,10 @@ export default async function WishlistPage() {
         <div
           style={{
             background: '#FAF7F2',
-            padding: '48px 40px 96px',
+            paddingTop: 'clamp(2rem, 5vw, 3rem)',
+            paddingBottom: 'clamp(3rem, 8vw, 6rem)',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}

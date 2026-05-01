@@ -135,32 +135,6 @@ export async function HeroSection() {
               Over Sakienah
             </Link>
           </div>
-
-          <div className="flex flex-wrap justify-center lg:justify-start" style={{ gap: 24 }}>
-            {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
-              <span
-                key={item}
-                className="flex items-center"
-                style={{
-                  fontSize: 'var(--text-xs)',
-                  color: 'rgb(253, 253, 253)',
-                  letterSpacing: '0.05em',
-                  gap: 8,
-                }}
-              >
-                <span
-                  style={{
-                    width: 4,
-                    height: 4,
-                    background: '#c9a84c',
-                    transform: 'rotate(45deg)',
-                    flexShrink: 0,
-                  }}
-                />
-                {item}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
 

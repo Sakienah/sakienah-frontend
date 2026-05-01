@@ -22,10 +22,10 @@ export default function AboutPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 146,
-            paddingBottom: 24,
-            paddingLeft: 'var(--px-page)',
-            paddingRight: 'var(--px-page)',
+            paddingTop: 'clamp(120px, 20vw, 146px)',
+            paddingBottom: 'clamp(1rem, 5vw, 1.5rem)',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -34,7 +34,7 @@ export default function AboutPage() {
           <div className="max-w-[1280px] mx-auto relative z-10 text-center">
             <p
               style={{
-                fontSize: 10,
+                fontSize: 'var(--text-xs)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#c9a84c',
@@ -46,14 +46,19 @@ export default function AboutPage() {
             </p>
             <h1
               className="font-display text-white"
-              style={{ fontSize: 52, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.15 }}
+              style={{
+                fontSize: 'clamp(2rem, 6vw, 3.25rem)',
+                fontWeight: 600,
+                letterSpacing: '-0.02em',
+                lineHeight: 1.15,
+              }}
             >
               Over Sakienah
             </h1>
             <p
               className="font-arabic"
               style={{
-                fontSize: 32,
+                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
                 color: '#c9a84c',
                 opacity: 0.6,
                 marginTop: 12,
@@ -67,9 +72,11 @@ export default function AboutPage() {
 
         {/* Story */}
         <div
-          className="px-4 md:px-10 py-16 md:py-24"
+          className="py-16 md:py-24"
           style={{
             background: '#fff',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -80,7 +87,7 @@ export default function AboutPage() {
               <div>
                 <p
                   style={{
-                    fontSize: 10,
+                    fontSize: 'var(--text-xs)',
                     letterSpacing: '0.22em',
                     textTransform: 'uppercase',
                     color: '#c9a84c',

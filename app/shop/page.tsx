@@ -18,8 +18,8 @@ export default async function ShopPage() {
         <div
           style={{
             background: '#0a0a0a',
-            paddingTop: 146,
-            paddingBottom: 56,
+            paddingTop: 'clamp(120px, 20vw, 146px)',
+            paddingBottom: 'clamp(40px, 8vw, 56px)',
             position: 'relative',
             overflow: 'hidden',
             textAlign: 'center',
@@ -35,7 +35,7 @@ export default async function ShopPage() {
                   left: '50%',
                   top: '50%',
                   transform: 'translate(-50%, -50%)',
-                  fontSize: 60,
+                  fontSize: 'clamp(3rem, 8vw, 4rem)',
                   color: '#c9a84c',
                   opacity: 0.12,
                   pointerEvents: 'none',
@@ -47,7 +47,7 @@ export default async function ShopPage() {
               </span>
               <p
                 style={{
-                  fontSize: 10,
+                  fontSize: 'var(--text-xs)',
                   letterSpacing: '0.22em',
                   textTransform: 'uppercase',
                   color: '#c9a84c',
@@ -61,7 +61,7 @@ export default async function ShopPage() {
               <h1
                 className="font-display text-white"
                 style={{
-                  fontSize: 48,
+                  fontSize: 'clamp(2rem, 6vw, 3rem)',
                   fontWeight: 600,
                   letterSpacing: '-0.02em',
                   position: 'relative',

@@ -15,13 +15,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <Navbar />
-      <main className="flex-1 bg-[#FAF7F2]" style={{ paddingTop: 96 }}>
+      <main className="flex-1 bg-[#FAF7F2]" style={{ paddingTop: 'clamp(5rem, 12vw, 6rem)' }}>
         <ProductBreadcrumb productName={product.name} />
 
         <div
-          className="px-4 md:px-10 py-10 md:py-20"
+          className="py-10 md:py-20"
           style={{
             background: '#FAF7F2',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}

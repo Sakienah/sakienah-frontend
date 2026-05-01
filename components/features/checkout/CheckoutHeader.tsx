@@ -13,10 +13,10 @@ export function CheckoutHeader({ step, allDone = false }: Props) {
     <div
       style={{
         background: '#0a0a0a',
-        paddingTop: 106,
-        paddingBottom: 56,
-        paddingLeft: 40,
-        paddingRight: 40,
+        paddingTop: 'clamp(120px, 20vw, 106px)',
+        paddingBottom: 'clamp(40px, 8vw, 56px)',
+        paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -25,7 +25,7 @@ export function CheckoutHeader({ step, allDone = false }: Props) {
       <div className="max-w-[1280px] mx-auto relative z-10">
         <p
           style={{
-            fontSize: 10,
+            fontSize: 'var(--text-xs)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: '#c9a84c',
@@ -37,7 +37,12 @@ export function CheckoutHeader({ step, allDone = false }: Props) {
         </p>
         <h1
           className="font-display text-white"
-          style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 28 }}
+          style={{
+            fontSize: 'clamp(2rem, 6vw, 2.75rem)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            marginBottom: 28,
+          }}
         >
           Bestelling afronden
         </h1>
@@ -69,7 +74,7 @@ export function CheckoutHeader({ step, allDone = false }: Props) {
                   </div>
                   <span
                     style={{
-                      fontSize: 11,
+                      fontSize: 'var(--text-xs)',
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase',
                       fontWeight: 500,

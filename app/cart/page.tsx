@@ -12,10 +12,10 @@ function CartHeader() {
     <div
       style={{
         background: '#0a0a0a',
-        paddingTop: 146,
-        paddingBottom: 56,
-        paddingLeft: 'var(--px-page)',
-        paddingRight: 'var(--px-page)',
+        paddingTop: 'clamp(120px, 20vw, 146px)',
+        paddingBottom: 'clamp(40px, 8vw, 56px)',
+        paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+        paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -28,7 +28,7 @@ function CartHeader() {
         <div>
           <p
             style={{
-              fontSize: 10,
+              fontSize: 'var(--text-xs)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#c9a84c',
@@ -40,12 +40,19 @@ function CartHeader() {
           </p>
           <h1
             className="font-display text-white"
-            style={{ fontSize: 44, fontWeight: 600, letterSpacing: '-0.02em' }}
+            style={{
+              fontSize: 'clamp(2rem, 6vw, 2.75rem)',
+              fontWeight: 600,
+              letterSpacing: '-0.02em',
+            }}
           >
             Winkelwagen
           </h1>
         </div>
-        <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
+        <span
+          className="hidden md:block"
+          style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.4)' }}
+        >
           {totalItems} product{totalItems !== 1 ? 'en' : ''}
         </span>
       </div>
@@ -60,9 +67,11 @@ export default function CartPage() {
       <main className="flex-1">
         <CartHeader />
         <div
-          className="px-4 md:px-10 py-12 md:py-24"
+          className="py-12 md:py-24"
           style={{
             background: '#FAF7F2',
+            paddingLeft: 'clamp(1rem, 5vw, 2.5rem)',
+            paddingRight: 'clamp(1rem, 5vw, 2.5rem)',
             position: 'relative',
             overflow: 'hidden',
           }}
