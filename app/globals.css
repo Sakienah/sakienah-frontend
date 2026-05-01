@@ -7,6 +7,45 @@
   /* Fluid typography */
   --text-hero: clamp(2rem, 4vw + 1rem, 4rem);
   --text-h2: clamp(1.75rem, 2vw + 1.25rem, 2.75rem);
+  --text-h1-page: clamp(1.75rem, 5vw, 3.25rem);
+  --px-page: clamp(1rem, 5vw, 2.5rem);
+}
+
+/* Trust bar responsive */
+.trust-bar {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.trust-bar-item {
+  flex: none;
+  width: 50%;
+  position: relative;
+}
+
+.trust-bar-item:nth-child(odd) {
+  border-right: 1px solid rgba(201, 168, 76, 0.12);
+}
+
+.trust-bar-item:nth-child(1),
+.trust-bar-item:nth-child(2) {
+  border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+}
+
+@media (min-width: 768px) {
+  .trust-bar {
+    flex-wrap: nowrap;
+  }
+  .trust-bar-item {
+    flex: 1;
+    width: auto;
+    border-right: 1px solid rgba(201, 168, 76, 0.12);
+    border-bottom: none !important;
+  }
+  .trust-bar-item:last-child {
+    border-right: none;
+  }
 }
 
 /* Hero section responsive layout */
@@ -29,7 +68,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 100px 24px 60px;
+  padding: clamp(90px, 15vw, 100px) 24px 60px;
   position: relative;
   overflow: hidden;
 }
