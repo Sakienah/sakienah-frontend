@@ -99,12 +99,12 @@ export function TrustBar() {
           onMouseEnter={() => setHovered(i)}
           onMouseLeave={() => setHovered(null)}
           style={{
-            padding: '18px 28px',
+            padding: 'clamp(14px, 4vw, 18px) clamp(16px, 5vw, 28px)',
             cursor: 'default',
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
-            gap: 16,
+            gap: 'clamp(10px, 3vw, 16px)',
           }}
         >
           {/* Number */}
@@ -129,11 +129,11 @@ export function TrustBar() {
           <div
             style={{
               position: 'absolute',
-              right: 10,
+              right: 'clamp(6px, 2vw, 10px)',
               top: '50%',
               transform: 'translateY(-50%)',
               fontFamily: 'var(--font-amiri)',
-              fontSize: 38,
+              fontSize: 'clamp(24px, 6vw, 38px)',
               direction: 'rtl',
               color: '#c9a84c',
               opacity: hovered === i ? 0.18 : 0.1,
