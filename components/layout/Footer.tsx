@@ -5,8 +5,8 @@ import Link from 'next/link';
 export function Footer() {
   return (
     <footer className="text-white" style={{ background: '#0a0a0a', padding: '72px 0 36px' }}>
-      <div className="max-w-[1280px] mx-auto px-10">
-        <div className="grid mb-14" style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48 }}>
+      <div className="max-w-[1280px] mx-auto px-6 md:px-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10 md:gap-12 mb-14">
           <div>
             <div className="font-display font-semibold text-gold mb-2" style={{ fontSize: 24 }}>
               Sakienah
@@ -104,7 +104,7 @@ export function Footer() {
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
             © 2026 Sakienah. Alle rechten voorbehouden.
           </p>
-          <div className="flex" style={{ gap: 24 }}>
+          <div className="flex flex-wrap" style={{ gap: 24 }}>
             {['Privacy', 'Algemene Voorwaarden', 'Cookies'].map((t) => (
               <span
                 key={t}

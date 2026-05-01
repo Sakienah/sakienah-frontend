@@ -3,6 +3,60 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
+
+  /* Fluid typography */
+  --text-hero: clamp(2rem, 4vw + 1rem, 4rem);
+  --text-h2: clamp(1.75rem, 2vw + 1.25rem, 2.75rem);
+}
+
+/* Hero section responsive layout */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  overflow: hidden;
+  position: relative;
+  min-height: 100svh;
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    grid-template-columns: 58% 42%;
+    min-height: 100vh;
+  }
+}
+
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .hero-left {
+    padding-top: 140px;
+    padding-bottom: 80px;
+    padding-right: 64px;
+    padding-left: max(40px, calc((100vw - 1280px) / 2 + 40px));
+  }
+}
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 24px 60px;
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .hero-right {
+    padding: 140px 48px 80px;
+  }
 }
 
 @theme inline {

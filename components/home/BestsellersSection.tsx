@@ -8,11 +8,12 @@ export async function BestsellersSection() {
 
   return (
     <section
-      style={{ background: '#FAF7F2', padding: '96px 0', position: 'relative', overflow: 'hidden' }}
+      className="py-16 md:py-24"
+      style={{ background: '#FAF7F2', position: 'relative', overflow: 'hidden' }}
     >
       <GeomPattern flip />
-      <div className="max-w-[1280px] mx-auto relative z-10" style={{ padding: '0 40px' }}>
-        <div className="flex items-end justify-between" style={{ marginBottom: 56 }}>
+      <div className="max-w-[1280px] mx-auto relative z-10 px-6 md:px-10">
+        <div className="flex items-end justify-between mb-10 md:mb-14">
           <div>
             <p
               style={{
@@ -29,7 +30,7 @@ export async function BestsellersSection() {
             <h2
               className="font-display"
               style={{
-                fontSize: 44,
+                fontSize: 'var(--text-h2)',
                 fontWeight: 600,
                 color: '#0a0a0a',
                 letterSpacing: '-0.02em',

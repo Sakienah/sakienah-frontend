@@ -5,7 +5,7 @@ import { ProductCard } from '@/components/ui/ProductCard';
 
 export function ShopGrid({ products }: { products: Product[] }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {products.map((p) => (
         <ProductCard
           key={p.id}

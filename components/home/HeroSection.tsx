@@ -8,31 +8,10 @@ export async function HeroSection() {
   const featured = dealProduct ? [dealProduct] : [];
 
   return (
-    <section
-      style={{
-        minHeight: '100vh',
-        display: 'grid',
-        gridTemplateColumns: '58% 42%',
-        overflow: 'hidden',
-        position: 'relative',
-      }}
-    >
-      {/* Left */}
-      <div
-        style={{
-          background: '#0a0a0a',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          paddingTop: 140,
-          paddingBottom: 80,
-          paddingRight: 64,
-          paddingLeft: 'max(40px, calc((100vw - 1280px) / 2 + 40px))',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Zellij pattern — invert→sepia→goud, screen blend op donker */}
+    <section className="hero-section">
+      {/* Left — donker, tekst */}
+      <div className="hero-left bg-[#0a0a0a]">
+        {/* Zellij pattern */}
         <div
           aria-hidden
           style={{
@@ -49,12 +28,12 @@ export async function HeroSection() {
         />
         {/* Arabic watermark */}
         <div
-          className="font-arabic select-none pointer-events-none absolute"
+          className="font-arabic select-none pointer-events-none absolute hidden lg:block"
           style={{
             right: -40,
             top: '50%',
             transform: 'translateY(-50%)',
-            fontSize: 280,
+            fontSize: 'clamp(8rem, 18vw, 17.5rem)',
             color: 'rgba(201,168,76,0.04)',
             lineHeight: 1,
             direction: 'rtl',
@@ -90,7 +69,7 @@ export async function HeroSection() {
           <h1
             className="font-display text-white"
             style={{
-              fontSize: 64,
+              fontSize: 'var(--text-hero)',
               fontWeight: 700,
               lineHeight: 1.1,
               marginBottom: 8,
@@ -102,7 +81,7 @@ export async function HeroSection() {
           <h1
             className="font-display text-gold italic"
             style={{
-              fontSize: 64,
+              fontSize: 'var(--text-hero)',
               fontWeight: 400,
               lineHeight: 1.1,
               marginBottom: 32,
@@ -126,7 +105,7 @@ export async function HeroSection() {
             accessoires.
           </p>
 
-          <div className="flex mb-13" style={{ gap: 14 }}>
+          <div className="flex flex-wrap mb-13" style={{ gap: 14 }}>
             <Link
               href="/shop"
               className="text-[11px] tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] hover:opacity-85 transition-opacity"
@@ -148,7 +127,7 @@ export async function HeroSection() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap" style={{ gap: 32 }}>
+          <div className="flex flex-wrap" style={{ gap: 24 }}>
             {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
               <span
                 key={item}
@@ -176,20 +155,9 @@ export async function HeroSection() {
         </div>
       </div>
 
-      {/* Right */}
-      <div
-        style={{
-          background: '#FAF7F2',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '140px 48px 80px',
-          gap: 24,
-          position: 'relative',
-        }}
-      >
-        {/* Zellij pattern — sepia→goud, multiply blend op crème */}
+      {/* Right — crème, product */}
+      <div className="hero-right bg-[#FAF7F2]">
+        {/* Zellij pattern */}
         <div
           aria-hidden
           style={{
@@ -205,7 +173,7 @@ export async function HeroSection() {
           }}
         />
         <div
-          className="font-arabic select-none absolute"
+          className="font-arabic select-none absolute hidden lg:block"
           style={{
             fontSize: 48,
             color: '#c9a84c',
