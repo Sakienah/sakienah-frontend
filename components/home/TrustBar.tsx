@@ -70,12 +70,11 @@ export function TrustBar() {
 
   return (
     <div
+      className="trust-bar"
       style={{
         background: '#0f0d0a',
         borderTop: '1px solid rgba(201,168,76,0.12)',
         borderBottom: '1px solid rgba(201,168,76,0.12)',
-        display: 'flex',
-        position: 'relative',
       }}
     >
       {/* Top gold gradient line */}
@@ -89,132 +88,119 @@ export function TrustBar() {
           background:
             'linear-gradient(90deg, transparent 0%, #c9a84c 20%, #c9a84c 80%, transparent 100%)',
           opacity: 0.35,
+          zIndex: 1,
         }}
       />
 
       {trustItems.map(({ label, sub }, i) => (
-        <>
-          {i > 0 && (
-            <div
-              key={`div-${i}`}
-              style={{
-                width: 1,
-                alignSelf: 'stretch',
-                background: 'rgba(201,168,76,0.12)',
-                flexShrink: 0,
-              }}
-            />
-          )}
-          <div
-            key={label}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
+        <div
+          key={label}
+          className="trust-bar-item"
+          onMouseEnter={() => setHovered(i)}
+          onMouseLeave={() => setHovered(null)}
+          style={{
+            padding: '18px 28px',
+            cursor: 'default',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+          }}
+        >
+          {/* Number */}
+          <span
             style={{
-              flex: 1,
-              padding: '18px 28px',
-              cursor: 'default',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 16,
+              position: 'absolute',
+              top: 8,
+              left: 12,
+              fontFamily: 'var(--font-playfair)',
+              fontSize: 10,
+              color: '#c9a84c',
+              opacity: hovered === i ? 0.9 : 0.5,
+              fontStyle: 'italic',
+              transition: 'opacity 0.3s',
+              letterSpacing: '0.05em',
             }}
           >
-            {/* Number */}
-            <span
+            0{i + 1}
+          </span>
+
+          {/* Arabic watermark */}
+          <div
+            style={{
+              position: 'absolute',
+              right: 10,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              fontFamily: 'var(--font-amiri)',
+              fontSize: 38,
+              direction: 'rtl',
+              color: '#c9a84c',
+              opacity: hovered === i ? 0.18 : 0.1,
+              pointerEvents: 'none',
+              userSelect: 'none',
+              lineHeight: 1,
+              transition: 'opacity 0.3s',
+            }}
+          >
+            {ARABIC[i]}
+          </div>
+
+          {/* Animated bottom line */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: hovered === i ? '100%' : '30%',
+              height: 1.5,
+              background: 'linear-gradient(90deg, #c9a84c, rgba(201,168,76,0.2))',
+              transition: 'width 0.4s ease',
+            }}
+          />
+
+          {/* Icon */}
+          <div
+            style={{
+              color: '#c9a84c',
+              flexShrink: 0,
+              opacity: hovered === i ? 1 : 0.8,
+              transition: 'opacity 0.3s, transform 0.3s',
+              transform: hovered === i ? 'translateY(-2px)' : 'translateY(0)',
+            }}
+          >
+            {ICONS[i]}
+          </div>
+
+          <div>
+            <div
               style={{
-                position: 'absolute',
-                top: 8,
-                left: 12,
                 fontFamily: 'var(--font-playfair)',
+                fontSize: 13,
+                fontStyle: hovered === i ? 'italic' : 'normal',
+                fontWeight: 400,
+                color: hovered === i ? '#fff' : 'rgba(255,255,255,0.9)',
+                marginBottom: 3,
+                transition: 'all 0.3s',
+              }}
+            >
+              {label}
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-sans)',
                 fontSize: 10,
                 color: '#c9a84c',
-                opacity: hovered === i ? 0.9 : 0.5,
-                fontStyle: 'italic',
-                transition: 'opacity 0.3s',
-                letterSpacing: '0.05em',
-              }}
-            >
-              0{i + 1}
-            </span>
-
-            {/* Arabic watermark */}
-            <div
-              style={{
-                position: 'absolute',
-                right: 10,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                fontFamily: 'var(--font-amiri)',
-                fontSize: 38,
-                direction: 'rtl',
-                color: '#c9a84c',
-                opacity: hovered === i ? 0.18 : 0.1,
-                pointerEvents: 'none',
-                userSelect: 'none',
-                lineHeight: 1,
+                opacity: hovered === i ? 1 : 0.65,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
                 transition: 'opacity 0.3s',
               }}
             >
-              {ARABIC[i]}
-            </div>
-
-            {/* Animated bottom line */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                width: hovered === i ? '100%' : '30%',
-                height: 1.5,
-                background: 'linear-gradient(90deg, #c9a84c, rgba(201,168,76,0.2))',
-                transition: 'width 0.4s ease',
-              }}
-            />
-
-            {/* Icon */}
-            <div
-              style={{
-                color: '#c9a84c',
-                flexShrink: 0,
-                opacity: hovered === i ? 1 : 0.8,
-                transition: 'opacity 0.3s, transform 0.3s',
-                transform: hovered === i ? 'translateY(-2px)' : 'translateY(0)',
-              }}
-            >
-              {ICONS[i]}
-            </div>
-
-            <div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-playfair)',
-                  fontSize: 13,
-                  fontStyle: hovered === i ? 'italic' : 'normal',
-                  fontWeight: 400,
-                  color: hovered === i ? '#fff' : 'rgba(255,255,255,0.9)',
-                  marginBottom: 3,
-                  transition: 'all 0.3s',
-                }}
-              >
-                {label}
-              </div>
-              <div
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 10,
-                  color: '#c9a84c',
-                  opacity: hovered === i ? 1 : 0.65,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  transition: 'opacity 0.3s',
-                }}
-              >
-                {sub}
-              </div>
+              {sub}
             </div>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
