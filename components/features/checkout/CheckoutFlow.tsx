@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,6 +9,7 @@ import {
   postCheckout,
   postGuestCheckout,
   validateCoupon,
+  getAddress,
   type OrderResponse,
   type CouponValidationResult,
 } from '@/lib/api';
@@ -34,6 +35,49 @@ export function CheckoutFlow() {
   const [couponCode, setCouponCode] = useState('');
   const [couponError, setCouponError] = useState<string | null>(null);
   const [couponLoading, setCouponLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const [firstName = '', ...rest] = user.naam.split(' ');
+    const lastName = rest.join(' ');
+    setForm((f) => ({ ...f, firstName, lastName, email: user.email }));
+    void getAddress().then((addr) => {
+      if (!addr) return;
+      setForm((f) => ({
+        ...f,
+        address: addr.street,
+        postalCode: addr.postalCode,
+        city: addr.city,
+      }));
+    });
+  }, [user]);
+
+  useEffect(() => {
+    if (user) return;
+    try {
+      const raw = localStorage.getItem('sakienah_guest_address');
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return;
+      const record = parsed as Record<string, unknown>;
+      const safeFields: (keyof FormData)[] = [
+        'firstName',
+        'lastName',
+        'email',
+        'phone',
+        'address',
+        'postalCode',
+        'city',
+      ];
+      const safe: Partial<FormData> = {};
+      for (const key of safeFields) {
+        if (typeof record[key] === 'string') safe[key] = record[key] as string;
+      }
+      setForm((f) => ({ ...f, ...safe }));
+    } catch {
+      // localStorage onbeschikbaar of ongeldige JSON
+    }
+  }, [user]);
 
   const discountAmount = coupon?.discountAmount ?? 0;
   const discountedSubtotal = totalPrice - discountAmount;
@@ -109,6 +153,28 @@ export function CheckoutFlow() {
     }
   }
 
+  function handleStepInfoNext() {
+    if (mode === 'guest') {
+      try {
+        localStorage.setItem(
+          'sakienah_guest_address',
+          JSON.stringify({
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            postalCode: form.postalCode,
+            city: form.city,
+          }),
+        );
+      } catch {
+        // localStorage onbeschikbaar
+      }
+    }
+    setStep(2);
+  }
+
   if (items.length === 0 && !placed) {
     return (
       <>
@@ -178,7 +244,7 @@ export function CheckoutFlow() {
     return (
       <>
         <CheckoutHeader step={3} allDone />
-        <StepConfirmation form={form} order={order} />
+        <StepConfirmation form={form} order={order} isGuest={mode === 'guest'} />
       </>
     );
   }
@@ -215,7 +281,7 @@ export function CheckoutFlow() {
                 <StepInfo
                   form={form}
                   update={update}
-                  onNext={() => setStep(2)}
+                  onNext={handleStepInfoNext}
                   isGuest={mode === 'guest'}
                 />
               )}
