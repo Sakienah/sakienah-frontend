@@ -221,7 +221,7 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-1">
         {/* Hero */}
         <div
           style={{

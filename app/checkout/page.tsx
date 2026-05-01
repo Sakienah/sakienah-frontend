@@ -6,7 +6,7 @@ export default function CheckoutPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-1">
         <CheckoutFlow />
       </main>
       <Footer />

@@ -57,7 +57,7 @@ export default function CartPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-1">
         <CartHeader />
         <div
           style={{

@@ -17,7 +17,7 @@ export default function AboutPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-1">
         {/* Dark hero */}
         <div
           style={{

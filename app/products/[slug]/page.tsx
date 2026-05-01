@@ -15,7 +15,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#FAF7F2]" style={{ paddingTop: 96 }}>
+      <main className="flex-1 bg-[#FAF7F2]" style={{ paddingTop: 96 }}>
         <ProductBreadcrumb productName={product.name} />
 
         <div

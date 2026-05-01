@@ -10,7 +10,7 @@ export default async function WishlistPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen">
+      <main className="flex-1">
         <div
           style={{
             background: '#0a0a0a',
