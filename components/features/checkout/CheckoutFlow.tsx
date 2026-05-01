@@ -183,8 +183,8 @@ export function CheckoutFlow() {
             background: '#0a0a0a',
             paddingTop: 106,
             paddingBottom: 56,
-            paddingLeft: 40,
-            paddingRight: 40,
+            paddingLeft: 'var(--px-page)',
+            paddingRight: 'var(--px-page)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -253,22 +253,16 @@ export function CheckoutFlow() {
     <>
       <CheckoutHeader step={step} />
       <div
+        className="px-4 md:px-10 py-12 md:py-24"
         style={{
           background: '#FAF7F2',
-          padding: '48px 40px 96px',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
         <GeomPattern flip />
         <div
-          className="max-w-[1280px] mx-auto relative z-10"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: step === 0 ? '1fr' : '1fr 380px',
-            gap: 48,
-            alignItems: 'start',
-          }}
+          className={`max-w-[1280px] mx-auto relative z-10 ${step === 0 ? '' : 'grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start'}`}
         >
           <div
             style={{ background: '#fff', border: '1px solid #F0EBE3', padding: 40 }}
