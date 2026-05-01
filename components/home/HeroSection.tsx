@@ -156,7 +156,7 @@ export async function HeroSection() {
       </div>
 
       {/* Right — crème, product */}
-      <div className="hero-right bg-[#FAF7F2]">
+      <div className="hero-right bg-[#FAF7F2] hidden lg:flex">
         {/* Zellij pattern */}
         <div
           aria-hidden
