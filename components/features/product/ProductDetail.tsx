@@ -36,6 +36,7 @@ export function ProductDetail({
 }: Props) {
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState('beschrijving');
+  const [tabKey, setTabKey] = useState(0);
   const [added, setAdded] = useState(false);
   const [stickyVisible, setStickyVisible] = useState(false);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
@@ -502,7 +503,10 @@ export function ProductDetail({
             ].map(([t, l]) => (
               <button
                 key={t}
-                onClick={() => setTab(t)}
+                onClick={() => {
+                  setTab(t);
+                  setTabKey((k) => k + 1);
+                }}
                 className="flex-shrink-0"
                 style={{
                   fontSize: 11,
@@ -524,69 +528,83 @@ export function ProductDetail({
             ))}
           </div>
         </div>
-        {tab === 'beschrijving' && (
-          <div style={{ maxWidth: 680 }}>
-            {product.description ? (
-              product.description.split('\n\n').map((para, i) => (
-                <p
-                  key={i}
-                  style={{ fontSize: 15, color: '#555', lineHeight: 1.9, marginBottom: 20 }}
-                >
-                  {para}
+        <div
+          key={tabKey}
+          style={{
+            maxWidth: 680,
+            animation: 'fadeInTab 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
+        >
+          <style>{`
+            @keyframes fadeInTab {
+              from { opacity: 0; transform: translateY(12px) scale(0.98); }
+              to { opacity: 1; transform: translateY(0) scale(1); }
+            }
+          `}</style>
+          {tab === 'beschrijving' && (
+            <div>
+              {product.description ? (
+                product.description.split('\n\n').map((para, i) => (
+                  <p
+                    key={i}
+                    style={{ fontSize: 15, color: '#555', lineHeight: 1.9, marginBottom: 20 }}
+                  >
+                    {para}
+                  </p>
+                ))
+              ) : (
+                <p style={{ fontSize: 15, color: '#555', lineHeight: 1.9 }}>
+                  Geen beschrijving beschikbaar.
                 </p>
-              ))
-            ) : (
-              <p style={{ fontSize: 15, color: '#555', lineHeight: 1.9 }}>
-                Geen beschrijving beschikbaar.
-              </p>
-            )}
-          </div>
-        )}
-        {tab === 'kenmerken' && (
-          <div style={{ maxWidth: 560 }}>
-            <div
-              className="flex items-start"
-              style={{ gap: 14, padding: '14px 0', borderBottom: '1px solid #F8F4EF' }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  background: '#c9a84c',
-                  transform: 'rotate(45deg)',
-                  flexShrink: 0,
-                  marginTop: 6,
-                }}
-              />
-              <span style={{ fontSize: 14, color: '#444', lineHeight: 1.6 }}>
-                Premium kwaliteit materiaal
-              </span>
+              )}
             </div>
-            <div
-              className="flex items-start"
-              style={{ gap: 14, padding: '14px 0', borderBottom: '1px solid #F8F4EF' }}
-            >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  background: '#c9a84c',
-                  transform: 'rotate(45deg)',
-                  flexShrink: 0,
-                  marginTop: 6,
-                }}
-              />
-              <span style={{ fontSize: 14, color: '#444', lineHeight: 1.6 }}>
-                Handgemaakt met aandacht voor detail
-              </span>
+          )}
+          {tab === 'kenmerken' && (
+            <div style={{ maxWidth: 560 }}>
+              <div
+                className="flex items-start"
+                style={{ gap: 14, padding: '14px 0', borderBottom: '1px solid #F8F4EF' }}
+              >
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    background: '#c9a84c',
+                    transform: 'rotate(45deg)',
+                    flexShrink: 0,
+                    marginTop: 6,
+                  }}
+                />
+                <span style={{ fontSize: 14, color: '#444', lineHeight: 1.6 }}>
+                  Premium kwaliteit materiaal
+                </span>
+              </div>
+              <div
+                className="flex items-start"
+                style={{ gap: 14, padding: '14px 0', borderBottom: '1px solid #F8F4EF' }}
+              >
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    background: '#c9a84c',
+                    transform: 'rotate(45deg)',
+                    flexShrink: 0,
+                    marginTop: 6,
+                  }}
+                />
+                <span style={{ fontSize: 14, color: '#444', lineHeight: 1.6 }}>
+                  Handgemaakt met aandacht voor detail
+                </span>
+              </div>
             </div>
-          </div>
-        )}
-        {tab === 'reviews' && (
-          <div style={{ maxWidth: 680 }}>
-            <p style={{ fontSize: 14, color: '#aaa' }}>Nog geen reviews voor dit product.</p>
-          </div>
-        )}
+          )}
+          {tab === 'reviews' && (
+            <div>
+              <p style={{ fontSize: 14, color: '#aaa' }}>Nog geen reviews voor dit product.</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Sticky bar */}
