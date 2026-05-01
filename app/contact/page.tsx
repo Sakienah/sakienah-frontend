@@ -68,7 +68,7 @@ function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label
             style={{
@@ -228,8 +228,8 @@ export default function ContactPage() {
             background: '#0a0a0a',
             paddingTop: 146,
             paddingBottom: 48,
-            paddingLeft: 40,
-            paddingRight: 40,
+            paddingLeft: 'var(--px-page)',
+            paddingRight: 'var(--px-page)',
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
@@ -260,16 +260,16 @@ export default function ContactPage() {
 
         {/* Content */}
         <div
+          className="px-4 md:px-10 py-16 md:py-20"
           style={{
             background: '#fff',
-            padding: '80px 40px',
             position: 'relative',
             overflow: 'hidden',
           }}
         >
           <GeomPattern flip />
           <div className="max-w-[1100px] mx-auto relative z-10">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80 }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
               {/* Left */}
               <div>
                 <h2
