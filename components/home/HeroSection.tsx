@@ -42,9 +42,12 @@ export async function HeroSection() {
           سكينة
         </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 w-full max-w-[420px] text-center lg:text-left">
           {/* Bismillah */}
-          <div className="flex items-center mb-7" style={{ gap: 12 }}>
+          <div
+            className="flex items-center justify-center lg:justify-start mb-7"
+            style={{ gap: 12 }}
+          >
             <span
               style={{ width: 28, height: 1, background: '#c9a84c', opacity: 0.6, flexShrink: 0 }}
             />
@@ -105,7 +108,7 @@ export async function HeroSection() {
             accessoires.
           </p>
 
-          <div className="flex flex-wrap mb-13" style={{ gap: 14 }}>
+          <div className="flex flex-wrap mb-13 justify-center lg:justify-start" style={{ gap: 14 }}>
             <Link
               href="/shop"
               className="text-[11px] tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] hover:opacity-85 transition-opacity"
@@ -127,7 +130,7 @@ export async function HeroSection() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap" style={{ gap: 24 }}>
+          <div className="flex flex-wrap justify-center lg:justify-start" style={{ gap: 24 }}>
             {['Gratis verzending v.a. €50', '30 dagen retour', 'Veilig betalen'].map((item) => (
               <span
                 key={item}
