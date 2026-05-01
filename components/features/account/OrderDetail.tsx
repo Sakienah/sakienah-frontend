@@ -96,54 +96,121 @@ function StatusTimeline({ status }: { status: string }) {
   const currentIndex = STATUS_STEPS.findIndex((s) => s.key === status);
 
   return (
-    <div className="flex items-start gap-0 w-full">
-      {STATUS_STEPS.map((step, i) => {
-        const done = i <= currentIndex;
-        const active = i === currentIndex;
-        return (
-          <div key={step.key} className="flex-1 flex flex-col items-center">
-            <div className="flex items-center w-full">
-              {i > 0 && (
+    <div className="hidden md:block">
+      <div className="flex items-start gap-0 w-full">
+        {STATUS_STEPS.map((step, i) => {
+          const done = i <= currentIndex;
+          const active = i === currentIndex;
+          return (
+            <div key={step.key} className="flex-1 flex flex-col items-center">
+              <div className="flex items-center w-full">
+                {i > 0 && (
+                  <div
+                    className="flex-1 h-[2px]"
+                    style={{ background: done ? '#c9a84c' : '#E8E0D5' }}
+                  />
+                )}
+                <div
+                  className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
+                  style={{
+                    background: done ? '#c9a84c' : '#F0EBE3',
+                    border: active ? '2px solid #0a0a0a' : 'none',
+                  }}
+                >
+                  {done && (
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2 6l3 3 5-5"
+                        stroke={active ? '#0a0a0a' : '#fff'}
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  )}
+                </div>
+                {i < STATUS_STEPS.length - 1 && (
+                  <div
+                    className="flex-1 h-[2px]"
+                    style={{ background: i < currentIndex ? '#c9a84c' : '#E8E0D5' }}
+                  />
+                )}
+              </div>
+              <div
+                className="mt-2 font-sans text-[10px] tracking-[0.1em] uppercase text-center"
+                style={{ color: done ? '#0a0a0a' : '#bbb', fontWeight: active ? 600 : 400 }}
+              >
+                {step.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function StatusStepsMobile({ status }: { status: string }) {
+  const currentIndex = STATUS_STEPS.findIndex((s) => s.key === status);
+  return (
+    <div className="md:hidden">
+      <div className="flex items-center w-full px-1">
+        {STATUS_STEPS.map((step, i) => {
+          const done = i <= currentIndex;
+          const active = i === currentIndex;
+          const lineDone = i < currentIndex;
+          const isFirst = i === 0;
+          const isLast = i === STATUS_STEPS.length - 1;
+
+          return (
+            <div key={step.key} className="flex items-center flex-1">
+              {/* Left line - only show for steps after the first */}
+              {!isFirst && (
                 <div
                   className="flex-1 h-[2px]"
-                  style={{ background: done ? '#c9a84c' : '#E8E0D5' }}
+                  style={{ background: lineDone ? '#c9a84c' : '#E8E0D5' }}
                 />
               )}
+              {/* Circle */}
               <div
-                className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all"
+                className="w-4 h-4 rounded-full flex-shrink-0 transition-all"
                 style={{
                   background: done ? '#c9a84c' : '#F0EBE3',
                   border: active ? '2px solid #0a0a0a' : 'none',
                 }}
-              >
-                {done && (
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2 6l3 3 5-5"
-                      stroke={active ? '#0a0a0a' : '#fff'}
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                )}
-              </div>
-              {i < STATUS_STEPS.length - 1 && (
+              />
+              {/* Right line - only show for steps before the last */}
+              {!isLast && (
                 <div
                   className="flex-1 h-[2px]"
                   style={{ background: i < currentIndex ? '#c9a84c' : '#E8E0D5' }}
                 />
               )}
             </div>
-            <div
-              className="mt-2 font-sans text-[10px] tracking-[0.1em] uppercase text-center"
-              style={{ color: done ? '#0a0a0a' : '#bbb', fontWeight: active ? 600 : 400 }}
-            >
-              {step.label}
+          );
+        })}
+      </div>
+      <div className="flex w-full mt-1 px-1">
+        {STATUS_STEPS.map((step, i) => {
+          const done = i <= currentIndex;
+          const active = i === currentIndex;
+          return (
+            <div key={step.key} className="flex-1 text-center">
+              <span
+                className="font-sans uppercase"
+                style={{
+                  color: done ? '#0a0a0a' : '#bbb',
+                  fontWeight: active ? 600 : 400,
+                  fontSize: 8,
+                  letterSpacing: '0.03em',
+                }}
+              >
+                {step.label}
+              </span>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -267,6 +334,7 @@ export function OrderDetail({ orderId }: { orderId: string }) {
             </span>
           </div>
           <StatusTimeline status={order.status} />
+          <StatusStepsMobile status={order.status} />
         </div>
 
         {/* Producten */}
