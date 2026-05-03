@@ -98,7 +98,11 @@ export function registerUser(data: {
 }
 
 export async function verifyEmail(token: string): Promise<User> {
-  const res = await fetch(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
+  const res = await fetch('/api/auth/verify-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.message ?? 'Verificatie mislukt.');
   return data as User;

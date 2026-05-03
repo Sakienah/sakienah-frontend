@@ -4,14 +4,22 @@ const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http:
 const COOKIE_NAME = 'sakienah_token';
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
 
-export async function GET(req: NextRequest) {
-  const token = req.nextUrl.searchParams.get('token');
+export async function POST(req: NextRequest) {
+  let token: string | null = null;
+  try {
+    const body = await req.json();
+    token = typeof body.token === 'string' ? body.token : null;
+  } catch {
+    // body parsing failed
+  }
   if (!token) {
     return NextResponse.json({ message: 'Token ontbreekt.' }, { status: 400 });
   }
 
-  const apiRes = await fetch(`${API_URL}/auth/verify-email?token=${encodeURIComponent(token)}`, {
-    method: 'GET',
+  const apiRes = await fetch(`${API_URL}/auth/verify-email`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
   });
 
   const data = await apiRes.text();
