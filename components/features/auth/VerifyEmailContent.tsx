@@ -21,6 +21,7 @@ export function VerifyEmailContent() {
 
     const run = token
       ? verifyEmail(token).then((user) => {
+          window.history.replaceState({}, '', '/verify-email');
           login(user);
           setStatus('success');
           setTimeout(() => router.push('/account'), 2500);

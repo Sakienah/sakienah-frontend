@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AuthLayout } from './AuthLayout';
@@ -12,6 +12,12 @@ const labelClass = 'block font-sans text-[10px] tracking-[0.13em] uppercase text
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token') ?? '';
+
+  useEffect(() => {
+    if (token) {
+      window.history.replaceState({}, '', '/reset-password');
+    }
+  }, [token]);
 
   const [form, setForm] = useState({ nieuwWachtwoord: '', bevestigWachtwoord: '' });
   const [loading, setLoading] = useState(false);
