@@ -117,6 +117,7 @@ export async function updateProfile(data: {
   achternaam?: string;
   email?: string;
   telefoon?: string;
+  huidigWachtwoord?: string;
 }): Promise<User> {
   return proxyMutate<User>('PATCH', '/auth/profile', data);
 }

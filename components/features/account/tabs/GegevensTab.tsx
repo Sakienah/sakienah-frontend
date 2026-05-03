@@ -8,24 +8,42 @@ import { inputClass, labelClass } from '../shared';
 export function GegevensTab() {
   const { user, updateUser } = useAuth();
   const naamDelen = (user?.naam ?? '').split(' ');
+  const originalEmail = user?.email ?? '';
   const [form, setForm] = useState({
     voornaam: naamDelen[0] ?? '',
     achternaam: naamDelen.slice(1).join(' ') ?? '',
-    email: user?.email ?? '',
+    email: originalEmail,
     telefoon: user?.telefoon ?? '',
+    huidigWachtwoord: '',
   });
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
+  const emailChanged = form.email.trim().toLowerCase() !== originalEmail.trim().toLowerCase();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (emailChanged && !form.huidigWachtwoord) {
+      setError('Huidig wachtwoord is verplicht om je e-mailadres te wijzigen.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const updated = await updateProfile(form);
+      const updated = await updateProfile({
+        voornaam: form.voornaam,
+        achternaam: form.achternaam,
+        email: form.email,
+        telefoon: form.telefoon,
+        ...(emailChanged && { huidigWachtwoord: form.huidigWachtwoord }),
+      });
       updateUser(updated);
       setSaved(true);
+      setForm((f) => ({ ...f, huidigWachtwoord: '' }));
       setTimeout(() => setSaved(false), 2200);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Opslaan mislukt.');
@@ -86,6 +104,23 @@ export function GegevensTab() {
             className={inputClass}
           />
         </div>
+        {emailChanged && (
+          <div>
+            <label className={labelClass}>Huidig wachtwoord (verplicht voor e-mailwijziging)</label>
+            <input
+              type="password"
+              value={form.huidigWachtwoord}
+              onChange={(e) => setForm((f) => ({ ...f, huidigWachtwoord: e.target.value }))}
+              placeholder="Voer je huidige wachtwoord in om je e-mail te wijzigen"
+              className={inputClass}
+              required
+            />
+            <p className="font-sans text-[11px] text-[#999] mt-1.5">
+              Je ontvangt een verificatiemail op je nieuwe adres én een notificatie op je oude
+              adres.
+            </p>
+          </div>
+        )}
         <button
           type="submit"
           disabled={loading}
