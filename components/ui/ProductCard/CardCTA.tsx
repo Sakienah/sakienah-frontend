@@ -34,7 +34,7 @@ export function CardCTA({
           className="block w-full text-center uppercase font-semibold no-underline bg-[#0a0a0a] text-white"
           style={{ fontSize: 10, letterSpacing: '0.1em', padding: '10px 0' }}
         >
-          Stel samen →
+          Stel samen
         </Link>
       </div>
     );
@@ -49,7 +49,7 @@ export function CardCTA({
         ? 'Kies kleur'
         : variantOutOfStock
           ? 'Uitverkocht'
-          : '+ Winkelwagen';
+          : 'Winkelwagen';
 
   return (
     <div className="px-2 pb-2" style={{ paddingTop: 6, position: 'relative', zIndex: 10 }}>
