@@ -99,7 +99,7 @@ export function PromoBar() {
     <section
       className="relative overflow-hidden"
       style={{
-        background: '#c9a84c',
+        background: '#ffffff6f',
         padding: 'clamp(14px, 3vw, 22px) clamp(1rem, 5vw, 2.5rem)',
       }}
     >
@@ -120,7 +120,7 @@ export function PromoBar() {
       <span
         className="font-arabic select-none pointer-events-none absolute hidden md:block"
         style={{
-          right: -20,
+          right: 50,
           top: '50%',
           transform: 'translateY(-50%)',
           fontSize: 'clamp(4rem, 10vw, 8rem)',
@@ -134,7 +134,7 @@ export function PromoBar() {
       <span
         className="font-arabic select-none pointer-events-none absolute hidden md:block"
         style={{
-          left: -20,
+          left: 50,
           top: '50%',
           transform: 'translateY(-50%)',
           fontSize: 'clamp(4rem, 10vw, 8rem)',
@@ -209,17 +209,6 @@ export function PromoBar() {
                     </span>
                   </>
                 )}
-
-                <span
-                  className="flex-shrink-0 font-semibold"
-                  style={{
-                    fontSize: 14,
-                    color: 'rgba(201,168,76,0.5)',
-                    transition: 'transform 0.2s',
-                  }}
-                >
-                  →
-                </span>
               </button>
             </div>
           ) : (
@@ -260,8 +249,8 @@ export function PromoBar() {
               <span
                 className="whitespace-nowrap"
                 style={{
-                  fontSize: 'clamp(10px, 1.1vw, 11px)',
-                  color: 'rgba(255,255,255,0.5)',
+                  fontSize: 'clamp(11px, 1.2vw, 13px)',
+                  color: 'rgba(254, 254, 254, 0.89)',
                 }}
               >
                 bij het afrekenen
