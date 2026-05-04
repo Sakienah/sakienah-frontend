@@ -70,4 +70,10 @@ export type Product = {
   category: Category | null;
   createdAt: string;
   updatedAt: string;
+  rating?: number;
+  reviewCount?: number;
+  features?: string[];
+  shippingPromise?: string;
+  trustSignal?: string;
+  origin?: string;
 };
