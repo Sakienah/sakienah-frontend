@@ -291,6 +291,7 @@ export function CheckoutFlow() {
                     error={error}
                     grandTotal={grandTotal}
                     formValid={formValid}
+                    mode={mode}
                   />
                 </div>
               )}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { formatPrice } from '@/lib/utils';
 import type { FormData } from './types';
 
@@ -17,6 +18,7 @@ type Props = {
   error: string | null;
   grandTotal: number;
   formValid: boolean;
+  mode: 'guest' | 'account';
 };
 
 export function StepPayment({
@@ -28,6 +30,7 @@ export function StepPayment({
   error,
   grandTotal,
   formValid,
+  mode,
 }: Props) {
   return (
     <div>
@@ -118,21 +121,41 @@ export function StepPayment({
       </div>
 
       <div className="flex" style={{ gap: 12 }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'transparent',
-            color: '#999',
-            border: '1px solid #E8E0D5',
-            cursor: 'pointer',
-            fontSize: 11,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            padding: '16px 24px',
-          }}
-        >
-          ← Terug
-        </button>
+        {mode === 'guest' ? (
+          <button
+            onClick={onBack}
+            style={{
+              background: 'transparent',
+              color: '#999',
+              border: '1px solid #E8E0D5',
+              cursor: 'pointer',
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '16px 24px',
+            }}
+          >
+            ← Terug
+          </button>
+        ) : (
+          <Link
+            href="/cart"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              background: 'transparent',
+              color: '#999',
+              border: '1px solid #E8E0D5',
+              fontSize: 11,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              padding: '16px 24px',
+              textDecoration: 'none',
+            }}
+          >
+            ← Winkelwagen
+          </Link>
+        )}
         <button
           onClick={onPlaceOrder}
           disabled={submitting || !formValid}
