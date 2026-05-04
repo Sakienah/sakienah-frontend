@@ -16,22 +16,19 @@ export async function BestsellersSection() {
         <div className="flex items-end justify-between mb-10 md:mb-14">
           <div>
             <p
+              className="uppercase font-semibold text-gold"
               style={{
                 fontSize: 'var(--text-xs)',
                 letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: '#c9a84c',
-                fontWeight: 600,
                 marginBottom: 12,
               }}
             >
               Onze Collectie
             </p>
             <h2
-              className="font-display"
+              className="font-display font-semibold"
               style={{
                 fontSize: 'var(--text-h2)',
-                fontWeight: 600,
                 color: '#0a0a0a',
                 letterSpacing: '-0.02em',
                 lineHeight: 1.1,
@@ -42,12 +39,10 @@ export async function BestsellersSection() {
           </div>
           <Link
             href="/shop"
-            className="transition-colors hover:text-gold"
+            className="uppercase transition-colors hover:text-gold text-[#999]"
             style={{
               fontSize: 'var(--text-xs)',
               letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: '#999',
             }}
           >
             Bekijk alles →

@@ -5,6 +5,8 @@ import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
 import { CartProvider } from '@/contexts/CartContext';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/contexts/ToastContext';
+import { ToastContainer } from '@/components/ui/ToastContainer';
 import type { User } from '@/types';
 
 const API_URL = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -66,10 +68,13 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <AuthProvider initialUser={initialUser}>
-          <CartProvider>
-            {children}
-            <GiftFloater />
-          </CartProvider>
+          <ToastProvider>
+            <CartProvider>
+              {children}
+              <GiftFloater />
+              <ToastContainer />
+            </CartProvider>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

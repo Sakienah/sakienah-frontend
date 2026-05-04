@@ -121,19 +121,22 @@ export async function HeroSection() {
             >
               Shop collectie
             </Link>
-            <Link
-              href="/about"
-              className="tracking-[0.15em] uppercase font-medium hover:text-gold hover:border-gold transition-all"
-              style={{
-                fontSize: 'var(--text-xs)',
-                padding: '16px 36px',
-                background: 'transparent',
-                color: 'rgba(255,255,255,0.7)',
-                border: '1px solid rgba(255,255,255,0.2)',
-              }}
-            >
-              Over Sakienah
-            </Link>
+          </div>
+
+          {/* Subtiele trust-lijn — geen overlap met TrustBar eronder */}
+          <div className="flex items-center" style={{ gap: 8, justifyContent: 'center' }}>
+            <span className="flex items-center" style={{ gap: 6 }}>
+              <svg width="14" height="14" viewBox="0 0 20 20" style={{ fill: '#c9a84c' }}>
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+                4.9 · 500+ tevreden klanten
+              </span>
+            </span>
+            <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.15)' }} />
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+              Islamitisch gecureerd
+            </span>
           </div>
         </div>
       </div>

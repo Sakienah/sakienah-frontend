@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroProductCards({ products }: { products: Product[] }) {
   return (
-    <div style={{ width: '100%', maxWidth: 340 }}>
+    <div className="w-full" style={{ maxWidth: 340 }}>
       {products.map((p) => (
         <HeroProductCard key={p.id} product={p} />
       ))}
@@ -30,15 +30,10 @@ function HeroProductCard({ product }: { product: Product }) {
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="w-full max-w-full bg-white relative z-[2] transition-shadow transition-transform duration-300"
       style={{
-        width: '100%',
-        maxWidth: '100%',
-        background: '#fff',
-        position: 'relative',
         boxShadow: hovered ? '0 20px 60px rgba(0,0,0,0.12)' : '0 4px 20px rgba(0,0,0,0.06)',
-        transition: 'box-shadow 0.3s, transform 0.3s',
         transform: hovered ? 'translateY(-4px)' : 'none',
-        zIndex: 2,
       }}
     >
       <button
@@ -49,16 +44,13 @@ function HeroProductCard({ product }: { product: Product }) {
           }
           toggleWishlist(product.id);
         }}
-        className="absolute z-10 flex items-center justify-center"
+        className="absolute z-10 flex items-center justify-center rounded-full border-none cursor-pointer"
         style={{
           top: 12,
           right: 12,
           background: 'rgba(255,255,255,0.9)',
-          border: 'none',
-          cursor: 'pointer',
           width: 32,
           height: 32,
-          borderRadius: '50%',
         }}
         aria-label={wished ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
       >
@@ -76,13 +68,8 @@ function HeroProductCard({ product }: { product: Product }) {
 
       <Link
         href={`/products/${product.slug}`}
-        style={{
-          aspectRatio: '4/3',
-          display: 'block',
-          overflow: 'hidden',
-          position: 'relative',
-          background: '#EDE8DF',
-        }}
+        className="block overflow-hidden relative bg-[#EDE8DF]"
+        style={{ aspectRatio: '4/3' }}
       >
         {image ? (
           <Image src={image} alt={product.name} fill className="object-cover" sizes="300px" />
@@ -95,18 +82,21 @@ function HeroProductCard({ product }: { product: Product }) {
 
       <div style={{ padding: '16px 18px 20px' }}>
         <p
-          style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: '#0a0a0a', marginBottom: 8 }}
+          className="font-medium"
+          style={{
+            fontSize: 'var(--text-sm)',
+            color: '#0a0a0a',
+            marginBottom: 8,
+          }}
         >
           {product.name}
         </p>
         <div className="flex items-center" style={{ gap: 10 }}>
-          <span style={{ fontSize: 'var(--text-base)', fontWeight: 600, color: '#c9a84c' }}>
+          <span className="font-semibold text-gold" style={{ fontSize: 'var(--text-base)' }}>
             € {parseFloat(product.price).toFixed(2).replace('.', ',')}
           </span>
           {product.comparePrice && (
-            <span
-              style={{ fontSize: 'var(--text-sm)', color: '#aaa', textDecoration: 'line-through' }}
-            >
+            <span className="line-through text-[#aaa]" style={{ fontSize: 'var(--text-sm)' }}>
               € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
             </span>
           )}
