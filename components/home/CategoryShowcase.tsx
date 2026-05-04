@@ -10,7 +10,7 @@ export function CategoryShowcase() {
     {
       slug: 'gebedskleed',
       name: 'Gebedskleden',
-      description: 'Comfortabele gebedskleden voor dagelijks gebruik',
+      description: 'Handgemaakte gebedskleden van premium kwaliteit',
       arabic: 'صلاة',
       image: '/brand_assets/categories/gebedkleed.webp',
     },
@@ -39,23 +39,52 @@ export function CategoryShowcase() {
     >
       <GeomPattern flip />
 
-      {/* Hover-effecten — zoom background + border glow + arabic watermark fade */}
       <style>{`
-        .cat-card:hover .cat-bg    { transform: scale(1.1); }
-        .cat-card:hover .cat-arabic { color: rgba(255,255,255,0.1) !important; transform: translate(-50%,-50%) scale(1.05); }
-        .cat-card:hover .cat-corner { border-color: rgba(201,168,76,0.45) !important; }
-        .cat-card:hover .cat-cta    { letter-spacing: 0.22em; }
+        .cat-card { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease; }
+        .cat-card:hover { transform: translateY(-8px); box-shadow: 0 32px 64px rgba(0,0,0,0.15); }
+        .cat-card:hover .cat-bg { transform: scale(1.12); }
+        .cat-card:hover .cat-arabic { color: rgba(255,255,255,0.12) !important; transform: translate(-50%,-50%) scale(1.1); }
+        .cat-card:hover .cat-corner { opacity: 1 !important; }
+        .cat-card:hover .cat-cta { letter-spacing: 0.22em; color: #d4af37; }
+        .cat-card:hover .cat-glow { opacity: 1; }
+        .cat-card:hover .cat-image-overlay { opacity: 0.4; }
+        
+        .cat-corner { opacity: 0.5; transition: opacity 0.4s; }
+        .cat-glow { opacity: 0; transition: opacity 0.5s; }
+        .cat-cta { transition: letter-spacing 0.3s, color 0.3s; }
+        .cat-bg { transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
+        .cat-arabic { transition: color 0.5s, transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
+        .cat-image-overlay { transition: opacity 0.5s; }
+        
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .cat-shimmer::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.15) 50%, transparent 100%);
+          background-size: 200% 100%;
+          animation: shimmer 3s ease-in-out infinite;
+          pointer-events: none;
+        }
       `}</style>
 
       <div className="max-w-[1280px] mx-auto relative z-10">
-        {/* Koptekst */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-14">
+          <span
+            className="inline-block font-arabic text-gold mb-3"
+            style={{ fontSize: 28, direction: 'rtl', opacity: 0.7 }}
+          >
+            اكتشف
+          </span>
           <p
             className="uppercase font-semibold text-gold"
             style={{
               fontSize: 'var(--text-xs)',
               letterSpacing: '0.22em',
-              marginBottom: 12,
+              marginBottom: 10,
             }}
           >
             Collecties
@@ -70,135 +99,161 @@ export function CategoryShowcase() {
           >
             Ontdek onze collecties
           </h2>
+          <div
+            className="mx-auto mt-4"
+            style={{
+              width: 60,
+              height: 2,
+              background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)',
+            }}
+          />
         </div>
 
-        {/* Categoriekaarten */}
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {categories.map((cat) => (
-            <Link key={cat.slug} href={`/shop?category=${cat.slug}`} className="no-underline">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {categories.map((cat, index) => (
+            <Link key={cat.slug} href={`/shop?category=${cat.slug}`} className="no-underline group">
               <div
-                className="cat-card relative overflow-hidden cursor-pointer"
+                className="cat-card relative overflow-hidden cat-shimmer"
                 style={{
-                  minHeight: 'clamp(400px, 52vw, 520px)',
-                  border: '1px solid rgba(201,168,76,0.12)',
-                  transition: 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
+                  minHeight: 'clamp(420px, 55vw, 560px)',
+                  border: '1px solid rgba(201,168,76,0.2)',
                 }}
               >
-                {/* Achtergrondafbeelding — zoomt in op hover via .cat-card:hover .cat-bg */}
                 <div
                   className="cat-bg absolute inset-0"
                   style={{
                     backgroundImage: `url(${cat.image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    transition: 'transform 0.7s ease-out',
                   }}
                 />
 
-                {/* Gradient overlay — transparant boven, donker onder */}
                 <div
-                  className="absolute inset-0"
+                  className="cat-image-overlay absolute inset-0"
                   style={{
-                    background: 'linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.75) 100%)',
+                    background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%)',
                   }}
                 />
 
-                {/* Arabic watermark — subtiel op de achtergrond */}
+                <div
+                  className="cat-glow absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 70%)',
+                    boxShadow: 'inset 0 0 80px rgba(201,168,76,0.05)',
+                  }}
+                />
+
                 <span
-                  className="cat-arabic font-arabic select-none pointer-events-none absolute hidden sm:block"
+                  className="cat-arabic font-arabic select-none pointer-events-none absolute hidden md:block"
                   style={{
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%,-50%)',
-                    fontSize: 'clamp(3rem, 7vw, 6rem)',
-                    color: 'rgba(255, 255, 255, 0.53)',
+                    fontSize: 'clamp(4rem, 10vw, 8rem)',
+                    color: 'rgba(255, 255, 255, 0.4)',
                     lineHeight: 1,
                     direction: 'rtl',
-                    transition: 'color 0.4s, transform 0.7s',
                   }}
                 >
                   {cat.arabic}
                 </span>
 
-                {/* Content — onderin de kaart */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center text-center"
+                  className="absolute bottom-0 left-0 right-0 z-10 text-center"
                   style={{
-                    padding: 'clamp(24px, 5vw, 40px) clamp(16px, 3vw, 28px) clamp(24px, 5vw, 36px)',
+                    padding: 'clamp(28px, 5vw, 48px) clamp(20px, 4vw, 36px)',
                   }}
                 >
-                  <h3
-                    className="font-display font-semibold text-white"
+                  <div
+                    className="inline-block mb-4"
                     style={{
-                      fontSize: 'clamp(18px, 2.2vw, 24px)',
-                      marginBottom: 6,
+                      width: 1,
+                      height: 30,
+                      background: 'linear-gradient(180deg, rgba(201,168,76,0.8), transparent)',
+                    }}
+                  />
+
+                  <h3
+                    className="font-display text-white"
+                    style={{
+                      fontSize: 'clamp(22px, 2.5vw, 28px)',
+                      fontWeight: 600,
+                      marginBottom: 8,
                       letterSpacing: '-0.01em',
+                      textShadow: '0 2px 20px rgba(0,0,0,0.3)',
                     }}
                   >
                     {cat.name}
                   </h3>
+
                   <p
                     style={{
-                      fontSize: 'clamp(11px, 1.2vw, 13px)',
-                      color: 'rgba(255,255,255,0.65)',
-                      lineHeight: 1.55,
-                      marginBottom: 14,
-                      maxWidth: 220,
+                      fontSize: 'clamp(12px, 1.3vw, 14px)',
+                      color: 'rgba(255,255,255,0.75)',
+                      lineHeight: 1.6,
+                      marginBottom: 20,
+                      maxWidth: 240,
+                      margin: '0 auto 20px',
                     }}
                   >
                     {cat.description}
                   </p>
+
                   <span
                     className="cat-cta uppercase font-bold text-gold"
                     style={{
                       fontSize: 10,
                       letterSpacing: '0.15em',
-                      transition: 'letter-spacing 0.3s',
+                      display: 'inline-block',
                     }}
                   >
-                    Bekijk collectie
+                    Bekijk collectie →
                   </span>
                 </div>
 
-                {/* 4 gouden hoekdecoraties */}
                 <span
-                  className="cat-corner absolute top-0 left-0 z-10"
+                  className="cat-corner absolute"
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderLeft: '1px solid rgba(201,168,76,0.2)',
-                    borderTop: '1px solid rgba(201,168,76,0.2)',
-                    transition: 'border-color 0.4s',
+                    top: 16,
+                    left: 16,
+                    width: 32,
+                    height: 32,
+                    borderLeft: '2px solid #c9a84c',
+                    borderTop: '2px solid #c9a84c',
                   }}
                 />
                 <span
-                  className="cat-corner absolute top-0 right-0 z-10"
+                  className="cat-corner absolute"
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderRight: '1px solid rgba(201,168,76,0.2)',
-                    borderTop: '1px solid rgba(201,168,76,0.2)',
-                    transition: 'border-color 0.4s',
+                    top: 16,
+                    right: 16,
+                    width: 32,
+                    height: 32,
+                    borderRight: '2px solid #c9a84c',
+                    borderTop: '2px solid #c9a84c',
                   }}
                 />
                 <span
-                  className="cat-corner absolute bottom-0 left-0 z-10"
+                  className="cat-corner absolute"
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderLeft: '1px solid rgba(201,168,76,0.2)',
-                    borderBottom: '1px solid rgba(201,168,76,0.2)',
-                    transition: 'border-color 0.4s',
+                    bottom: 16,
+                    left: 16,
+                    width: 32,
+                    height: 32,
+                    borderLeft: '2px solid #c9a84c',
+                    borderBottom: '2px solid #c9a84c',
                   }}
                 />
                 <span
-                  className="cat-corner absolute bottom-0 right-0 z-10"
+                  className="cat-corner absolute"
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderRight: '1px solid rgba(201,168,76,0.2)',
-                    borderBottom: '1px solid rgba(201,168,76,0.2)',
-                    transition: 'border-color 0.4s',
+                    bottom: 16,
+                    right: 16,
+                    width: 32,
+                    height: 32,
+                    borderRight: '2px solid #c9a84c',
+                    borderBottom: '2px solid #c9a84c',
                   }}
                 />
               </div>
