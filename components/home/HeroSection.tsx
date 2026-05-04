@@ -113,14 +113,64 @@ export async function HeroSection() {
             accessoires.
           </p>
 
-          <div className="flex flex-wrap mb-13 justify-center lg:justify-start" style={{ gap: 14 }}>
+          <div
+            className="flex flex-wrap items-center mb-8 justify-center lg:justify-start"
+            style={{ gap: 12 }}
+          >
             <Link
               href="/shop"
-              className="tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a] hover:opacity-85 transition-opacity"
-              style={{ fontSize: 'var(--text-xs)', padding: '16px 36px' }}
+              className="group relative overflow-hidden tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a]"
+              style={{ fontSize: 'var(--text-xs)', padding: '18px 40px' }}
             >
-              Shop collectie
+              <span className="relative z-10 flex items-center gap-3">
+                Ontdek nu
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform group-hover:translate-x-1.5"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </span>
             </Link>
+            <Link
+              href="/shop?category=deals"
+              className="tracking-[0.15em] uppercase font-semibold border border-gold/30 text-gold hover:bg-gold/10 transition-all"
+              style={{ fontSize: 'var(--text-xs)', padding: '18px 32px' }}
+            >
+              Bekijk deals
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-center lg:justify-start" style={{ gap: 8 }}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(201,168,76,0.6)"
+              strokeWidth="1.5"
+            >
+              <path d="M5 12l5 5L20 7" />
+            </svg>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>
+              Gratis verzending vanaf €50
+            </span>
+            <span
+              style={{
+                width: 1,
+                height: 12,
+                background: 'rgba(255,255,255,0.15)',
+                margin: '0 4px',
+              }}
+            />
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>30 dagen retour</span>
           </div>
         </div>
       </div>
