@@ -14,7 +14,7 @@ import { resolveFeatures, DEFAULT_SHIPPING_PROMISE } from './constants';
 
 type Props = {
   product: Product;
-  aspectRatio?: '3/4' | '4/3' | '1/1';
+  aspectRatio?: '3/4' | '4/3' | '1/1' | '4/5';
   sizes?: string;
 };
 

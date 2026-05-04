@@ -57,7 +57,7 @@ export function CardInfo({
 
           {hasRating && (
             <div className="flex items-center gap-1.5">
-              <StarRating count={5} size={10} />
+              <StarRating count={5} />
               <span style={{ fontSize: 11, fontWeight: 600, color: '#0a0a0a' }}>
                 {rating!.toFixed(1)}
               </span>
