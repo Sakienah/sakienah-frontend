@@ -6,7 +6,9 @@ export type FormData = {
   lastName: string;
   email: string;
   phone: string;
+  country: string;
   address: string;
+  houseNumber: string;
   postalCode: string;
   city: string;
   payment: string;
@@ -17,7 +19,9 @@ export const defaultForm: FormData = {
   lastName: '',
   email: '',
   phone: '',
+  country: '',
   address: '',
+  houseNumber: '',
   postalCode: '',
   city: '',
   payment: 'ideal',

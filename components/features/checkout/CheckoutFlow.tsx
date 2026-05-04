@@ -46,8 +46,10 @@ export function CheckoutFlow() {
       setForm((f) => ({
         ...f,
         address: addr.street,
+        houseNumber: addr.houseNumber ?? '',
         postalCode: addr.postalCode,
         city: addr.city,
+        country: addr.country,
       }));
     });
   }, [user]);
@@ -65,7 +67,9 @@ export function CheckoutFlow() {
         'lastName',
         'email',
         'phone',
+        'country',
         'address',
+        'houseNumber',
         'postalCode',
         'city',
       ];
@@ -131,14 +135,26 @@ export function CheckoutFlow() {
             quantity: i.quantity,
             selectedColor: i.selectedColor,
           })),
-          address: { street: form.address, city: form.city, postalCode: form.postalCode },
+          address: {
+            street: form.address,
+            houseNumber: form.houseNumber || undefined,
+            city: form.city,
+            postalCode: form.postalCode,
+            country: form.country,
+          },
           paymentMethod: form.payment,
           couponCode: coupon ? couponCode.trim() : undefined,
         });
       } else {
         result = await postCheckout({
           email: form.email,
-          address: { street: form.address, city: form.city, postalCode: form.postalCode },
+          address: {
+            street: form.address,
+            houseNumber: form.houseNumber || undefined,
+            city: form.city,
+            postalCode: form.postalCode,
+            country: form.country,
+          },
           paymentMethod: form.payment,
           couponCode: coupon ? couponCode.trim() : undefined,
         });
@@ -158,9 +174,11 @@ export function CheckoutFlow() {
     form.firstName.trim().length > 0 &&
     form.lastName.trim().length > 0 &&
     form.email.trim().length > 0 &&
+    form.country.trim().length > 0 &&
     form.address.trim().length > 0 &&
     form.postalCode.trim().length > 0 &&
-    form.city.trim().length > 0;
+    form.city.trim().length > 0 &&
+    (form.country !== 'NL' || form.houseNumber.trim().length > 0);
 
   if (items.length === 0 && !placed) {
     return (

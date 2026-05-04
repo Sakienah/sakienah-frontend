@@ -89,10 +89,22 @@ export function StepConfirmation({ form, order, isGuest }: Props) {
           <p style={{ fontSize: 14, color: '#555' }}>
             {form.firstName} {form.lastName}
           </p>
-          <p style={{ fontSize: 14, color: '#555' }}>{form.address}</p>
+          <p style={{ fontSize: 14, color: '#555' }}>
+            {form.address}
+            {form.houseNumber ? ` ${form.houseNumber}` : ''}
+          </p>
           <p style={{ fontSize: 14, color: '#555' }}>
             {form.postalCode} {form.city}
           </p>
+          {form.country && (
+            <p style={{ fontSize: 14, color: '#555' }}>
+              {form.country === 'NL'
+                ? 'Nederland'
+                : form.country === 'BE'
+                  ? 'België'
+                  : form.country}
+            </p>
+          )}
         </div>
         <Link
           href="/"

@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { checkEmailExists } from '@/lib/api';
+import { checkEmailExists, lookupPostcode } from '@/lib/api';
+import { formatPostcode } from '@/lib/utils';
 import type { FormData } from './types';
 
 type Props = {
@@ -18,6 +19,9 @@ function InputField({
   onBlur,
   type = 'text',
   required = true,
+  placeholder,
+  suffix,
+  maxLength,
 }: {
   label: string;
   value: string;
@@ -25,6 +29,9 @@ function InputField({
   onBlur?: () => void;
   type?: string;
   required?: boolean;
+  placeholder?: string;
+  suffix?: React.ReactNode;
+  maxLength?: number;
 }) {
   return (
     <div>
@@ -41,43 +48,72 @@ function InputField({
       >
         {label}
       </label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onBlur={onBlur}
-        required={required}
-        style={{
-          width: '100%',
-          background: '#FAF7F2',
-          border: '1px solid #E8E0D5',
-          padding: '14px 18px',
-          fontSize: 14,
-          color: '#0a0a0a',
-          outline: 'none',
-          boxSizing: 'border-box',
-        }}
-      />
+      <div style={{ position: 'relative' }}>
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          required={required}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          style={{
+            width: '100%',
+            background: '#FAF7F2',
+            border: '1px solid #E8E0D5',
+            padding: '14px 18px',
+            fontSize: 14,
+            color: '#0a0a0a',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+        />
+        {suffix && (
+          <div
+            style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)' }}
+          >
+            {suffix}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
+const LANDEN = [
+  { value: 'NL', label: 'Nederland' },
+  { value: 'BE', label: 'België' },
+];
+
 export function StepInfo({ form, update, isGuest }: Props) {
   const [emailWarning, setEmailWarning] = useState(false);
-
-  const isValid =
-    !emailWarning &&
-    form.firstName &&
-    form.lastName &&
-    form.email &&
-    form.address &&
-    form.postalCode &&
-    form.city;
+  const [postcodeLoading, setPostcodeLoading] = useState(false);
+  const [postcodeError, setPostcodeError] = useState('');
 
   async function handleEmailBlur() {
     if (!isGuest || !form.email) return;
     const exists = await checkEmailExists(form.email);
     setEmailWarning(exists);
+  }
+
+  async function handlePostcodeBlur() {
+    setPostcodeError('');
+    if (form.country !== 'NL' || !form.postalCode || !form.houseNumber) return;
+
+    const trimmedCode = form.postalCode.replace(/\s/g, '');
+    const trimmedNumber = form.houseNumber.trim();
+    if (!trimmedCode || !trimmedNumber) return;
+
+    setPostcodeLoading(true);
+    try {
+      const result = await lookupPostcode(trimmedCode, trimmedNumber);
+      update('address', result.street);
+      update('city', result.city);
+    } catch (err) {
+      setPostcodeError(err instanceof Error ? err.message : 'Postcode niet gevonden.');
+    } finally {
+      setPostcodeLoading(false);
+    }
   }
 
   return (
@@ -156,15 +192,112 @@ export function StepInfo({ form, update, isGuest }: Props) {
             </div>
           )}
         </div>
-        <InputField label="Adres" value={form.address} onChange={(v) => update('address', v)} />
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20 }}>
+
+        {/* Land — dropdown */}
+        <div>
+          <label
+            style={{
+              display: 'block',
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: '#777',
+              fontWeight: 600,
+              marginBottom: 8,
+            }}
+          >
+            Land
+          </label>
+          <select
+            value={form.country}
+            onChange={(e) => {
+              const next = e.target.value;
+              update('country', next);
+              update('postalCode', formatPostcode(form.postalCode, next));
+              setPostcodeError('');
+            }}
+            required
+            style={{
+              width: '100%',
+              background: '#FAF7F2',
+              border: '1px solid #E8E0D5',
+              padding: '14px 18px',
+              fontSize: 14,
+              color: form.country ? '#0a0a0a' : '#aaa',
+              outline: 'none',
+              boxSizing: 'border-box',
+              appearance: 'none',
+            }}
+          >
+            <option value="" disabled>
+              Selecteer je land
+            </option>
+            {LANDEN.map((l) => (
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Postcode + Huisnummer */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           <InputField
             label="Postcode"
             value={form.postalCode}
-            onChange={(v) => update('postalCode', v)}
+            onChange={(v) => {
+              update('postalCode', formatPostcode(v, form.country));
+              setPostcodeError('');
+            }}
+            onBlur={() => void handlePostcodeBlur()}
+            placeholder={form.country === 'NL' ? '1234 AB' : 'bv. 1000'}
+            maxLength={form.country === 'NL' ? 7 : 4}
           />
-          <InputField label="Stad" value={form.city} onChange={(v) => update('city', v)} />
+          <InputField
+            label={form.country === 'NL' ? 'Huisnummer' : 'Huisnr.'}
+            value={form.houseNumber}
+            onChange={(v) => {
+              update('houseNumber', v);
+              setPostcodeError('');
+            }}
+            onBlur={() => void handlePostcodeBlur()}
+            placeholder="12"
+            required={form.country === 'NL'}
+            suffix={
+              postcodeLoading ? <span style={{ fontSize: 12, color: '#c9a84c' }}>⏳</span> : null
+            }
+          />
         </div>
+        {postcodeError && (
+          <div
+            style={{
+              background: '#FFF3F3',
+              border: '1px solid #FCCACA',
+              padding: '10px 16px',
+              fontSize: 12,
+              color: '#C62828',
+              marginTop: -8,
+            }}
+          >
+            {postcodeError}
+          </div>
+        )}
+
+        {/* Straat (auto-fill) */}
+        <InputField
+          label="Straat"
+          value={form.address}
+          onChange={(v) => update('address', v)}
+          placeholder="Hoofdstraat"
+        />
+
+        {/* Stad (auto-fill) */}
+        <InputField
+          label="Stad"
+          value={form.city}
+          onChange={(v) => update('city', v)}
+          placeholder="Amsterdam"
+        />
       </div>
     </div>
   );

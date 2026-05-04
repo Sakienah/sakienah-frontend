@@ -245,7 +245,13 @@ export function clearCart(): Promise<CartResponse> {
 // Checkout
 export type CheckoutPayload = {
   email: string;
-  address: { street: string; city: string; postalCode: string };
+  address: {
+    street: string;
+    houseNumber?: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
   paymentMethod: string;
   couponCode?: string;
   notes?: string;
@@ -303,7 +309,13 @@ export type GuestCheckoutPayload = {
   lastName: string;
   phone?: string;
   items: GuestCheckoutItem[];
-  address: { street: string; city: string; postalCode: string };
+  address: {
+    street: string;
+    houseNumber?: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
   paymentMethod: string;
   couponCode?: string;
   notes?: string;
@@ -347,6 +359,7 @@ export type OrderItem = {
 
 export type OrderAddress = {
   street: string;
+  houseNumber: string | null;
   city: string;
   postalCode: string;
   country: string;
@@ -378,6 +391,7 @@ export function getOrderById(id: string): Promise<OrderSummary> {
 export type AddressData = {
   id: string;
   street: string;
+  houseNumber: string | null;
   city: string;
   postalCode: string;
   country: string;
@@ -391,11 +405,30 @@ export function getAddress(): Promise<AddressData | null> {
 
 export function saveAddress(data: {
   street: string;
+  houseNumber?: string;
   city: string;
   postalCode: string;
   country: string;
 }): Promise<AddressData> {
   return proxyMutate<AddressData>('PUT', '/addresses/default', data);
+}
+
+export type PostcodeLookupResult = {
+  street: string;
+  city: string;
+};
+
+export async function lookupPostcode(
+  postalCode: string,
+  houseNumber: string,
+): Promise<PostcodeLookupResult> {
+  const params = new URLSearchParams({ postalCode, houseNumber });
+  const res = await fetch(`${PROXY}/postcode/lookup?${params.toString()}`);
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new Error(d.message ?? 'Postcode niet gevonden.');
+  }
+  return res.json() as Promise<PostcodeLookupResult>;
 }
 
 // Favorieten

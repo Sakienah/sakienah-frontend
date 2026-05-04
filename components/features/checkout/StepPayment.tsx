@@ -38,7 +38,9 @@ export function StepPayment({
         Betaalmethode
       </h2>
       <p style={{ fontSize: 13, color: '#aaa', marginBottom: 28 }}>
-        Bezorging naar: {form.address}, {form.postalCode} {form.city}
+        Bezorging naar: {form.address}
+        {form.houseNumber ? ` ${form.houseNumber}` : ''}, {form.postalCode} {form.city}
+        {form.country ? ` (${form.country})` : ''}
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
