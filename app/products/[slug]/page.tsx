@@ -5,6 +5,7 @@ import { ProductView } from '@/components/features/product/ProductView';
 import { ProductBreadcrumb } from '@/components/features/product/ProductBreadcrumb';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { getProduct } from '@/lib/api';
+import { ProductPageClient } from '@/components/features/product/ProductPageClient';
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -39,6 +40,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
       </main>
+      <ProductPageClient product={product} />
       <Footer />
     </>
   );

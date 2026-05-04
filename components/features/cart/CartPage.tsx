@@ -1,11 +1,127 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
+import { CartCrossSells } from './CartCrossSells';
 
+/**
+ * Prijs formatteren naar Nederlands formaat (€ 19,99).
+ */
 function formatPrice(n: number) {
   return `€ ${n.toFixed(2).replace('.', ',')}`;
+}
+
+/**
+ * Horizontale progress bar die vult naarmate de klant dichter
+ * bij de gratis-verzending-drempel van € 50 komt.
+ * De balk animeert automatisch bij elke waarde-update.
+ */
+function FreeShippingBar({ currentTotal }: { currentTotal: number }) {
+  const THRESHOLD = 50;
+  const [animatedPct, setAnimatedPct] = useState(0);
+
+  // Animateer de balkbreedte bij elke verandering van currentTotal
+  useEffect(() => {
+    const target = Math.min((currentTotal / THRESHOLD) * 100, 100);
+    const timer = setTimeout(() => setAnimatedPct(target), 50);
+    return () => clearTimeout(timer);
+  }, [currentTotal]);
+
+  const remaining = THRESHOLD - currentTotal;
+
+  // Volledige breedte = gratis verzending bereikt
+  if (remaining <= 0) {
+    return (
+      <div style={{ marginBottom: 20 }}>
+        <div
+          style={{
+            height: 6,
+            background: '#4CAF78',
+            borderRadius: 3,
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        />
+        <p style={{ fontSize: 12, color: '#4CAF78', fontWeight: 600, marginTop: 8 }}>
+          ✓ Je krijgt gratis verzending!
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <p style={{ fontSize: 12, color: '#c9a84c', fontWeight: 600, marginBottom: 8 }}>
+        Nog {formatPrice(remaining)} tot gratis verzending
+      </p>
+      <div
+        style={{
+          height: 6,
+          background: '#F0EBE3',
+          borderRadius: 3,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+      >
+        <div
+          style={{
+            height: '100%',
+            background: 'linear-gradient(90deg, #c9a84c, #d4b65e)',
+            borderRadius: 3,
+            width: `${animatedPct}%`,
+            transition: 'width 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
+            minWidth: 4,
+          }}
+        />
+      </div>
+      <p style={{ fontSize: 11, color: '#bbb', marginTop: 6 }}>
+        Gratis verzending vanaf € 50 in Nederland en België.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Vertrouwensbadges die de klant geruststellen bij het afrekenen:
+ * beveiligde betaling, geaccepteerde betaalmethodes.
+ */
+function CartTrustBadges() {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+        marginTop: 16,
+        paddingTop: 16,
+        borderTop: '1px solid #F0EBE3',
+        flexWrap: 'wrap',
+      }}
+    >
+      <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.05em' }}>
+        🔒 Veilig betalen
+      </span>
+      <span style={{ color: '#ddd' }}>·</span>
+      <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.05em', fontWeight: 500 }}>
+        iDEAL
+      </span>
+      <span style={{ color: '#ddd' }}>·</span>
+      <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.05em', fontWeight: 500 }}>
+        Visa
+      </span>
+      <span style={{ color: '#ddd' }}>·</span>
+      <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.05em', fontWeight: 500 }}>
+        Mastercard
+      </span>
+      <span style={{ color: '#ddd' }}>·</span>
+      <span style={{ fontSize: 11, color: '#aaa', letterSpacing: '0.05em', fontWeight: 500 }}>
+        PayPal
+      </span>
+    </div>
+  );
 }
 
 export function CartPage() {
@@ -305,11 +421,8 @@ export function CartPage() {
             {shipping === 0 ? 'Gratis' : formatPrice(shipping)}
           </span>
         </div>
-        {shipping > 0 && (
-          <p style={{ fontSize: 11, color: '#c9a84c', marginTop: 10 }}>
-            Nog {formatPrice(50 - totalPrice)} tot gratis verzending
-          </p>
-        )}
+        {/* Visuele voortgangsbalk voor gratis verzending — verhoogt conversie door de drempel concreet te maken */}
+        <FreeShippingBar currentTotal={totalPrice} />
 
         <div
           style={{
@@ -367,7 +480,13 @@ export function CartPage() {
         >
           Verder winkelen
         </Link>
+
+        {/* Vertrouwensbadges onder de CTA's — reduceren aankoopangst */}
+        <CartTrustBadges />
       </div>
+
+      {/* Cross-sells — 'Vaak samen gekocht' producten om de gemiddelde orderwaarde te verhogen */}
+      <CartCrossSells />
     </div>
   );
 }

@@ -153,27 +153,14 @@ export function CheckoutFlow() {
     }
   }
 
-  function handleStepInfoNext() {
-    if (mode === 'guest') {
-      try {
-        localStorage.setItem(
-          'sakienah_guest_address',
-          JSON.stringify({
-            firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            phone: form.phone,
-            address: form.address,
-            postalCode: form.postalCode,
-            city: form.city,
-          }),
-        );
-      } catch {
-        // localStorage onbeschikbaar
-      }
-    }
-    setStep(2);
-  }
+  /** Bevat alle verplichte velden een waarde? */
+  const formValid =
+    form.firstName.trim().length > 0 &&
+    form.lastName.trim().length > 0 &&
+    form.email.trim().length > 0 &&
+    form.address.trim().length > 0 &&
+    form.postalCode.trim().length > 0 &&
+    form.city.trim().length > 0;
 
   if (items.length === 0 && !placed) {
     return (
@@ -272,23 +259,22 @@ export function CheckoutFlow() {
             <div className="relative z-10">
               {step === 0 && <StepGateway onContinue={handleGateway} />}
               {step === 1 && (
-                <StepInfo
-                  form={form}
-                  update={update}
-                  onNext={handleStepInfoNext}
-                  isGuest={mode === 'guest'}
-                />
-              )}
-              {step === 2 && (
-                <StepPayment
-                  form={form}
-                  update={update}
-                  onBack={() => setStep(1)}
-                  onPlaceOrder={() => void handlePlaceOrder()}
-                  submitting={submitting}
-                  error={error}
-                  grandTotal={grandTotal}
-                />
+                <div>
+                  {/* Single-page checkout: bezorggegevens + betaling in één overzicht */}
+                  <StepInfo form={form} update={update} isGuest={mode === 'guest'} />
+                  {/* Scheidingslijn tussen adres en betaling */}
+                  <div style={{ borderTop: '1px solid #F0EBE3', margin: '28px 0' }} />
+                  <StepPayment
+                    form={form}
+                    update={update}
+                    onBack={() => setStep(0)}
+                    onPlaceOrder={() => void handlePlaceOrder()}
+                    submitting={submitting}
+                    error={error}
+                    grandTotal={grandTotal}
+                    formValid={formValid}
+                  />
+                </div>
               )}
             </div>
           </div>

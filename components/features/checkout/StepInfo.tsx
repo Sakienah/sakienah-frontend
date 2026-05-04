@@ -8,7 +8,6 @@ import type { FormData } from './types';
 type Props = {
   form: FormData;
   update: (field: keyof FormData, value: string) => void;
-  onNext: () => void;
   isGuest?: boolean;
 };
 
@@ -63,7 +62,7 @@ function InputField({
   );
 }
 
-export function StepInfo({ form, update, onNext, isGuest }: Props) {
+export function StepInfo({ form, update, isGuest }: Props) {
   const [emailWarning, setEmailWarning] = useState(false);
 
   const isValid =
@@ -166,26 +165,6 @@ export function StepInfo({ form, update, onNext, isGuest }: Props) {
           />
           <InputField label="Stad" value={form.city} onChange={(v) => update('city', v)} />
         </div>
-        <button
-          onClick={onNext}
-          disabled={!isValid}
-          style={{
-            background: '#0a0a0a',
-            color: '#c9a84c',
-            border: 'none',
-            cursor: isValid ? 'pointer' : 'not-allowed',
-            fontSize: 12,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            fontWeight: 700,
-            padding: 16,
-            opacity: isValid ? 1 : 0.4,
-            transition: 'opacity 0.2s',
-            marginTop: 8,
-          }}
-        >
-          Doorgaan naar betaling →
-        </button>
       </div>
     </div>
   );

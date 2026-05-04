@@ -2,10 +2,10 @@ import { formatPrice } from '@/lib/utils';
 import type { FormData } from './types';
 
 const PAYMENT_OPTIONS = [
-  { id: 'ideal', label: 'iDEAL' },
-  { id: 'card', label: 'Creditcard / Debitcard' },
-  { id: 'paypal', label: 'PayPal' },
-  { id: 'klarna', label: 'Klarna achteraf betalen' },
+  { id: 'ideal', label: 'iDEAL', icon: '🏦', desc: 'Direct betalen via je eigen bank' },
+  { id: 'card', label: 'Creditcard / Debitcard', icon: '💳', desc: 'Visa, Mastercard, Amex' },
+  { id: 'paypal', label: 'PayPal', icon: '🅿️', desc: 'Betaal met je PayPal account' },
+  { id: 'klarna', label: 'Klarna achteraf betalen', icon: '📦', desc: 'Betaal na ontvangst' },
 ];
 
 type Props = {
@@ -16,6 +16,7 @@ type Props = {
   submitting: boolean;
   error: string | null;
   grandTotal: number;
+  formValid: boolean;
 };
 
 export function StepPayment({
@@ -26,6 +27,7 @@ export function StepPayment({
   submitting,
   error,
   grandTotal,
+  formValid,
 }: Props) {
   return (
     <div>
@@ -40,7 +42,7 @@ export function StepPayment({
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
-        {PAYMENT_OPTIONS.map(({ id, label }) => (
+        {PAYMENT_OPTIONS.map(({ id, label, icon, desc }) => (
           <label
             key={id}
             style={{
@@ -49,11 +51,12 @@ export function StepPayment({
               gap: 14,
               padding: '16px 20px',
               cursor: 'pointer',
-              border: `1px solid ${form.payment === id ? '#c9a84c' : '#E8E0D5'}`,
+              border: `2px solid ${form.payment === id ? '#c9a84c' : '#E8E0D5'}`,
               background: form.payment === id ? '#FAF7F2' : '#fff',
               transition: 'all 0.2s',
             }}
           >
+            {/* Radio button — aangepaste styling met gouden accent */}
             <div
               style={{
                 width: 18,
@@ -70,7 +73,12 @@ export function StepPayment({
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#c9a84c' }} />
               )}
             </div>
-            <span style={{ fontSize: 14, color: '#0a0a0a' }}>{label}</span>
+            {/* Betaalmethode icoon + label + omschrijving */}
+            <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontSize: 13, color: '#0a0a0a', fontWeight: 500 }}>{label}</span>
+              <p style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{desc}</p>
+            </div>
             <input
               type="radio"
               name="payment"
@@ -83,10 +91,11 @@ export function StepPayment({
         ))}
       </div>
 
+      {/* Beveiligingsbadge — vertrouwen bij de betalingsstap */}
       <div
         style={{
-          background: '#FAF7F2',
-          border: '1px solid rgba(201,168,76,0.2)',
+          background: '#F0FBF4',
+          border: '1px solid #D4EDDA',
           padding: '14px 18px',
           display: 'flex',
           alignItems: 'center',
@@ -94,10 +103,16 @@ export function StepPayment({
           marginBottom: 28,
         }}
       >
-        <span>🔒</span>
-        <span style={{ fontSize: 12, color: '#777' }}>
-          Alle betalingen worden beveiligd verwerkt via SSL-encryptie.
-        </span>
+        <span style={{ fontSize: 16 }}>🔒</span>
+        <div>
+          <p style={{ fontSize: 12, color: '#2d7a4f', fontWeight: 600, marginBottom: 2 }}>
+            Veilig betalen
+          </p>
+          <p style={{ fontSize: 11, color: '#666' }}>
+            Je betaling wordt beveiligd verwerkt via SSL-encryptie. Wij slaan geen betalingsgegevens
+            op.
+          </p>
+        </div>
       </div>
 
       <div className="flex" style={{ gap: 12 }}>
@@ -118,13 +133,13 @@ export function StepPayment({
         </button>
         <button
           onClick={onPlaceOrder}
-          disabled={submitting}
+          disabled={submitting || !formValid}
           style={{
             flex: 1,
-            background: submitting ? '#555' : '#0a0a0a',
-            color: '#c9a84c',
+            background: submitting ? '#555' : !formValid ? '#C8C1B8' : '#0a0a0a',
+            color: !formValid ? '#fff' : '#c9a84c',
             border: 'none',
-            cursor: submitting ? 'not-allowed' : 'pointer',
+            cursor: !formValid || submitting ? 'not-allowed' : 'pointer',
             fontSize: 11,
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
@@ -133,7 +148,11 @@ export function StepPayment({
             transition: 'background 0.2s',
           }}
         >
-          {submitting ? 'Verwerken...' : `Bestelling plaatsen — ${formatPrice(grandTotal)}`}
+          {submitting
+            ? 'Verwerken...'
+            : !formValid
+              ? 'Vul eerst je gegevens in'
+              : `Bestelling plaatsen — ${formatPrice(grandTotal)}`}
         </button>
       </div>
       {error && <p style={{ fontSize: 13, color: '#c0392b', marginTop: 12 }}>{error}</p>}

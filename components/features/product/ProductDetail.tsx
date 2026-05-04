@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import type { Product, ProductVariant, BundleSelection } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/contexts/ToastContext';
+import { ProductReviews } from './ProductReviews';
 
 function Stars() {
   return (
@@ -41,6 +43,7 @@ export function ProductDetail({
   const [stickyVisible, setStickyVisible] = useState(false);
   const { addItem, toggleWishlist, isWishlisted } = useCart();
   const { user } = useAuth();
+  const { showAddedToast, showWishlistToast } = useToast();
   const router = useRouter();
   const wished = isWishlisted(product.id);
 
@@ -99,6 +102,8 @@ export function ProductDetail({
       );
     }
     setAdded(true);
+    // Toon een bevestigingstoast met productafbeelding voor positieve conversie-feedback
+    showAddedToast(product.name, product.images[0]);
     setTimeout(() => setAdded(false), 1600);
   };
 
@@ -413,6 +418,7 @@ export function ProductDetail({
                 return;
               }
               toggleWishlist(product.id, selectedVariant?.colorValue ?? undefined);
+              showWishlistToast(product.name, !wished);
             }}
             style={{
               width: 52,
@@ -599,15 +605,11 @@ export function ProductDetail({
               </div>
             </div>
           )}
-          {tab === 'reviews' && (
-            <div>
-              <p style={{ fontSize: 14, color: '#aaa' }}>Nog geen reviews voor dit product.</p>
-            </div>
-          )}
+          {tab === 'reviews' && <ProductReviews />}
         </div>
       </div>
 
-      {/* Sticky bar */}
+      {/* Sticky bar — blijft zichtbaar tijdens scrollen voor directe conversie */}
       {stickyVisible && (
         <div
           style={{
@@ -617,41 +619,83 @@ export function ProductDetail({
             right: 0,
             background: '#fff',
             borderTop: '1px solid #E8E0D5',
-            padding: 'clamp(12px, 3vw, 16px) clamp(16px, 5vw, 40px)',
+            padding: 'clamp(10px, 3vw, 14px) clamp(16px, 5vw, 40px)',
+            paddingBottom: 'max(clamp(10px, 3vw, 14px), env(safe-area-inset-bottom))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             zIndex: 150,
             boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
+            gap: 12,
           }}
         >
-          <div className="flex items-center" style={{ gap: 20 }}>
-            <span
-              className="font-display"
-              style={{ fontSize: 18, fontWeight: 600, color: '#0a0a0a' }}
-            >
-              {product.name}
-            </span>
-            <span style={{ fontSize: 20, fontWeight: 700, color: '#c9a84c' }}>
-              € {parseFloat(product.price).toFixed(2).replace('.', ',')}
-            </span>
+          {/* Productinfo — compact weergegeven */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="flex items-center" style={{ gap: 12, marginBottom: 2 }}>
+              <p
+                className="font-display truncate"
+                style={{
+                  fontSize: 'clamp(13px, 2vw, 16px)',
+                  fontWeight: 600,
+                  color: '#0a0a0a',
+                  maxWidth: 300,
+                }}
+              >
+                {product.name}
+              </p>
+              {/* Voorraadindicator — direct zichtbaar bij aankoopbeslissing */}
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: effectiveStock > 0 ? '#4CAF78' : '#E74C3C',
+                  flexShrink: 0,
+                }}
+              >
+                ● {effectiveStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
+              </span>
+            </div>
+            <div className="flex items-baseline" style={{ gap: 10 }}>
+              <span style={{ fontSize: 18, fontWeight: 700, color: '#c9a84c' }}>
+                € {parseFloat(product.price).toFixed(2).replace('.', ',')}
+              </span>
+              {product.comparePrice && (
+                <span style={{ fontSize: 12, color: '#ccc', textDecoration: 'line-through' }}>
+                  € {parseFloat(product.comparePrice).toFixed(2).replace('.', ',')}
+                </span>
+              )}
+              {selectedVariant && (
+                <span style={{ fontSize: 11, color: '#888' }}>· {selectedVariant.colorName}</span>
+              )}
+            </div>
           </div>
+
+          {/* CTA knop — goud bij succes, zwart bij actie */}
           <button
             onClick={handleAdd}
+            disabled={!canAdd}
             style={{
-              background: added ? '#c9a84c' : '#0a0a0a',
+              background: added ? '#c9a84c' : canAdd ? '#0a0a0a' : '#C8C1B8',
               color: added ? '#0a0a0a' : '#fff',
               border: 'none',
-              cursor: 'pointer',
-              fontSize: 11,
-              letterSpacing: '0.18em',
+              cursor: !canAdd ? 'not-allowed' : 'pointer',
+              fontSize: 'clamp(10px, 1.5vw, 12px)',
+              letterSpacing: '0.15em',
               textTransform: 'uppercase',
               fontWeight: 700,
-              padding: '14px 36px',
+              padding: 'clamp(10px, 2vw, 14px) clamp(18px, 4vw, 32px)',
               transition: 'all 0.25s',
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
             }}
           >
-            {added ? '✓ Toegevoegd' : 'Voeg toe aan winkelwagen'}
+            {added
+              ? '✓ Toegevoegd'
+              : isBundle && !allBundleSelectionsReady
+                ? 'Kies kleuren'
+                : effectiveStock === 0
+                  ? 'Niet op voorraad'
+                  : 'Voeg toe aan winkelwagen'}
           </button>
         </div>
       )}

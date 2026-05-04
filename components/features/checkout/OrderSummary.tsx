@@ -38,7 +38,7 @@ export function OrderSummary({
       style={{
         background: '#fff',
         border: '1px solid #F0EBE3',
-        padding: 28,
+        padding: 40,
         position: 'sticky',
         top: 106,
       }}
@@ -250,8 +250,23 @@ export function OrderSummary({
           }}
         >
           <span>Verzending</span>
-          <span style={{ color: shipping === 0 ? '#4CAF78' : '#0a0a0a' }}>
-            {shipping === 0 ? 'Gratis' : formatPrice(shipping)}
+          <span>
+            {shipping === 0 ? (
+              <span
+                style={{
+                  background: '#F0FBF4',
+                  color: '#2d7a4f',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  padding: '2px 10px',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                ✓ Gratis
+              </span>
+            ) : (
+              <span style={{ color: '#0a0a0a' }}>{formatPrice(shipping)}</span>
+            )}
           </span>
         </div>
         <div

@@ -129,7 +129,7 @@ export function PromoBar() {
           direction: 'rtl',
         }}
       >
-        مكة
+        هدية
       </span>
       <span
         className="font-arabic select-none pointer-events-none absolute hidden md:block"
@@ -143,7 +143,7 @@ export function PromoBar() {
           direction: 'rtl',
         }}
       >
-        مكة
+        هدية
       </span>
 
       <div className="max-w-[1280px] mx-auto relative z-10 flex justify-center">

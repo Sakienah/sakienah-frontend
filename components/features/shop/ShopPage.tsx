@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import type { Product, Category } from '@/types';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { ShopGrid } from './ShopGrid';
@@ -12,7 +13,17 @@ export function ShopPage({
   products: Product[];
   categories: Category[];
 }) {
-  const [filter, setFilter] = useState('Alles');
+  const searchParams = useSearchParams();
+
+  /** Lees ?category=slug uit de URL en zoek de bijbehorende categorienaam */
+  function getInitialFilter(): string {
+    const slug = searchParams.get('category');
+    if (!slug) return 'Alles';
+    const match = categories.find((c) => c.slug === slug || c.name === slug);
+    return match ? match.name : 'Alles';
+  }
+
+  const [filter, setFilter] = useState(getInitialFilter);
   const [hovered, setHovered] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const allItems = ['Alles', ...categories.map((c) => c.name)];
