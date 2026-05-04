@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product, ProductVariant } from '@/types';
 import { useCart } from '@/contexts/CartContext';
@@ -11,6 +11,7 @@ export function useProductCard(product: Product) {
   const [added, setAdded] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [randomSoldCount] = useState(() => Math.floor(Math.random() * 50) + 20);
 
   const { addItem, toggleWishlist: ctxToggleWishlist, isWishlisted } = useCart();
   const { user } = useAuth();
@@ -26,6 +27,8 @@ export function useProductCard(product: Product) {
     ? Math.round((1 - parseFloat(product.price) / parseFloat(product.comparePrice)) * 100)
     : null;
   const isBestseller = !isOutOfStock && discountPct === null && product.category?.slug !== 'deals';
+  const isHot = product.isHot === true || (discountPct !== null && discountPct > 15);
+  const soldCount = product.soldCount ?? 47;
 
   const variantImages = selectedVariant?.images.length ? selectedVariant.images : product.images;
   const images = variantImages.length > 0 ? variantImages : product.images;
@@ -76,6 +79,8 @@ export function useProductCard(product: Product) {
     isLowStock,
     discountPct,
     isBestseller,
+    isHot,
+    soldCount,
     images,
     currentImage,
     currentImageIndex,

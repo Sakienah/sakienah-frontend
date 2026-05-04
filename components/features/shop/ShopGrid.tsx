@@ -10,7 +10,7 @@ export function ShopGrid({ products }: { products: Product[] }) {
         <ProductCard
           key={p.id}
           product={p}
-          aspectRatio="3/4"
+          aspectRatio="4/5"
           sizes="(max-width:768px) 50vw, 33vw"
         />
       ))}

@@ -68,6 +68,8 @@ export function ProductCard({
           stock={product.stock}
           discountPct={card.discountPct}
           isBestseller={card.isBestseller}
+          isHot={card.isHot}
+          soldCount={card.soldCount}
           wishlisted={card.wishlisted}
           onWishlistToggle={card.toggleWishlist}
           onQuickView={() => setQuickViewOpen(true)}
@@ -98,6 +100,8 @@ export function ProductCard({
             features={features}
             shippingPromise={shippingPromise}
             trustSignal={product.trustSignal}
+            stock={product.stock}
+            isLowStock={card.isLowStock}
           />
         </div>
 

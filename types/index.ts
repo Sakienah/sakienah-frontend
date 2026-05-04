@@ -76,4 +76,6 @@ export type Product = {
   shippingPromise?: string;
   trustSignal?: string;
   origin?: string;
+  isHot?: boolean;
+  soldCount?: number;
 };

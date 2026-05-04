@@ -6,7 +6,7 @@ type Props = {
   images: string[];
   currentImageIndex: number;
   alt: string;
-  aspectRatio: '3/4' | '4/3' | '1/1';
+  aspectRatio: '3/4' | '4/3' | '1/1' | '4/5';
   sizes: string;
   hovered: boolean;
   isOutOfStock: boolean;
@@ -14,6 +14,8 @@ type Props = {
   stock: number;
   discountPct: number | null;
   isBestseller: boolean;
+  isHot?: boolean;
+  soldCount?: number;
   wishlisted: boolean;
   onWishlistToggle: () => void;
   onQuickView: () => void;
@@ -32,12 +34,15 @@ export function CardImage({
   stock,
   discountPct,
   isBestseller,
+  isHot,
+  soldCount,
   wishlisted,
   onWishlistToggle,
   onQuickView,
   onNavigate,
 }: Props) {
   const currentImage = images[currentImageIndex] ?? images[0];
+  const secondImage = images[1] ?? images[0];
 
   return (
     <div
@@ -62,11 +67,34 @@ export function CardImage({
         </div>
       )}
 
-      {/* Badges — linksboven */}
+      <style>{`
+        @keyframes pulse-badge {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        .hot-badge {
+          animation: pulse-badge 2s ease-in-out infinite;
+        }
+      `}</style>
+
       <div
         className="absolute flex flex-col pointer-events-none"
         style={{ top: 8, left: 8, gap: 4, zIndex: 2 }}
       >
+        {isHot && !isOutOfStock && (
+          <span
+            className="hot-badge font-semibold uppercase"
+            style={{
+              fontSize: 9,
+              letterSpacing: '0.08em',
+              padding: '4px 8px',
+              background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
+              color: '#fff',
+            }}
+          >
+            🔥 Populair
+          </span>
+        )}
         {isOutOfStock && (
           <span
             className="font-semibold uppercase bg-[#0a0a0a] text-gold"
@@ -77,18 +105,19 @@ export function CardImage({
         )}
         {discountPct && !isOutOfStock && (
           <span
-            className="font-bold uppercase bg-gold"
+            className="font-bold uppercase"
             style={{
               fontSize: 9,
               letterSpacing: '0.1em',
               padding: '4px 8px',
-              color: '#0a0a0a',
+              background: '#0a0a0a',
+              color: '#c9a84c',
             }}
           >
             -{discountPct}%
           </span>
         )}
-        {isLowStock && !isOutOfStock && !discountPct && (
+        {isLowStock && !isOutOfStock && !discountPct && !isHot && (
           <span
             className="low-stock-badge font-semibold uppercase bg-[#0a0a0a] text-gold relative"
             style={{ fontSize: 9, letterSpacing: '0.08em', padding: '5px 8px' }}
@@ -110,7 +139,7 @@ export function CardImage({
             </svg>
           </span>
         )}
-        {isBestseller && !isOutOfStock && !isLowStock && (
+        {isBestseller && !isOutOfStock && !isLowStock && !isHot && (
           <span
             className="font-semibold uppercase bg-[#0a0a0a] text-gold"
             style={{ fontSize: 9, letterSpacing: '0.1em', padding: '4px 8px' }}
@@ -118,9 +147,22 @@ export function CardImage({
             Bestseller
           </span>
         )}
+        {soldCount && soldCount > 10 && !isOutOfStock && (
+          <span
+            className="font-semibold uppercase"
+            style={{
+              fontSize: 9,
+              letterSpacing: '0.08em',
+              padding: '4px 8px',
+              background: '#0a0a0a',
+              color: '#c9a84c',
+            }}
+          >
+            {soldCount}+ verkocht
+          </span>
+        )}
       </div>
 
-      {/* Wishlist hart — rechtsboven, altijd boven de stretched link */}
       <button
         type="button"
         onClick={(e) => {
@@ -135,8 +177,10 @@ export function CardImage({
           background: 'rgba(255,255,255,0.95)',
           width: 34,
           height: 34,
-          transition: 'transform 0.2s',
+          transition: 'transform 0.2s, box-shadow 0.2s',
           zIndex: 10,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          ...(hovered ? { transform: 'scale(1.1)' } : {}),
         }}
         aria-label={wishlisted ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
       >
@@ -152,7 +196,6 @@ export function CardImage({
         </svg>
       </button>
 
-      {/* Quick View — op mobile altijd zichtbaar, op desktop fade-in bij hover */}
       <button
         type="button"
         onClick={(e) => {
@@ -186,7 +229,6 @@ export function CardImage({
         </svg>
       </button>
 
-      {/* Carousel pijlen — mobile: altijd; desktop: alleen bij hover */}
       {images.length > 1 && (
         <>
           <button
@@ -244,7 +286,6 @@ export function CardImage({
         </>
       )}
 
-      {/* Dot indicatoren */}
       {images.length > 1 && (
         <div
           className="absolute flex pointer-events-none"
