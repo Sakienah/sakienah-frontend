@@ -79,7 +79,7 @@ export function CategoryShowcase() {
               <div
                 className="cat-card relative overflow-hidden cursor-pointer"
                 style={{
-                  minHeight: 'clamp(340px, 45vw, 420px)',
+                  minHeight: 'clamp(400px, 52vw, 520px)',
                   border: '1px solid rgba(201,168,76,0.12)',
                   transition: 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
                 }}
