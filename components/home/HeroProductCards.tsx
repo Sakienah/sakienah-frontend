@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export function HeroProductCards({ products }: { products: Product[] }) {
   return (
-    <div className="w-full" style={{ maxWidth: 320 }}>
+    <div className="w-full" style={{ maxWidth: 420, marginRight: '60px' }}>
       {products.map((p) => (
         <HeroProductCard key={p.id} product={p} />
       ))}
