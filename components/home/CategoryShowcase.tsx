@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 
 /**
- * Toont de drie hoofdcategorieën als visuele kaarten op de homepage,
- * zodat bezoekers snel naar relevante producten kunnen navigeren.
+ * Toont de drie hoofdcategorieën als visuele kaarten met achtergrondafbeeldingen,
+ * gradient overlay, zoom-effect op hover, Arabic watermarks, en gouden accenten.
  */
 export function CategoryShowcase() {
   const categories = [
@@ -11,19 +11,22 @@ export function CategoryShowcase() {
       slug: 'gebedskleed',
       name: 'Gebedskleden',
       description: 'Comfortabele gebedskleden voor dagelijks gebruik',
-      icon: '🕌',
+      arabic: 'صلاة',
+      image: '/brand_assets/categories/gebedkleed.webp',
     },
     {
       slug: 'koran-accessoires',
       name: 'Koran Accessoires',
       description: 'Rehals, boekensteunen en meer',
-      icon: '📖',
+      arabic: 'قرآن',
+      image: '/brand_assets/categories/korantafel.webp',
     },
     {
       slug: 'deals',
       name: 'Deals',
       description: 'Voordelige combinaties met korting',
-      icon: '✨',
+      arabic: 'عرض',
+      image: '/brand_assets/categories/deals.webp',
     },
   ];
 
@@ -35,6 +38,15 @@ export function CategoryShowcase() {
       }}
     >
       <GeomPattern flip />
+
+      {/* Hover-effecten — zoom background + border glow + arabic watermark fade */}
+      <style>{`
+        .cat-card:hover .cat-bg    { transform: scale(1.1); }
+        .cat-card:hover .cat-arabic { color: rgba(255,255,255,0.1) !important; transform: translate(-50%,-50%) scale(1.05); }
+        .cat-card:hover .cat-corner { border-color: rgba(201,168,76,0.45) !important; }
+        .cat-card:hover .cat-cta    { letter-spacing: 0.22em; }
+      `}</style>
+
       <div className="max-w-[1280px] mx-auto relative z-10">
         {/* Koptekst */}
         <div className="text-center mb-12">
@@ -65,50 +77,128 @@ export function CategoryShowcase() {
           {categories.map((cat) => (
             <Link key={cat.slug} href={`/shop?category=${cat.slug}`} className="no-underline">
               <div
-                className="text-center cursor-pointer relative overflow-hidden bg-white transition-transform transition-shadow duration-300 hover:-translate-y-1.5 hover:shadow-lg"
+                className="cat-card relative overflow-hidden cursor-pointer"
                 style={{
-                  border: '1px solid #F0EBE3',
-                  padding: '32px 24px',
+                  minHeight: 'clamp(340px, 45vw, 420px)',
+                  border: '1px solid rgba(201,168,76,0.12)',
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
                 }}
               >
-                {/* Categorie-icoon */}
-                <span className="block mb-4" style={{ fontSize: 40 }}>
-                  {cat.icon}
-                </span>
-                <h3
-                  className="font-display font-semibold"
-                  style={{ fontSize: 20, color: '#0a0a0a', marginBottom: 8 }}
-                >
-                  {cat.name}
-                </h3>
-                <p
+                {/* Achtergrondafbeelding — zoomt in op hover via .cat-card:hover .cat-bg */}
+                <div
+                  className="cat-bg absolute inset-0"
                   style={{
-                    fontSize: 13,
-                    color: '#888',
-                    lineHeight: 1.6,
-                    marginBottom: 16,
+                    backgroundImage: `url(${cat.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    transition: 'transform 0.7s ease-out',
                   }}
-                >
-                  {cat.description}
-                </p>
+                />
+
+                {/* Gradient overlay — transparant boven, donker onder */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(180deg, transparent 35%, rgba(0,0,0,0.75) 100%)',
+                  }}
+                />
+
+                {/* Arabic watermark — subtiel op de achtergrond */}
                 <span
-                  className="uppercase font-bold text-gold"
+                  className="cat-arabic font-arabic select-none pointer-events-none absolute hidden sm:block"
                   style={{
-                    fontSize: 10,
-                    letterSpacing: '0.15em',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%,-50%)',
+                    fontSize: 'clamp(3rem, 7vw, 6rem)',
+                    color: 'rgba(255, 255, 255, 0.53)',
+                    lineHeight: 1,
+                    direction: 'rtl',
+                    transition: 'color 0.4s, transform 0.7s',
                   }}
                 >
-                  Bekijk collectie →
+                  {cat.arabic}
                 </span>
 
-                {/* Decoratief gouden hoekje */}
-                <span
-                  className="absolute top-0 right-0"
+                {/* Content — onderin de kaart */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center text-center"
                   style={{
-                    width: 32,
-                    height: 32,
+                    padding: 'clamp(24px, 5vw, 40px) clamp(16px, 3vw, 28px) clamp(24px, 5vw, 36px)',
+                  }}
+                >
+                  <h3
+                    className="font-display font-semibold text-white"
+                    style={{
+                      fontSize: 'clamp(18px, 2.2vw, 24px)',
+                      marginBottom: 6,
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {cat.name}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: 'clamp(11px, 1.2vw, 13px)',
+                      color: 'rgba(255,255,255,0.65)',
+                      lineHeight: 1.55,
+                      marginBottom: 14,
+                      maxWidth: 220,
+                    }}
+                  >
+                    {cat.description}
+                  </p>
+                  <span
+                    className="cat-cta uppercase font-bold text-gold"
+                    style={{
+                      fontSize: 10,
+                      letterSpacing: '0.15em',
+                      transition: 'letter-spacing 0.3s',
+                    }}
+                  >
+                    Bekijk collectie
+                  </span>
+                </div>
+
+                {/* 4 gouden hoekdecoraties */}
+                <span
+                  className="cat-corner absolute top-0 left-0 z-10"
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderLeft: '1px solid rgba(201,168,76,0.2)',
+                    borderTop: '1px solid rgba(201,168,76,0.2)',
+                    transition: 'border-color 0.4s',
+                  }}
+                />
+                <span
+                  className="cat-corner absolute top-0 right-0 z-10"
+                  style={{
+                    width: 28,
+                    height: 28,
                     borderRight: '1px solid rgba(201,168,76,0.2)',
                     borderTop: '1px solid rgba(201,168,76,0.2)',
+                    transition: 'border-color 0.4s',
+                  }}
+                />
+                <span
+                  className="cat-corner absolute bottom-0 left-0 z-10"
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderLeft: '1px solid rgba(201,168,76,0.2)',
+                    borderBottom: '1px solid rgba(201,168,76,0.2)',
+                    transition: 'border-color 0.4s',
+                  }}
+                />
+                <span
+                  className="cat-corner absolute bottom-0 right-0 z-10"
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRight: '1px solid rgba(201,168,76,0.2)',
+                    borderBottom: '1px solid rgba(201,168,76,0.2)',
+                    transition: 'border-color 0.4s',
                   }}
                 />
               </div>
