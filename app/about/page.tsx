@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import Image from 'next/image';
 
 const values = [
   {
@@ -140,6 +141,13 @@ export default function AboutPage() {
                   overflow: 'hidden',
                 }}
               >
+                <Image
+                  src="/brand_assets/categories/overons.webp"
+                  alt="Over Sakienah"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
                 <div
                   style={{
                     position: 'absolute',
@@ -149,14 +157,6 @@ export default function AboutPage() {
                     pointerEvents: 'none',
                   }}
                 />
-                <div className="w-full h-full flex items-center justify-center">
-                  <p
-                    className="font-arabic select-none"
-                    style={{ fontSize: 80, color: '#c9a84c', opacity: 0.2, direction: 'rtl' }}
-                  >
-                    سكينة
-                  </p>
-                </div>
               </div>
             </div>
           </div>
