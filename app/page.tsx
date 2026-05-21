@@ -9,6 +9,7 @@ import { BestsellersSkeleton } from '@/components/home/BestsellersSkeleton';
 import { CTABanner } from '@/components/home/CTABanner';
 import { ValueProposition } from '@/components/home/ValueProposition';
 import { SocialProof } from '@/components/home/SocialProof';
+import { FaqSection } from '@/components/home/FaqSection';
 import { FinalCTA } from '@/components/home/FinalCTA';
 import { CategoryShowcase } from '@/components/home/CategoryShowcase';
 
@@ -27,6 +28,7 @@ export default function Home() {
         <CTABanner />
         <ValueProposition />
         <SocialProof />
+        <FaqSection />
         <FinalCTA />
       </main>
       <Footer />
