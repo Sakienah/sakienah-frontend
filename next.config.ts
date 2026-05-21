@@ -3,6 +3,12 @@ import type { NextConfig } from 'next';
 const isDev = process.env.NODE_ENV !== 'production';
 
 const nextConfig: NextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
+  },
   async headers() {
     return [
       {

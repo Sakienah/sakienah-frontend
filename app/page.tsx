@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { HeroSection } from '@/components/home/HeroSection';
+import { HeroSkeleton } from '@/components/home/HeroSkeleton';
 import { TrustBar } from '@/components/home/TrustBar';
 import { PromoBar } from '@/components/home/PromoBar';
 import { BestsellersSection } from '@/components/home/BestsellersSection';
@@ -18,7 +19,9 @@ export default function Home() {
     <>
       <Navbar />
       <main>
-        <HeroSection />
+        <Suspense fallback={<HeroSkeleton />}>
+          <HeroSection />
+        </Suspense>
         <TrustBar />
         <PromoBar />
         <CategoryShowcase />

@@ -41,7 +41,7 @@ export function ProductCrossSells({ categorySlug, currentProductId }: Props) {
     void load();
   }, [categorySlug, currentProductId]);
 
-  if (loading || products.length === 0) return null;
+  if (!loading && products.length === 0) return null;
 
   return (
     <div style={{ marginTop: 64 }}>
@@ -52,88 +52,116 @@ export function ProductCrossSells({ categorySlug, currentProductId }: Props) {
         Ook interessant
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {products.map((product) => {
-          const image = product.images[0];
-          const discountPct = product.comparePrice
-            ? Math.round((1 - parseFloat(product.price) / parseFloat(product.comparePrice)) * 100)
-            : null;
-
-          return (
-            <Link
-              key={product.id}
-              href={`/products/${product.slug}`}
-              style={{ textDecoration: 'none' }}
-            >
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => (
               <div
+                key={i}
                 style={{
                   background: '#fff',
                   border: '1px solid #F0EBE3',
                   overflow: 'hidden',
-                  transition: 'transform 0.3s, box-shadow 0.3s',
                 }}
-                className="hover:translate-y-[-4px] hover:shadow-lg"
               >
-                {/* Productafbeelding */}
                 <div
-                  style={{
-                    aspectRatio: '3/4',
-                    background: '#EDE8DF',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {image && (
-                    <Image
-                      src={image}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                    />
-                  )}
-                  {discountPct && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: 10,
-                        left: 10,
-                        background: '#c9a84c',
-                        color: '#0a0a0a',
-                        fontSize: 9,
-                        fontWeight: 700,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        padding: '4px 8px',
-                      }}
-                    >
-                      -{discountPct}%
-                    </span>
-                  )}
-                </div>
-
-                {/* Info */}
+                  className="skeleton-shimmer"
+                  style={{ aspectRatio: '3/4', background: '#EDE8DF' }}
+                />
                 <div style={{ padding: 14 }}>
-                  <p
-                    className="font-display"
-                    style={{ fontSize: 14, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
-                  >
-                    {product.name}
-                  </p>
-                  <div className="flex items-baseline" style={{ gap: 8 }}>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: '#c9a84c' }}>
-                      {formatPrice(product.price)}
-                    </span>
-                    {product.comparePrice && (
-                      <span style={{ fontSize: 11, color: '#ccc', textDecoration: 'line-through' }}>
-                        {formatPrice(product.comparePrice)}
-                      </span>
-                    )}
-                  </div>
+                  <div
+                    className="skeleton-shimmer"
+                    style={{ height: 14, width: '70%', marginBottom: 8, background: '#EDE8DF' }}
+                  />
+                  <div
+                    className="skeleton-shimmer"
+                    style={{ height: 12, width: '40%', background: '#EDE8DF' }}
+                  />
                 </div>
               </div>
-            </Link>
-          );
-        })}
+            ))
+          : products.map((product) => {
+              const image = product.images[0];
+              const discountPct = product.comparePrice
+                ? Math.round(
+                    (1 - parseFloat(product.price) / parseFloat(product.comparePrice)) * 100,
+                  )
+                : null;
+
+              return (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.slug}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <div
+                    style={{
+                      background: '#fff',
+                      border: '1px solid #F0EBE3',
+                      overflow: 'hidden',
+                      transition: 'transform 0.3s, box-shadow 0.3s',
+                    }}
+                    className="hover:translate-y-[-4px] hover:shadow-lg"
+                  >
+                    <div
+                      style={{
+                        aspectRatio: '3/4',
+                        background: '#EDE8DF',
+                        position: 'relative',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {image && (
+                        <Image
+                          src={image}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                        />
+                      )}
+                      {discountPct && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            top: 10,
+                            left: 10,
+                            background: '#c9a84c',
+                            color: '#0a0a0a',
+                            fontSize: 9,
+                            fontWeight: 700,
+                            letterSpacing: '0.1em',
+                            textTransform: 'uppercase',
+                            padding: '4px 8px',
+                          }}
+                        >
+                          -{discountPct}%
+                        </span>
+                      )}
+                    </div>
+
+                    <div style={{ padding: 14 }}>
+                      <p
+                        className="font-display"
+                        style={{ fontSize: 14, fontWeight: 500, color: '#0a0a0a', marginBottom: 6 }}
+                      >
+                        {product.name}
+                      </p>
+                      <div className="flex items-baseline" style={{ gap: 8 }}>
+                        <span style={{ fontSize: 15, fontWeight: 700, color: '#c9a84c' }}>
+                          {formatPrice(product.price)}
+                        </span>
+                        {product.comparePrice && (
+                          <span
+                            style={{ fontSize: 11, color: '#ccc', textDecoration: 'line-through' }}
+                          >
+                            {formatPrice(product.comparePrice)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
       </div>
     </div>
   );
