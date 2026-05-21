@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { AuthLayout } from './AuthLayout';
 import { registerUser } from '@/lib/api';
 
@@ -61,7 +60,6 @@ function Field({
 }
 
 export function RegisterForm() {
-  const router = useRouter();
   const [form, setForm] = useState<FormState>({
     voornaam: '',
     achternaam: '',
@@ -100,7 +98,7 @@ export function RegisterForm() {
         wachtwoord: form.wachtwoord,
         nieuwsbrief: form.nieuwsbrief,
       });
-      router.push(`/verify-email-sent?email=${encodeURIComponent(form.email)}`);
+      window.location.href = `/verify-email-sent?email=${encodeURIComponent(form.email)}`;
     } catch (err) {
       setApiError(err instanceof Error ? err.message : 'Registratie mislukt.');
     } finally {

@@ -18,6 +18,12 @@ export function formatDate(dateString: string): string {
   return dateFormatter.format(new Date(dateString));
 }
 
+export function safeRedirect(raw: string | null, fallback = '/'): string {
+  if (!raw || raw.startsWith('//') || raw.includes('://')) return fallback;
+  if (!raw.startsWith('/')) return fallback;
+  return raw;
+}
+
 export function cn(...classes: (string | undefined | null | false)[]): string {
   return classes.filter(Boolean).join(' ');
 }

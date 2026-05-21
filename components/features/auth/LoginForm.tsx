@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { AuthLayout } from './AuthLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { loginUser, resendVerification } from '@/lib/api';
+import { safeRedirect } from '@/lib/utils';
 
 const inputClass =
   'w-full bg-[#FAF7F2] border border-[#E8E0D5] text-[#0a0a0a] text-sm px-4 py-3.5 outline-none focus:border-[#c9a84c] transition-colors placeholder:text-[#bbb]';
 const labelClass = 'block font-sans text-[10px] tracking-[0.13em] uppercase text-[#888] mb-2';
 
 export function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: '', wachtwoord: '' });
@@ -36,7 +36,7 @@ export function LoginForm() {
     try {
       const user = await loginUser(form.email, form.wachtwoord);
       login(user);
-      router.push(searchParams.get('from') ?? '/account');
+      window.location.href = safeRedirect(searchParams.get('from'), '/account');
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (msg.includes('EMAIL_NOT_VERIFIED')) {
