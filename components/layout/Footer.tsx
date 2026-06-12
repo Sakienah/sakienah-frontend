@@ -67,7 +67,7 @@ export function Footer() {
               [
                 ['Over ons', '/about'],
                 ['Contact', '/contact'],
-                ['Retourbeleid', '/'],
+                ['Retourbeleid', '/retourbeleid'],
               ] as [string, string][]
             ).map(([label, href]) => (
               <div key={label} className="mb-2.5">
@@ -105,14 +105,19 @@ export function Footer() {
             © 2026 Sakienah. Alle rechten voorbehouden.
           </p>
           <div className="flex flex-wrap" style={{ gap: 24 }}>
-            {['Privacy', 'Algemene Voorwaarden', 'Cookies'].map((t) => (
-              <span
-                key={t}
-                className="cursor-pointer"
+            {[
+              ['Privacy', '/privacy'],
+              ['Algemene Voorwaarden', '/algemene-voorwaarden'],
+              ['Retourbeleid', '/retourbeleid'],
+            ].map(([label, href]) => (
+              <Link
+                key={label}
+                href={href}
+                className="footer-link"
                 style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}
               >
-                {t}
-              </span>
+                {label}
+              </Link>
             ))}
           </div>
         </div>

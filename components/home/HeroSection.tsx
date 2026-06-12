@@ -26,6 +26,7 @@ export async function HeroSection() {
             pointerEvents: 'none',
           }}
         />
+
         {/* Arabic watermark */}
         <div
           className="font-arabic select-none pointer-events-none absolute hidden lg:block"
@@ -42,14 +43,14 @@ export async function HeroSection() {
           سكينة
         </div>
 
-        <div className="relative z-10 w-full max-w-[420px] text-center lg:text-left">
+        <div className="relative z-10 w-full max-w-[480px] text-center lg:text-left">
           {/* Bismillah */}
           <div
-            className="flex items-center justify-center lg:justify-start mb-7"
+            className="flex items-center justify-center lg:justify-start mb-6"
             style={{ gap: 12 }}
           >
             <span
-              style={{ width: 28, height: 1, background: '#c9a84c', opacity: 0.6, flexShrink: 0 }}
+              style={{ width: 32, height: 1, background: '#c9a84c', opacity: 0.6, flexShrink: 0 }}
             />
             <span
               className="font-arabic"
@@ -63,24 +64,35 @@ export async function HeroSection() {
               بِسْمِ اللَّهِ
             </span>
             <span
-              style={{ width: 28, height: 1, background: '#c9a84c', opacity: 0.6, flexShrink: 0 }}
+              style={{ width: 32, height: 1, background: '#c9a84c', opacity: 0.6, flexShrink: 0 }}
             />
           </div>
 
-          <p
-            className="uppercase font-semibold text-gold mb-5"
-            style={{ fontFamily: 'inherit', fontSize: 'var(--text-xs)', letterSpacing: '0.22em' }}
+          {/* Social proof bar */}
+          <div
+            className="flex items-center justify-center lg:justify-start mb-6"
+            style={{ gap: 10 }}
           >
-            Islamitische Lifestyle Winkel
-          </p>
+            <div className="flex items-center" style={{ gap: 3 }}>
+              {[1, 2, 3, 4, 5].map((s) => (
+                <svg key={s} width="14" height="14" viewBox="0 0 20 20" style={{ fill: '#c9a84c' }}>
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}>
+              4.9/5 · 1.200+ tevreden klanten
+            </span>
+          </div>
 
+          {/* Headline */}
           <h1
             className="font-display text-white"
             style={{
               fontSize: 'var(--text-hero)',
               fontWeight: 700,
               lineHeight: 1.1,
-              marginBottom: 8,
+              marginBottom: 6,
               letterSpacing: '-0.02em',
             }}
           >
@@ -92,45 +104,51 @@ export async function HeroSection() {
               fontSize: 'var(--text-hero)',
               fontWeight: 400,
               lineHeight: 1.1,
-              marginBottom: 32,
+              marginBottom: 16,
               letterSpacing: '-0.02em',
             }}
           >
-            islamitische lifestyle
+            spirituele reis
           </h1>
 
+          {/* Subheadline */}
           <p
-            className="text-white/55 mb-11"
+            className="mb-10"
             style={{
-              fontSize: 'var(--text-base)',
+              fontSize: 'var(--text-sm)',
               lineHeight: 1.75,
-              maxWidth: 420,
+              maxWidth: 440,
               fontWeight: 300,
-              color: 'white',
+              color: 'rgba(255,255,255,0.6)',
             }}
           >
-            Premium producten geselecteerd met zorg en intentie — van gebedskleding tot Koran
-            accessoires.
+            Van handgemaakte gebedskleden tot Koran accessoires — elk product met zorg geselecteerd.
+            Omdat jouw ibadah verdient het beste.
           </p>
 
+          {/* CTA's */}
           <div
-            className="flex flex-wrap items-center mb-8 justify-center lg:justify-start"
-            style={{ gap: 12 }}
+            className="flex flex-wrap items-center mb-10 justify-center lg:justify-start"
+            style={{ gap: 14 }}
           >
             <Link
               href="/shop"
-              className="group relative overflow-hidden tracking-[0.15em] uppercase font-semibold bg-gold text-[#0a0a0a]"
-              style={{ fontSize: 'var(--text-xs)', padding: '18px 40px' }}
+              className="group relative overflow-hidden tracking-[0.12em] uppercase font-bold bg-gold text-[#0a0a0a]"
+              style={{
+                fontSize: 12,
+                padding: '18px 44px',
+                boxShadow: '0 4px 24px rgba(201,168,76,0.25)',
+              }}
             >
               <span className="relative z-10 flex items-center gap-3">
-                Ontdek nu
+                Ontdek de collectie
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="transition-transform group-hover:translate-x-1.5"
@@ -138,39 +156,22 @@ export async function HeroSection() {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </span>
+              {/* Subtle gold pulse ring */}
+              <span
+                className="absolute inset-0 rounded-none"
+                style={{
+                  animation: 'ctaPulse 2.5s ease-in-out infinite',
+                  border: '1px solid rgba(201,168,76,0.4)',
+                }}
+              />
             </Link>
             <Link
               href="/shop?category=deals"
-              className="tracking-[0.15em] uppercase font-semibold border border-gold/30 text-gold hover:bg-gold/10 transition-all"
-              style={{ fontSize: 'var(--text-xs)', padding: '18px 32px' }}
+              className="tracking-[0.12em] uppercase font-bold border border-gold/40 text-gold hover:bg-gold/10 transition-all"
+              style={{ fontSize: 12, padding: '18px 36px' }}
             >
               Bekijk deals
             </Link>
-          </div>
-
-          <div className="flex items-center justify-center lg:justify-start" style={{ gap: 8 }}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(201,168,76,0.6)"
-              strokeWidth="1.5"
-            >
-              <path d="M5 12l5 5L20 7" />
-            </svg>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>
-              Gratis verzending vanaf €50
-            </span>
-            <span
-              style={{
-                width: 1,
-                height: 12,
-                background: 'rgba(255,255,255,0.15)',
-                margin: '0 4px',
-              }}
-            />
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>30 dagen retour</span>
           </div>
         </div>
       </div>
@@ -207,6 +208,13 @@ export async function HeroSection() {
         </div>
         <HeroProductCards products={featured} />
       </div>
+
+      <style>{`
+        @keyframes ctaPulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.03); opacity: 0.7; }
+        }
+      `}</style>
     </section>
   );
 }
