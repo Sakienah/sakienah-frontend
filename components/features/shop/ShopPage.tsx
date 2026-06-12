@@ -15,7 +15,7 @@ export function ShopPage({
 }) {
   const searchParams = useSearchParams();
 
-  /** Lees ?category=slug uit de URL en zoek de bijbehorende categorienaam */
+  /** Lees ?category=slug & ?search= uit de URL */
   function getInitialFilter(): string {
     const slug = searchParams.get('category');
     if (!slug) return 'Alles';
@@ -23,14 +23,26 @@ export function ShopPage({
     return match ? match.name : 'Alles';
   }
 
+  const searchQuery = searchParams.get('search') || '';
   const [filter, setFilter] = useState(getInitialFilter);
   const [hovered, setHovered] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const allItems = ['Alles', ...categories.map((c) => c.name)];
-  const filtered =
+
+  let filtered =
     filter === 'Alles'
       ? products
       : products.filter((p) => p.category?.slug === filter || p.category?.name === filter);
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        (p.description && p.description.toLowerCase().includes(q)) ||
+        (p.category && p.category.name.toLowerCase().includes(q)),
+    );
+  }
 
   return (
     <>
@@ -239,6 +251,27 @@ export function ShopPage({
           {filtered.length} stuks
         </span>
       </div>
+
+      {/* Search results indicator */}
+      {searchQuery && (
+        <div
+          style={{
+            background: '#FAF7F2',
+            textAlign: 'center',
+            padding: '28px 20px 0',
+            fontFamily: 'var(--font-playfair)',
+            fontSize: 15,
+            fontStyle: 'italic',
+            color: '#0a0a0a',
+          }}
+        >
+          Zoekresultaten voor{' '}
+          <span style={{ color: '#c9a84c', fontWeight: 600, fontStyle: 'normal' }}>
+            &quot;{searchQuery}&quot;
+          </span>{' '}
+          · {filtered.length} resultaten
+        </div>
+      )}
 
       {/* Grid */}
       <div

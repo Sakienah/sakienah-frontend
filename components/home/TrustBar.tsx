@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trustItems } from '@/lib/data';
 
 const ARABIC = ['شحن', 'إرجاع', 'أمان', 'إسلام'];
@@ -65,16 +65,127 @@ const ICONS = [
   </svg>,
 ];
 
+function TrustItem({ label, sub, index }: { label: string; sub: string; index: number }) {
+  return (
+    <div
+      style={{
+        padding: 'clamp(14px, 4vw, 18px) clamp(16px, 5vw, 28px)',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 'clamp(10px, 3vw, 16px)',
+        height: '100%',
+      }}
+    >
+      {/* Number */}
+      <span
+        style={{
+          position: 'absolute',
+          top: 8,
+          left: 12,
+          fontFamily: 'var(--font-playfair)',
+          fontSize: 'var(--text-xs)',
+          color: '#c9a84c',
+          opacity: 0.5,
+          fontStyle: 'italic',
+          letterSpacing: '0.05em',
+        }}
+      >
+        0{index + 1}
+      </span>
+
+      {/* Arabic watermark */}
+      <div
+        style={{
+          position: 'absolute',
+          right: 'clamp(6px, 2vw, 10px)',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          fontFamily: 'var(--font-amiri)',
+          fontSize: 'clamp(24px, 6vw, 38px)',
+          direction: 'rtl',
+          color: '#c9a84c',
+          opacity: 0.1,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          lineHeight: 1,
+        }}
+      >
+        {ARABIC[index]}
+      </div>
+
+      {/* Gold line bottom */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: 24,
+          height: 1.5,
+          background: 'linear-gradient(90deg, #c9a84c, rgba(201,168,76,0.2))',
+        }}
+      />
+
+      {/* Icon */}
+      <div
+        style={{
+          color: '#c9a84c',
+          flexShrink: 0,
+          opacity: 0.85,
+        }}
+      >
+        {ICONS[index]}
+      </div>
+
+      <div>
+        <div
+          style={{
+            fontFamily: 'var(--font-playfair)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 400,
+            color: 'rgba(255,255,255,0.9)',
+            marginBottom: 3,
+          }}
+        >
+          {label}
+        </div>
+        <div
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: 'var(--text-xs)',
+            color: '#c9a84c',
+            opacity: 0.65,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {sub}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function TrustBar() {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % trustItems.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [paused]);
 
   return (
     <div
-      className="trust-bar"
       style={{
         background: '#0f0d0a',
         borderTop: '1px solid rgba(201,168,76,0.12)',
         borderBottom: '1px solid rgba(201,168,76,0.12)',
+        position: 'relative',
       }}
     >
       {/* Top gold gradient line */}
@@ -92,116 +203,44 @@ export function TrustBar() {
         }}
       />
 
-      {trustItems.map(({ label, sub }, i) => (
+      {/* ---- Mobile: auto-sliding carousel ---- */}
+      <div
+        className="md:hidden"
+        style={{ overflow: 'hidden' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={() => setPaused(true)}
+        onTouchEnd={() => setPaused(false)}
+      >
         <div
-          key={label}
-          className="trust-bar-item"
-          onMouseEnter={() => setHovered(i)}
-          onMouseLeave={() => setHovered(null)}
           style={{
-            padding: 'clamp(14px, 4vw, 18px) clamp(16px, 5vw, 28px)',
-            cursor: 'default',
-            overflow: 'hidden',
             display: 'flex',
-            alignItems: 'center',
-            gap: 'clamp(10px, 3vw, 16px)',
+            transform: `translateX(-${current * 100}%)`,
+            transition: 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
           }}
         >
-          {/* Number */}
-          <span
-            style={{
-              position: 'absolute',
-              top: 8,
-              left: 12,
-              fontFamily: 'var(--font-playfair)',
-              fontSize: 'var(--text-xs)',
-              color: '#c9a84c',
-              opacity: hovered === i ? 0.9 : 0.5,
-              fontStyle: 'italic',
-              transition: 'opacity 0.3s',
-              letterSpacing: '0.05em',
-            }}
-          >
-            0{i + 1}
-          </span>
-
-          {/* Arabic watermark */}
-          <div
-            style={{
-              position: 'absolute',
-              right: 'clamp(6px, 2vw, 10px)',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              fontFamily: 'var(--font-amiri)',
-              fontSize: 'clamp(24px, 6vw, 38px)',
-              direction: 'rtl',
-              color: '#c9a84c',
-              opacity: hovered === i ? 0.18 : 0.1,
-              pointerEvents: 'none',
-              userSelect: 'none',
-              lineHeight: 1,
-              transition: 'opacity 0.3s',
-            }}
-          >
-            {ARABIC[i]}
-          </div>
-
-          {/* Animated bottom line */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              width: hovered === i ? '100%' : '30%',
-              height: 1.5,
-              background: 'linear-gradient(90deg, #c9a84c, rgba(201,168,76,0.2))',
-              transition: 'width 0.4s ease',
-            }}
-          />
-
-          {/* Icon */}
-          <div
-            style={{
-              color: '#c9a84c',
-              flexShrink: 0,
-              opacity: hovered === i ? 1 : 0.8,
-              transition: 'opacity 0.3s, transform 0.3s',
-              transform: hovered === i ? 'translateY(-2px)' : 'translateY(0)',
-            }}
-          >
-            {ICONS[i]}
-          </div>
-
-          <div>
-            <div
-              style={{
-                fontFamily: 'var(--font-playfair)',
-                fontSize: 'var(--text-sm)',
-                fontStyle: hovered === i ? 'italic' : 'normal',
-                fontWeight: 400,
-                color: hovered === i ? '#fff' : 'rgba(255,255,255,0.9)',
-                marginBottom: 3,
-                transition: 'all 0.3s',
-              }}
-            >
-              {label}
+          {trustItems.map((item, i) => (
+            <div key={item.label} style={{ minWidth: '100%', flexShrink: 0 }}>
+              <TrustItem label={item.label} sub={item.sub} index={i} />
             </div>
-            <div
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 'var(--text-xs)',
-                color: '#c9a84c',
-                opacity: hovered === i ? 1 : 0.65,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                transition: 'opacity 0.3s',
-              }}
-            >
-              {sub}
-            </div>
-          </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      {/* ---- Desktop: 4-column grid ---- */}
+      <div className="hidden md:flex">
+        {trustItems.map((item, i) => (
+          <div
+            key={item.label}
+            style={{
+              flex: 1,
+              borderRight: i < trustItems.length - 1 ? '1px solid rgba(201,168,76,0.12)' : 'none',
+            }}
+          >
+            <TrustItem label={item.label} sub={item.sub} index={i} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
