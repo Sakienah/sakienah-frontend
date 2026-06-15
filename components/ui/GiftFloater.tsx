@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useDiscountCode } from '@/hooks/useDiscountCode';
 
 export default function GiftFloater() {
   const [bubbleVisible, setBubbleVisible] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   const { copied, copyCode: handleCopy } = useDiscountCode('SAKIENAH10');
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function GiftFloater() {
   };
 
   if (!mounted) return null;
+  if (pathname === '/dropping-soon') return null;
 
   return (
     <>
