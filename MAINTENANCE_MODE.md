@@ -71,18 +71,26 @@ npm run dev
 
 ---
 
-## Deploying naar productie
+## Deploying naar productie (Vercel)
 
-In productie (Vercel) voeg je toe:
+Jouw domein: `https://sakienah.shop`
 
-1. `MAINTENANCE_MODE=true` → Environment Variables
-2. `DEV_BYPASS_SECRET` → een eigen geheime string (niet de default!)
+In Vercel Dashboard → **Settings** → **Environment Variables**:
 
-De bypass-URL wordt dan:
+| Name                | Value                              | Environment |
+| ------------------- | ---------------------------------- | ----------- |
+| `MAINTENANCE_MODE`  | `true`                             | Production  |
+| `DEV_BYPASS_SECRET` | `lqbEMSVJLcl21QkheMgCubX8JCfpaqWe` | Production  |
+
+Daarna **redeploy** je project.
+
+De live bypass-URL wordt:
 
 ```
-https://jouwdomein.nl/dropping-soon?bypass=JOUW_GEHEIME_STRING
+https://sakienah.shop/dropping-soon?bypass=lqbEMSVJLcl21QkheMgCubX8JCfpaqWe
 ```
+
+> **Belangrijk:** Gebruik voor productie een andere secret dan lokaal. De bovenstaande is specifiek voor sakienah.shop.
 
 ---
 
