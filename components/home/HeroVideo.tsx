@@ -72,6 +72,7 @@ export function HeroVideo({
       {fill && (
         <div
           aria-hidden
+          className="hidden lg:block"
           style={{
             position: 'absolute',
             inset: 0,

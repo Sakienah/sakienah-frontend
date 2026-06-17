@@ -4,16 +4,18 @@ import { HeroVideo } from './HeroVideo';
 export function HeroSection() {
   return (
     <section className="hero-section">
-      {/* Mobile: video above text */}
-      <div className="hero-video-mobile lg:hidden bg-[#0a0a0a]">
-        <HeroVideo />
+      {/* Mobile: video fills the whole hero as a background, text overlays on top */}
+      <div className="hero-video-mobile-bg lg:hidden">
+        <HeroVideo fill />
+        <div className="hero-mobile-scrim" aria-hidden />
       </div>
 
       {/* Left — donker, tekst */}
-      <div className="hero-left bg-[#0a0a0a]">
+      <div className="hero-left lg:bg-[#0a0a0a]">
         {/* Zellij pattern */}
         <div
           aria-hidden
+          className="hidden lg:block"
           style={{
             position: 'absolute',
             inset: 0,

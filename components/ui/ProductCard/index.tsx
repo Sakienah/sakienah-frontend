@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import type { Product } from '@/types';
 import { QuickView } from '../QuickView';
 import { DealTimer } from '../DealCard';
@@ -36,10 +37,43 @@ export function ProductCard({
 
   return (
     <>
-      <article
-        className="card-lift group flex flex-col relative overflow-hidden rounded-lg bg-white"
-        style={{ border: '1px solid #F0EBE3' }}
+      <motion.article
+        className="group flex flex-col relative overflow-hidden rounded-2xl bg-white h-full"
+        style={
+          {
+            border: '1px solid rgba(201,168,76,0.18)',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.04)',
+            '--product-gold': '#c9a84c',
+            '--product-gold-light': 'rgba(201,168,76,0.18)',
+            '--product-gold-soft': 'rgba(201,168,76,0.08)',
+          } as React.CSSProperties
+        }
+        initial="initial"
+        whileHover="hover"
+        variants={{
+          initial: { y: 0 },
+          hover: { y: -10 },
+        }}
+        transition={{ type: 'spring', stiffness: 220, damping: 18 }}
       >
+        {/* Background wash */}
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 0%, var(--product-gold-light) 0%, transparent 55%)',
+          }}
+        />
+
+        {/* Subtle geometric pattern overlay */}
+        <div
+          className="absolute inset-0 z-0 opacity-[0.035] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30L30 0z' fill='none' stroke='%23c9a84c' stroke-width='1'/%3E%3C/svg%3E")`,
+            backgroundSize: '22px 22px',
+          }}
+        />
+
         {/* Stretched link — covers card, sits below interactive buttons */}
         <Link
           href={`/products/${product.slug}`}
@@ -81,7 +115,7 @@ export function ProductCard({
           </div>
         )}
 
-        <div style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
+        <div style={{ position: 'relative', zIndex: 2, pointerEvents: 'none', flex: '1 0 auto' }}>
           <CardInfo
             name={product.name}
             price={product.price}
@@ -107,7 +141,7 @@ export function ProductCard({
           productSlug={product.slug}
           onAddToCart={card.addToCart}
         />
-      </article>
+      </motion.article>
 
       {quickViewOpen && <QuickView product={product} onClose={() => setQuickViewOpen(false)} />}
     </>

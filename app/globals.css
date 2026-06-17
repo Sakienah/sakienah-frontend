@@ -45,9 +45,22 @@
   }
 }
 
-.hero-video-mobile {
-  padding-top: clamp(64px, 14vw, 80px);
-  position: relative;
+.hero-video-mobile-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-mobile-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 8, 4, 0.4) 0%,
+    rgba(10, 8, 4, 0.45) 40%,
+    rgba(10, 8, 4, 0.72) 100%
+  );
+  pointer-events: none;
 }
 
 .hero-left {
@@ -55,8 +68,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 24px 24px 60px;
+  padding: clamp(90px, 20vw, 110px) 24px 60px;
   position: relative;
+  z-index: 1;
   overflow: hidden;
 }
 

@@ -43,8 +43,8 @@ export function CardImage({
 
   return (
     <div
-      className="flex-shrink-0 relative overflow-hidden bg-[#FAF7F2]"
-      style={{ aspectRatio, borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+      className="flex-shrink-0 relative overflow-hidden rounded-t-2xl bg-[#FAF7F2]"
+      style={{ aspectRatio }}
     >
       {currentImage && (
         <div className="w-full h-full flex items-center justify-center bg-[#FAF7F2]">
