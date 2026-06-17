@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/ui/Reveal';
-import { IslamicMandala } from './IslamicMandala';
 
 export function FinalCTA() {
   return (
@@ -12,8 +12,24 @@ export function FinalCTA() {
         textAlign: 'center',
       }}
     >
-      {/* Islamic geometric mandala illustration */}
-      <IslamicMandala />
+      {/* Background photo with a dark layer for legibility, same approach as the mobile hero */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0 }}>
+        <Image
+          src="/images/products/finalcta.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background:
+              'linear-gradient(180deg, rgba(10,8,4,0.7) 0%, rgba(10,8,4,0.6) 40%, rgba(10,8,4,0.78) 100%)',
+          }}
+        />
+      </div>
 
       {/* Arabic watermark above text */}
       <div
