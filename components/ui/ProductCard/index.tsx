@@ -28,7 +28,6 @@ export function ProductCard({
   aspectRatio = '3/4',
   sizes = '(max-width:768px) 100vw, 50vw',
 }: Props) {
-  const [hovered, setHovered] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const card = useProductCard(product);
 
@@ -38,15 +37,8 @@ export function ProductCard({
   return (
     <>
       <article
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        className="flex flex-col relative overflow-hidden rounded-lg bg-white"
-        style={{
-          border: '1px solid #F0EBE3',
-          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-          transform: hovered ? 'translateY(-2px)' : 'translateY(0)',
-          boxShadow: hovered ? '0 8px 20px rgba(0,0,0,0.06)' : '0 2px 8px rgba(0,0,0,0.04)',
-        }}
+        className="card-lift group flex flex-col relative overflow-hidden rounded-lg bg-white"
+        style={{ border: '1px solid #F0EBE3' }}
       >
         {/* Stretched link — covers card, sits below interactive buttons */}
         <Link
@@ -62,7 +54,6 @@ export function ProductCard({
           alt={product.name}
           aspectRatio={aspectRatio}
           sizes={sizes}
-          hovered={hovered}
           isOutOfStock={card.isOutOfStock}
           isLowStock={card.isLowStock}
           stock={product.stock}

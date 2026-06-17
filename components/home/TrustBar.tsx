@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { trustItems } from '@/lib/data';
+import { Reveal } from '@/components/ui/Reveal';
 
 const ARABIC = ['شحن', 'إرجاع', 'أمان', 'إسلام'];
 
@@ -180,7 +181,7 @@ export function TrustBar() {
   }, [paused]);
 
   return (
-    <div
+    <Reveal
       style={{
         background: '#0f0d0a',
         borderTop: '1px solid rgba(201,168,76,0.12)',
@@ -241,6 +242,6 @@ export function TrustBar() {
           </div>
         ))}
       </div>
-    </div>
+    </Reveal>
   );
 }

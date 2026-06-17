@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
+import { Reveal } from '@/components/ui/Reveal';
 import { IslamicMandala } from './IslamicMandala';
 
 export function FinalCTA() {
@@ -29,68 +30,40 @@ export function FinalCTA() {
         سكينة
       </div>
 
-      {/* Label */}
-      <p
-        className="relative z-10"
-        style={{
-          fontSize: 'var(--text-xs)',
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          color: '#c9a84c',
-          fontWeight: 600,
-          marginBottom: 20,
-        }}
-      >
-        Klaar om te bestellen?
-      </p>
+      <Reveal>
+        {/* Headline */}
+        <h2
+          className="font-display text-white relative z-10"
+          style={{
+            fontSize: 'var(--text-xl)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            marginBottom: 16,
+            lineHeight: 1.15,
+          }}
+        >
+          Ontdek onze volledige
+          <br />
+          <span style={{ color: '#c9a84c', fontStyle: 'italic' }}>collectie</span>
+        </h2>
 
-      {/* Headline */}
-      <h2
-        className="font-display text-white relative z-10"
-        style={{
-          fontSize: 'var(--text-xl)',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
-          marginBottom: 16,
-          lineHeight: 1.15,
-        }}
-      >
-        Ontdek onze volledige
-        <br />
-        <span style={{ color: '#c9a84c', fontStyle: 'italic' }}>collectie</span>
-      </h2>
+        {/* Subtitle */}
+        <p
+          className="relative z-10"
+          style={{
+            fontSize: 'var(--text-sm)',
+            color: 'rgba(255,255,255,0.55)',
+            maxWidth: 440,
+            margin: '0 auto 40px',
+            lineHeight: 1.75,
+            fontWeight: 300,
+          }}
+        >
+          Premium producten voor jouw islamitische lifestyle — met gratis verzending vanaf €50.
+        </p>
 
-      {/* Subtitle */}
-      <p
-        className="relative z-10"
-        style={{
-          fontSize: 'var(--text-sm)',
-          color: 'rgba(255,255,255,0.55)',
-          maxWidth: 440,
-          margin: '0 auto 40px',
-          lineHeight: 1.75,
-          fontWeight: 300,
-        }}
-      >
-        Premium producten voor jouw islamitische lifestyle — met gratis verzending vanaf €50.
-      </p>
-
-      {/* CTA button */}
-      <Link
-        href="/shop"
-        className="relative z-10 inline-block group overflow-hidden"
-        style={{
-          background: '#c9a84c',
-          color: '#0a0a0a',
-          fontSize: 'var(--text-xs)',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          fontWeight: 700,
-          padding: '18px 44px',
-          boxShadow: '0 4px 24px rgba(201,168,76,0.25)',
-        }}
-      >
-        <span className="relative z-10 flex items-center gap-3">
+        {/* CTA button */}
+        <Button href="/shop" variant="primary" className="relative z-10">
           Shop nu
           <svg
             width="16"
@@ -105,13 +78,8 @@ export function FinalCTA() {
           >
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
-        </span>
-        {/* Hover overlay */}
-        <span
-          className="absolute inset-0 transition-transform duration-300 -translate-x-full group-hover:translate-x-0"
-          style={{ background: 'rgba(255,255,255,0.15)' }}
-        />
-      </Link>
+        </Button>
+      </Reveal>
 
       {/* Bottom trust line */}
       <div

@@ -14,6 +14,17 @@
   --text-sm: clamp(0.8125rem, 0.5vw, 0.9375rem);
   --text-xs: clamp(0.625rem, 0.25vw, 0.75rem);
   --text-page: clamp(1rem, 5vw, 2.5rem);
+
+  /* Depth scale - tinted toward the brand's gold/black hue, not flat black */
+  --shadow-resting: 0 4px 16px rgba(10, 8, 4, 0.06);
+  --shadow-hover: 0 16px 48px rgba(10, 8, 4, 0.12);
+  --shadow-floating: 0 32px 80px rgba(10, 8, 4, 0.18);
+
+  /* Section vertical rhythm */
+  --section-py: clamp(64px, 8vw, 96px);
+
+  /* Motion */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* Trust bar — desktop 4-col handled inline by TrustBar component */
@@ -34,12 +45,17 @@
   }
 }
 
+.hero-video-mobile {
+  padding-top: clamp(64px, 14vw, 80px);
+  position: relative;
+}
+
 .hero-left {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: clamp(120px, 20vw, 140px) 24px 60px;
+  padding: 24px 24px 60px;
   position: relative;
   overflow: hidden;
 }
@@ -61,11 +77,6 @@
 
 .hero-right {
   display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  padding: 48px 24px 60px;
   position: relative;
 }
 
@@ -106,6 +117,42 @@ body {
 
 .animate-marquee {
   animation: marquee 30s infinite linear;
+}
+
+@keyframes geomDrift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-2%, 1.5%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+.geom-pattern-drift {
+  animation: geomDrift 40s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geom-pattern-drift {
+    animation: none;
+  }
+}
+
+.card-lift {
+  transition:
+    transform 220ms var(--ease-out-strong),
+    box-shadow 220ms var(--ease-out-strong);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  }
 }
 
 .footer-link:hover {

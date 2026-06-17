@@ -8,7 +8,6 @@ type Props = {
   alt: string;
   aspectRatio: '3/4' | '4/3' | '1/1' | '4/5';
   sizes: string;
-  hovered: boolean;
   isOutOfStock: boolean;
   isLowStock: boolean;
   stock: number;
@@ -28,7 +27,6 @@ export function CardImage({
   alt,
   aspectRatio,
   sizes,
-  hovered,
   isOutOfStock,
   isLowStock,
   stock,
@@ -42,7 +40,6 @@ export function CardImage({
   onNavigate,
 }: Props) {
   const currentImage = images[currentImageIndex] ?? images[0];
-  const secondImage = images[1] ?? images[0];
 
   return (
     <div
@@ -56,12 +53,8 @@ export function CardImage({
               src={currentImage}
               alt={alt}
               fill
-              className="object-contain"
+              className="object-contain transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] md:group-hover:scale-[1.06]"
               sizes={sizes}
-              style={{
-                transition: 'transform 0.5s ease',
-                transform: hovered ? 'scale(1.06)' : 'scale(1)',
-              }}
             />
           </div>
         </div>
@@ -170,17 +163,15 @@ export function CardImage({
           e.stopPropagation();
           onWishlistToggle();
         }}
-        className="absolute flex items-center justify-center rounded-full border-none cursor-pointer"
+        className="absolute flex items-center justify-center rounded-full border-none cursor-pointer transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-90 md:group-hover:scale-110"
         style={{
           top: 8,
           right: 8,
           background: 'rgba(255,255,255,0.95)',
           width: 34,
           height: 34,
-          transition: 'transform 0.2s, box-shadow 0.2s',
           zIndex: 10,
           boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-          ...(hovered ? { transform: 'scale(1.1)' } : {}),
         }}
         aria-label={wishlisted ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten'}
       >
@@ -203,16 +194,14 @@ export function CardImage({
           e.stopPropagation();
           onQuickView();
         }}
-        className="absolute flex items-center justify-center rounded-full border-none cursor-pointer opacity-100 md:opacity-0 md:translate-y-[-8px]"
+        className="absolute flex items-center justify-center rounded-full border-none cursor-pointer transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-90 opacity-100 translate-y-0 md:opacity-0 md:-translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0"
         style={{
           top: 48,
           right: 8,
           background: 'rgba(255,255,255,0.95)',
           width: 34,
           height: 34,
-          transition: 'opacity 0.2s, transform 0.2s',
           zIndex: 10,
-          ...(hovered ? { opacity: 1, transform: 'translateY(0)' } : {}),
         }}
         aria-label="Snel bekijken"
       >
@@ -238,7 +227,7 @@ export function CardImage({
               e.stopPropagation();
               onNavigate(-1);
             }}
-            className="absolute flex items-center justify-center rounded-full cursor-pointer border hover:bg-gold hover:text-white opacity-100 md:opacity-0"
+            className="absolute flex items-center justify-center rounded-full cursor-pointer border hover:bg-gold hover:text-white transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-90 opacity-100 md:opacity-0 md:group-hover:opacity-100"
             style={{
               left: 8,
               top: '50%',
@@ -249,9 +238,7 @@ export function CardImage({
               height: 28,
               fontSize: 12,
               color: '#555',
-              transition: 'opacity 0.2s',
               zIndex: 10,
-              ...(hovered ? { opacity: 1 } : {}),
             }}
             aria-label="Vorige afbeelding"
           >
@@ -264,7 +251,7 @@ export function CardImage({
               e.stopPropagation();
               onNavigate(1);
             }}
-            className="absolute flex items-center justify-center rounded-full cursor-pointer border hover:bg-gold hover:text-white opacity-100 md:opacity-0"
+            className="absolute flex items-center justify-center rounded-full cursor-pointer border hover:bg-gold hover:text-white transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-90 opacity-100 md:opacity-0 md:group-hover:opacity-100"
             style={{
               right: 8,
               top: '50%',
@@ -275,9 +262,7 @@ export function CardImage({
               height: 28,
               fontSize: 12,
               color: '#555',
-              transition: 'opacity 0.2s',
               zIndex: 10,
-              ...(hovered ? { opacity: 1 } : {}),
             }}
             aria-label="Volgende afbeelding"
           >
@@ -305,7 +290,7 @@ export function CardImage({
                 height: 6,
                 borderRadius: 3,
                 background: i === currentImageIndex ? '#c9a84c' : 'rgba(10,10,10,0.25)',
-                transition: 'all 0.3s',
+                transition: 'width 300ms var(--ease-out-strong), background 300ms ease',
               }}
             />
           ))}

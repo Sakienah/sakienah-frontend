@@ -56,6 +56,11 @@ export function IslamicMandala() {
         .mandala-pulse {
           animation: mandalaPulse 8s ease-in-out infinite;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .mandala-layer-1, .mandala-layer-2, .mandala-layer-3, .mandala-pulse {
+            animation: none;
+          }
+        }
       `}</style>
 
       <svg

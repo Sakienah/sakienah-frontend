@@ -1,4 +1,5 @@
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import { Reveal } from '@/components/ui/Reveal';
 
 export function CTABanner() {
   return (
@@ -13,8 +14,8 @@ export function CTABanner() {
         overflow: 'hidden',
       }}
     >
-      <GeomPattern dark />
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <GeomPattern dark animate />
+      <Reveal style={{ position: 'relative', zIndex: 1 }}>
         <div
           className="font-arabic"
           style={{
@@ -50,7 +51,7 @@ export function CTABanner() {
         >
           In naam van Allah, de Barmhartige, de Genadevolle
         </p>
-      </div>
+      </Reveal>
     </section>
   );
 }

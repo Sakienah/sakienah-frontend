@@ -3,19 +3,23 @@ export function GeomPattern({
   flip = false,
   opacity,
   id,
+  animate = false,
 }: {
   dark?: boolean;
   flip?: boolean;
   opacity?: number;
   id?: string;
+  /** Very slow ambient drift. Pure CSS, automatically disabled under prefers-reduced-motion. */
+  animate?: boolean;
 }) {
   return (
     <div
       aria-hidden
       id={id}
+      className={animate ? 'geom-pattern-drift' : undefined}
       style={{
         position: 'absolute',
-        inset: 0,
+        inset: animate ? '-10%' : 0,
         backgroundImage: "url('/brand_assets/background.webp')",
         backgroundRepeat: 'repeat',
         backgroundSize: '320px auto',

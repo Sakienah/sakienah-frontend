@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import { Reveal } from '@/components/ui/Reveal';
 
 const faqs = [
   {
@@ -140,68 +141,24 @@ export function FaqSection() {
         }}
       >
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p
-            style={{
-              fontSize: 'var(--text-xs)',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              fontWeight: 600,
-              marginBottom: 14,
-            }}
-          >
-            Veelgestelde Vragen
-          </p>
-          <h2
-            className="font-display"
-            style={{
-              fontSize: 'var(--text-h2)',
-              fontWeight: 600,
-              color: '#0a0a0a',
-              letterSpacing: '-0.02em',
-              marginBottom: 18,
-            }}
-          >
-            Hulp nodig?
-          </h2>
-          {/* Ornamental divider */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-            }}
-          >
-            <div
+        <Reveal>
+          <div style={{ textAlign: 'center', marginBottom: 64 }}>
+            <h2
+              className="font-display"
               style={{
-                width: 32,
-                height: 1,
-                background: 'linear-gradient(90deg, transparent, rgba(201,168,76,0.5))',
+                fontSize: 'var(--text-h2)',
+                fontWeight: 600,
+                color: '#0a0a0a',
+                letterSpacing: '-0.02em',
               }}
-            />
-            <div
-              style={{
-                width: 5,
-                height: 5,
-                background: '#c9a84c',
-                opacity: 0.6,
-                transform: 'rotate(45deg)',
-              }}
-            />
-            <div
-              style={{
-                width: 32,
-                height: 1,
-                background: 'linear-gradient(90deg, rgba(201,168,76,0.5), transparent)',
-              }}
-            />
+            >
+              Hulp nodig?
+            </h2>
           </div>
-        </div>
+        </Reveal>
 
         {/* Desktop split layout: questions left | answer right */}
-        <div className="hidden md:flex" style={{ gap: 0, alignItems: 'stretch' }}>
+        <Reveal className="hidden md:flex" style={{ gap: 0, alignItems: 'stretch' }}>
           {/* Left: question list */}
           <div
             style={{
@@ -212,52 +169,6 @@ export function FaqSection() {
               boxShadow: '0 4px 40px rgba(201,168,76,0.06)',
             }}
           >
-            {/* Corner brackets left */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-
             {faqs.map((faq, i) => (
               <div
                 key={i}
@@ -289,52 +200,6 @@ export function FaqSection() {
               boxShadow: '0 4px 40px rgba(201,168,76,0.06)',
             }}
           >
-            {/* Corner brackets right */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-
             {/* Decorative big quote mark */}
             <div
               className="font-display select-none"
@@ -446,7 +311,7 @@ export function FaqSection() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* Mobile accordion */}
         <div className="md:hidden">
@@ -459,52 +324,6 @@ export function FaqSection() {
               padding: '12px 0',
             }}
           >
-            {/* Corner brackets */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-
             {faqs.map((faq, i) => (
               <div
                 key={i}

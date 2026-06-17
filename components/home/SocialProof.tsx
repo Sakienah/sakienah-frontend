@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { reviews } from '@/lib/data';
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { Reveal } from '@/components/ui/Reveal';
 
 function Stars({ count = 5 }: { count?: number }) {
   return (
@@ -116,38 +118,24 @@ export function SocialProof() {
         }}
       >
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 64 }}>
-          <p
+        <Reveal>
+          <SectionHeader eyebrow="Klantervaringen" heading="Wat onze klanten zeggen" />
+          <div
             style={{
-              fontSize: 'var(--text-xs)',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: '#c9a84c',
-              fontWeight: 600,
-              marginBottom: 14,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              marginTop: -32,
+              marginBottom: 48,
             }}
           >
-            Klantervaringen
-          </p>
-          <h2
-            className="font-display"
-            style={{
-              fontSize: 'var(--text-h2)',
-              fontWeight: 600,
-              color: '#0a0a0a',
-              letterSpacing: '-0.02em',
-              marginBottom: 18,
-            }}
-          >
-            Wat onze klanten zeggen
-          </h2>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Stars count={5} />
             <span style={{ fontSize: 'var(--text-sm)', color: '#aaa', marginLeft: 4 }}>
               4.9 gemiddeld · 500+ reviews
             </span>
           </div>
-        </div>
+        </Reveal>
 
         {/* Layout: side | featured | side */}
         <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-6 items-center">
@@ -187,52 +175,6 @@ export function SocialProof() {
               boxShadow: '0 4px 40px rgba(201,168,76,0.08)',
             }}
           >
-            {/* Corner brackets */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderTop: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                left: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderLeft: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                width: 16,
-                height: 16,
-                borderBottom: '1px solid rgba(201,168,76,0.5)',
-                borderRight: '1px solid rgba(201,168,76,0.5)',
-              }}
-            />
-
             {/* Decorative quote mark */}
             <div
               className="font-display select-none"
@@ -267,12 +209,12 @@ export function SocialProof() {
               <p
                 className="font-display"
                 style={{
-                  fontSize: 'var(--text-lg)',
+                  fontSize: 'clamp(1.375rem, 2.2vw, 1.75rem)',
                   fontStyle: 'italic',
                   color: '#222',
-                  lineHeight: 1.75,
+                  lineHeight: 1.5,
                   marginBottom: 36,
-                  maxWidth: 440,
+                  maxWidth: 480,
                 }}
               >
                 &ldquo;{r.text}&rdquo;

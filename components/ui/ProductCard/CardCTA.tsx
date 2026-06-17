@@ -31,14 +31,15 @@ export function CardCTA({
       <div className="px-3 pb-3" style={{ paddingTop: 8, position: 'relative', zIndex: 10 }}>
         <Link
           href={`/products/${productSlug}`}
-          className="block w-full text-center uppercase font-semibold no-underline"
+          className="block w-full text-center uppercase font-semibold no-underline active:scale-[0.97]"
           style={{
             fontSize: 10,
             letterSpacing: '0.1em',
             padding: '12px 0',
             background: '#0a0a0a',
             color: '#fff',
-            transition: 'all 0.2s',
+            transition:
+              'background-color 200ms var(--ease-out-strong), transform 160ms var(--ease-out-strong)',
           }}
         >
           Stel samen
@@ -68,7 +69,7 @@ export function CardCTA({
           if (!disabled) onAddToCart();
         }}
         disabled={disabled}
-        className="w-full font-semibold border-none text-center transition-all"
+        className="w-full font-semibold border-none text-center disabled:cursor-not-allowed active:enabled:scale-[0.97]"
         style={{
           fontSize: 11,
           letterSpacing: '0.06em',
@@ -78,6 +79,8 @@ export function CardCTA({
           cursor: disabled ? 'not-allowed' : 'pointer',
           transform: added ? 'scale(1.02)' : 'scale(1)',
           boxShadow: added ? '0 4px 16px rgba(201,168,76,0.3)' : 'none',
+          transition:
+            'background-color 200ms var(--ease-out-strong), transform 200ms var(--ease-out-strong), box-shadow 200ms var(--ease-out-strong)',
         }}
       >
         {label}

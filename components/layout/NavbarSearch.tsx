@@ -22,9 +22,10 @@ function SearchIcon() {
 type Props = {
   variant?: 'desktop' | 'mobile';
   onClose?: () => void;
+  autoFocus?: boolean;
 };
 
-export function NavbarSearch({ variant = 'desktop', onClose }: Props) {
+export function NavbarSearch({ variant = 'desktop', onClose, autoFocus = false }: Props) {
   const [query, setQuery] = useState('');
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,6 +59,7 @@ export function NavbarSearch({ variant = 'desktop', onClose }: Props) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Zoeken..."
+            autoFocus={autoFocus}
             style={{
               flex: 1,
               border: 'none',

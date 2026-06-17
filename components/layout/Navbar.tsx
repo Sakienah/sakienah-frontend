@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnnouncementBar } from './AnnouncementBar';
 import { NavbarSearch } from './NavbarSearch';
-import { NavbarMegaMenu } from './NavbarMegaMenu';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { getCategories } from '@/lib/api';
@@ -14,8 +13,8 @@ import type { Category } from '@/types';
 function WishlistIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="100%"
+      height="100%"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
@@ -29,8 +28,8 @@ function WishlistIcon() {
 function CartIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="100%"
+      height="100%"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
@@ -46,8 +45,8 @@ function CartIcon() {
 function AccountIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="100%"
+      height="100%"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
@@ -62,8 +61,8 @@ function AccountIcon() {
 function HamburgerIcon() {
   return (
     <svg
-      width="22"
-      height="22"
+      width="100%"
+      height="100%"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
@@ -88,6 +87,22 @@ function CloseIcon() {
     >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      width="100%"
+      height="100%"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
   );
 }
@@ -121,35 +136,12 @@ function Badge({ count }: { count: string | number }) {
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [mobileExpandedShop, setMobileExpandedShop] = useState(false);
   const pathname = usePathname();
   const { totalItems, wishlist } = useCart();
   const { user } = useAuth();
-  const megaMenuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const openMegaMenu = useCallback(() => {
-    if (megaMenuTimerRef.current) {
-      clearTimeout(megaMenuTimerRef.current);
-      megaMenuTimerRef.current = null;
-    }
-    setMegaMenuOpen(true);
-  }, []);
-
-  const scheduleCloseMegaMenu = useCallback(() => {
-    megaMenuTimerRef.current = setTimeout(() => {
-      setMegaMenuOpen(false);
-    }, 150);
-  }, []);
-
-  const closeMegaMenuNow = useCallback(() => {
-    if (megaMenuTimerRef.current) {
-      clearTimeout(megaMenuTimerRef.current);
-      megaMenuTimerRef.current = null;
-    }
-    setMegaMenuOpen(false);
-  }, []);
 
   useEffect(() => {
     getCategories()
@@ -215,14 +207,24 @@ export function Navbar() {
         }}
       >
         <AnnouncementBar />
-        <div
-          className="max-w-[1280px] mx-auto px-5 md:px-10 flex items-center justify-between"
-          style={{ height: 72 }}
-        >
-          {/* Logo */}
+        <div className="max-w-[1280px] mx-auto px-5 md:px-10 grid grid-cols-3 items-center h-[72px] md:h-[80px]">
+          {/* Left: hamburger */}
+          <div className="justify-self-start">
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="icon-btn flex items-center justify-center text-[#0a0a0a] p-1"
+              aria-label="Menu openen"
+            >
+              <span className="block w-[22px] h-[22px] md:w-[23px] md:h-[23px]">
+                <HamburgerIcon />
+              </span>
+            </button>
+          </div>
+
+          {/* Center: logo */}
           <Link
             href="/"
-            className="font-display text-[24px] font-semibold text-[#0a0a0a] flex items-center gap-2 shrink-0"
+            className="justify-self-center font-display text-[22px] md:text-[26px] font-semibold text-[#0a0a0a] flex items-center gap-2 shrink-0"
             style={{ letterSpacing: '-0.01em' }}
           >
             Sakienah
@@ -238,69 +240,38 @@ export function Navbar() {
             />
           </Link>
 
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex items-center" style={{ gap: 40, marginLeft: 48 }}>
-            <div
-              onMouseEnter={openMegaMenu}
-              onMouseLeave={scheduleCloseMegaMenu}
-              style={{ position: 'relative' }}
-            >
-              <Link
-                href="/shop"
-                className={`nav-link-underline text-[13px] tracking-[0.12em] uppercase font-medium flex items-center gap-1.5 ${isShopActive ? 'active' : ''}`}
-                style={{
-                  color: isShopActive ? '#c9a84c' : '#0a0a0a',
-                  paddingBottom: 4,
-                  position: 'relative',
-                  fontFamily: 'var(--font-sans)',
-                }}
+          {/* Right: search, favorieten, cart, account */}
+          <div className="justify-self-end flex items-center gap-4 md:gap-5">
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setSearchOpen((v) => !v)}
+                className="icon-btn flex items-center justify-center text-[#0a0a0a] p-1"
+                aria-label={searchOpen ? 'Zoeken sluiten' : 'Zoeken openen'}
+                aria-expanded={searchOpen}
               >
-                Shop
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    transition: 'transform 0.25s',
-                    transform: megaMenuOpen ? 'rotate(180deg)' : 'rotate(0)',
-                    color: isShopActive ? '#c9a84c' : '#888',
-                  }}
-                >
-                  <ChevronDown />
+                <span className="block w-[20px] h-[20px] md:w-[21px] md:h-[21px]">
+                  <SearchIcon />
                 </span>
-              </Link>
-            </div>
-
-            {[
-              { href: '/about', label: 'Over ons' },
-              { href: '/contact', label: 'Contact' },
-            ].map(({ href, label }) => {
-              const active = pathname === href || pathname.startsWith(href + '/');
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`nav-link-underline text-[13px] tracking-[0.12em] uppercase font-medium ${active ? 'active' : ''}`}
+              </button>
+              {searchOpen && (
+                <div
                   style={{
-                    color: active ? '#c9a84c' : '#0a0a0a',
-                    paddingBottom: 4,
-                    position: 'relative',
-                    fontFamily: 'var(--font-sans)',
+                    position: 'absolute',
+                    top: 'calc(100% + 14px)',
+                    right: 0,
+                    width: 280,
+                    background: '#fff',
+                    boxShadow: '0 16px 48px rgba(0,0,0,0.12)',
+                    border: '1px solid rgba(201,168,76,0.18)',
                   }}
                 >
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Spacer */}
-          <div className="hidden md:block flex-1" />
-
-          {/* Desktop search + icons */}
-          <div className="hidden md:flex items-center" style={{ gap: 22 }}>
-            <NavbarSearch />
+                  <NavbarSearch variant="mobile" onClose={() => setSearchOpen(false)} autoFocus />
+                </div>
+              )}
+            </div>
             <Link
               href="/wishlist"
-              className="icon-btn text-[#0a0a0a] relative flex"
+              className="icon-btn text-[#0a0a0a] relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
               title="Favorieten"
             >
               <WishlistIcon />
@@ -308,7 +279,7 @@ export function Navbar() {
             </Link>
             <Link
               href="/cart"
-              className="icon-btn text-[#0a0a0a] relative flex"
+              className="icon-btn text-[#0a0a0a] relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
               title="Winkelwagen"
             >
               <CartIcon />
@@ -316,58 +287,28 @@ export function Navbar() {
             </Link>
             <Link
               href="/account"
-              className="icon-btn text-[#0a0a0a] flex items-center gap-1.5"
+              className="icon-btn text-[#0a0a0a] flex items-center w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
               title={user ? user.naam : 'Inloggen'}
             >
               <AccountIcon />
-              {user && (
-                <span
-                  className="text-[11px] tracking-[0.1em] uppercase font-medium"
-                  style={{ color: '#c9a84c' }}
-                >
-                  {user.naam.split(' ')[0]}
-                </span>
-              )}
             </Link>
-          </div>
-
-          {/* Mobile: icons + hamburger */}
-          <div className="flex md:hidden items-center gap-2">
-            <Link href="/cart" className="icon-btn text-[#0a0a0a] relative flex p-1">
-              <CartIcon />
-              {totalItems > 0 && <Badge count={totalItems > 9 ? '9+' : totalItems} />}
-            </Link>
-            <button
-              onClick={() => setMobileOpen(true)}
-              className="flex items-center justify-center text-[#0a0a0a] p-1"
-              aria-label="Menu openen"
-            >
-              <HamburgerIcon />
-            </button>
           </div>
         </div>
-
-        {/* Mega menu */}
-        {megaMenuOpen && (
-          <div onMouseEnter={openMegaMenu} onMouseLeave={closeMegaMenuNow}>
-            <NavbarMegaMenu categories={categories} onClose={closeMegaMenuNow} />
-          </div>
-        )}
       </header>
 
-      {/* Mobile overlay */}
+      {/* Nav overlay */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 ${
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setMobileOpen(false)}
         aria-hidden="true"
       />
 
-      {/* Mobile slide-in panel */}
+      {/* Nav slide-in panel */}
       <aside
-        className={`fixed top-0 right-0 z-[70] bg-white flex flex-col transition-transform duration-300 ease-in-out md:hidden ${
-          mobileOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 left-0 z-[70] bg-white flex flex-col transition-transform duration-300 ease-in-out ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ width: 300, height: '100dvh' }}
         aria-label="Navigatiemenu"
@@ -517,45 +458,6 @@ export function Navbar() {
             Contact
           </Link>
         </nav>
-
-        {/* Bottom actions */}
-        <div className="px-6 py-6 border-t border-[#F0EBE3] shrink-0 flex flex-col gap-5">
-          <Link
-            href="/wishlist"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 text-[14px] text-[#0a0a0a]"
-            style={{ fontFamily: 'var(--font-sans)' }}
-          >
-            <WishlistIcon />
-            Favorieten
-            {wishlist.size > 0 && (
-              <span style={{ color: '#c9a84c', fontSize: 13, fontWeight: 500 }}>
-                ({wishlist.size})
-              </span>
-            )}
-          </Link>
-          {user ? (
-            <Link
-              href="/account"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 text-[14px] font-medium"
-              style={{ color: '#c9a84c', fontFamily: 'var(--font-sans)' }}
-            >
-              <AccountIcon />
-              {user.naam}
-            </Link>
-          ) : (
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 text-[14px] text-[#0a0a0a]"
-              style={{ fontFamily: 'var(--font-sans)' }}
-            >
-              <AccountIcon />
-              Inloggen
-            </Link>
-          )}
-        </div>
       </aside>
     </>
   );

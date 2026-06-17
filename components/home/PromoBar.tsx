@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { GeomPattern } from '@/components/ui/GeomPattern';
+import { Reveal } from '@/components/ui/Reveal';
 
 interface TimeLeft {
   days: number;
@@ -164,7 +165,7 @@ export function PromoBar() {
         }
       `}</style>
 
-      <div className="max-w-[1280px] mx-auto relative z-10 flex justify-center">
+      <Reveal className="max-w-[1280px] mx-auto relative z-10 flex justify-center">
         <div
           className="promo-container inline-flex items-center"
           style={{
@@ -329,7 +330,7 @@ export function PromoBar() {
             </div>
           )}
         </div>
-      </div>
+      </Reveal>
 
       <div
         className="absolute bottom-0 left-0 right-0"
