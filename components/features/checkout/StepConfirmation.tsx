@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import type { FormData } from './types';
 import type { OrderResponse } from '@/lib/api';
+import type { CartItem } from '@/contexts/CartContext';
 
 type Props = {
   form: FormData;
   order: OrderResponse | null;
+  items?: CartItem[];
   isGuest?: boolean;
 };
 
-export function StepConfirmation({ form, order, isGuest }: Props) {
+export function StepConfirmation({ form, order, items, isGuest }: Props) {
   return (
     <div
       style={{
@@ -62,10 +64,74 @@ export function StepConfirmation({ form, order, isGuest }: Props) {
           Verwachte levertijd: 2–4 werkdagen
         </p>
         {order && (
-          <p style={{ fontSize: 12, color: '#aaa', marginBottom: 36 }}>
+          <p style={{ fontSize: 12, color: '#aaa', marginBottom: 24 }}>
             Bestelnummer: <strong style={{ color: '#555' }}>{order.orderNumber}</strong>
           </p>
         )}
+
+        {items && items.length > 0 && (
+          <div
+            style={{
+              background: '#FAF7F2',
+              border: '1px solid #F0EBE3',
+              padding: '20px 24px',
+              textAlign: 'left',
+              marginBottom: 24,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 12,
+                color: '#777',
+                marginBottom: 12,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Bestelde producten
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {items.map((item, idx) => (
+                <div key={idx} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                  {item.product.images[0] && (
+                    <img
+                      src={item.product.images[0]}
+                      alt={item.product.name}
+                      style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 4 }}
+                    />
+                  )}
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 13, color: '#0a0a0a', fontWeight: 500 }}>
+                      {item.product.name}
+                    </p>
+                    <p style={{ fontSize: 12, color: '#777' }}>
+                      {item.variant?.colorName ? `${item.variant.colorName} · ` : ''}
+                      {item.quantity}x
+                    </p>
+                  </div>
+                  <p style={{ fontSize: 13, color: '#555', fontWeight: 500 }}>
+                    €{Number(item.product.price).toFixed(2)}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div
+              style={{
+                borderTop: '1px solid #E8E3DA',
+                marginTop: 16,
+                paddingTop: 16,
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ fontSize: 13, color: '#777' }}>Totaal</span>
+              <span style={{ fontSize: 14, color: '#0a0a0a', fontWeight: 600 }}>
+                €{Number(order?.total ?? 0).toFixed(2)}
+              </span>
+            </div>
+          </div>
+        )}
+
         <div
           style={{
             background: '#FAF7F2',

@@ -267,6 +267,7 @@ export type OrderResponse = {
   shippingCost: string;
   total: string;
   createdAt: string;
+  guestToken?: string;
 };
 
 export type CouponValidationResult = {
@@ -331,8 +332,49 @@ export function postGuestCheckout(payload: GuestCheckoutPayload): Promise<OrderR
       const d = (await r.json().catch(() => ({}))) as { message?: string };
       throw new Error(d.message ?? `Fout: ${r.status}`);
     }
-    return r.json() as Promise<OrderResponse>;
+    const data = (await r.json()) as { order: OrderResponse; guestToken: string };
+    return { ...data.order, guestToken: data.guestToken };
   });
+}
+
+// Payments
+export type PaymentSessionResponse = {
+  checkoutUrl: string;
+  orderId: string;
+};
+
+export type PaymentStatusResponse = {
+  id: string;
+  orderNumber: string;
+  status: string;
+  paymentStatus: string;
+  molliePaymentId: string | null;
+  checkoutUrl: string | null;
+  expiresAt: string | null;
+};
+
+export function createPayment(
+  orderId: string,
+  guestToken?: string,
+): Promise<PaymentSessionResponse> {
+  return proxyMutate<PaymentSessionResponse>('POST', '/payments', { orderId, guestToken });
+}
+
+export function getPaymentStatus(
+  orderId: string,
+  guestToken?: string,
+): Promise<PaymentStatusResponse> {
+  const params = new URLSearchParams();
+  if (guestToken) params.set('guestToken', guestToken);
+  const query = params.toString() ? `?${params.toString()}` : '';
+  return proxyGetOrThrow<PaymentStatusResponse>(`/payments/${orderId}/status${query}`);
+}
+
+export function retryPayment(
+  orderId: string,
+  guestToken?: string,
+): Promise<PaymentSessionResponse> {
+  return proxyMutate<PaymentSessionResponse>('POST', '/payments/retry', { orderId, guestToken });
 }
 
 export async function checkEmailExists(email: string): Promise<boolean> {

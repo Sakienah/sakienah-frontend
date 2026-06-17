@@ -8,6 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import {
   postCheckout,
   postGuestCheckout,
+  createPayment,
   validateCoupon,
   getAddress,
   type OrderResponse,
@@ -19,7 +20,6 @@ import { OrderSummary } from './OrderSummary';
 import { StepGateway } from './StepGateway';
 import { StepInfo } from './StepInfo';
 import { StepPayment } from './StepPayment';
-import { StepConfirmation } from './StepConfirmation';
 
 export function CheckoutFlow() {
   const { user } = useAuth();
@@ -27,10 +27,8 @@ export function CheckoutFlow() {
   const [step, setStep] = useState<Step>(user ? 1 : 0);
   const [mode, setMode] = useState<CheckoutMode>(user ? 'account' : 'guest');
   const [form, setForm] = useState<FormData>(defaultForm);
-  const [placed, setPlaced] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [order, setOrder] = useState<OrderResponse | null>(null);
   const [coupon, setCoupon] = useState<CouponValidationResult | null>(null);
   const [couponCode, setCouponCode] = useState('');
   const [couponError, setCouponError] = useState<string | null>(null);
@@ -159,12 +157,24 @@ export function CheckoutFlow() {
           couponCode: coupon ? couponCode.trim() : undefined,
         });
       }
-      setOrder(result);
+
+      // Store checkout data for post-payment success page
+      localStorage.setItem('sakienah_checkout_order', JSON.stringify(result));
+      localStorage.setItem('sakienah_checkout_form', JSON.stringify(form));
+      localStorage.setItem('sakienah_checkout_items', JSON.stringify(items));
+
+      // Store guest token for post-payment pages if applicable
+      if (result.guestToken) {
+        localStorage.setItem('sakienah_guest_token', result.guestToken);
+      }
+
       await clearCart();
-      setPlaced(true);
+
+      // Create Mollie payment session and redirect customer
+      const session = await createPayment(result.id, result.guestToken);
+      window.location.href = session.checkoutUrl;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Er ging iets mis. Probeer opnieuw.');
-    } finally {
       setSubmitting(false);
     }
   }
@@ -180,7 +190,7 @@ export function CheckoutFlow() {
     form.city.trim().length > 0 &&
     (form.country !== 'NL' || form.houseNumber.trim().length > 0);
 
-  if (items.length === 0 && !placed) {
+  if (items.length === 0) {
     return (
       <>
         <div
@@ -241,15 +251,6 @@ export function CheckoutFlow() {
             Ga naar de shop
           </Link>
         </div>
-      </>
-    );
-  }
-
-  if (placed) {
-    return (
-      <>
-        <CheckoutHeader step={3} allDone />
-        <StepConfirmation form={form} order={order} isGuest={mode === 'guest'} />
       </>
     );
   }
