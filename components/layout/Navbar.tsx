@@ -242,7 +242,7 @@ export function Navbar() {
 
           {/* Right: search, favorieten, cart, account */}
           <div className="justify-self-end flex items-center gap-4 md:gap-5">
-            <div style={{ position: 'relative' }}>
+            <div className="hidden md:block" style={{ position: 'relative' }}>
               <button
                 onClick={() => setSearchOpen((v) => !v)}
                 className="icon-btn flex items-center justify-center text-[#0a0a0a] p-1"
