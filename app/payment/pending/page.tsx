@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { getPaymentStatus, type PaymentStatusResponse } from '@/lib/api';
+import { getPaymentStatus, retryPayment, type PaymentStatusResponse } from '@/lib/api';
 
 export default function PaymentPendingPage() {
   const searchParams = useSearchParams();
@@ -10,6 +10,7 @@ export default function PaymentPendingPage() {
   const orderId = searchParams.get('order');
   const [status, setStatus] = useState<PaymentStatusResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [retryLoading, setRetryLoading] = useState(false);
   const [guestToken] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('sakienah_guest_token');
@@ -21,7 +22,7 @@ export default function PaymentPendingPage() {
       const result = await getPaymentStatus(orderId, guestToken ?? undefined);
       setStatus(result);
 
-      if (result.paymentStatus === 'PAID') {
+      if (result.paymentStatus === 'PAID' || result.status === 'CONFIRMED') {
         router.replace(`/payment/success?order=${orderId}`);
         return;
       }
@@ -46,6 +47,19 @@ export default function PaymentPendingPage() {
     }, 3000);
     return () => clearInterval(interval);
   }, [orderId, checkStatus]);
+
+  async function handleRetry() {
+    if (!orderId) return;
+    setRetryLoading(true);
+    setError(null);
+    try {
+      const session = await retryPayment(orderId, guestToken ?? undefined);
+      window.location.href = session.checkoutUrl;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Opnieuw proberen mislukt.');
+      setRetryLoading(false);
+    }
+  }
 
   const expiresAt = status?.expiresAt ? new Date(status.expiresAt) : null;
   const now = new Date();
@@ -98,6 +112,14 @@ export default function PaymentPendingPage() {
         )}
 
         {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
+
+        <button
+          onClick={handleRetry}
+          disabled={retryLoading}
+          className="mt-8 inline-block bg-[#0a0a0a] text-[#c9a84c] uppercase font-bold text-[11px] tracking-[0.18em] px-10 py-4 disabled:opacity-50"
+        >
+          {retryLoading ? 'Laden...' : 'Opnieuw proberen te betalen'}
+        </button>
 
         <p className="text-[#aaa] text-xs mt-6">Ordernummer: {status?.orderNumber ?? '...'}</p>
       </div>

@@ -419,6 +419,9 @@ export type OrderSummary = {
   notes: string | null;
   items: OrderItem[];
   address: OrderAddress | null;
+  guestEmail?: string | null;
+  guestFirstName?: string | null;
+  customer?: { firstName: string; lastName: string; email: string } | null;
 };
 
 export function getOrders(): Promise<OrderSummary[]> {
@@ -427,6 +430,13 @@ export function getOrders(): Promise<OrderSummary[]> {
 
 export function getOrderById(id: string): Promise<OrderSummary> {
   return proxyGetOrThrow<OrderSummary>(`/orders/${id}`);
+}
+
+export function getOrderSummary(id: string, guestToken?: string): Promise<OrderSummary> {
+  const params = new URLSearchParams();
+  if (guestToken) params.set('guestToken', guestToken);
+  const query = params.toString() ? `?${params.toString()}` : '';
+  return proxyGetOrThrow<OrderSummary>(`/orders/${id}/summary${query}`);
 }
 
 // Adressen

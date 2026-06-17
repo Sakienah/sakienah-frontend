@@ -16,6 +16,12 @@ async function proxyRequest(req: NextRequest, params: Params['params']) {
   if (contentType) headers['content-type'] = contentType;
   if (token) headers['cookie'] = `${COOKIE_NAME}=${token}`;
 
+  // Forward origin/referer so the backend CSRF guard can validate the request.
+  const origin = req.headers.get('origin');
+  const referer = req.headers.get('referer');
+  if (origin) headers['origin'] = origin;
+  if (referer) headers['referer'] = referer;
+
   const qs = req.nextUrl.searchParams.toString();
   const apiPath = path.join('/') + (qs ? `?${qs}` : '');
 
