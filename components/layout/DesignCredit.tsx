@@ -19,13 +19,13 @@ export function DesignCredit() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 11,
+          gap: 12,
           textDecoration: 'none',
         }}
       >
         <span
           style={{
-            fontSize: 11,
+            fontSize: 13,
             color: 'rgba(255,255,255,0.22)',
             letterSpacing: '0.12em',
           }}
@@ -35,8 +35,8 @@ export function DesignCredit() {
         <Image
           src="/logo-credit-gold.png"
           alt="Snippt"
-          width={72}
-          height={22}
+          width={84}
+          height={26}
           style={{ height: 'auto', opacity: 0.6 }}
           unoptimized
         />
