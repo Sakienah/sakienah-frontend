@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans, Amiri } from 'next/font/google';
 import { cookies } from 'next/headers';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
+import { DesignCredit } from '@/components/layout/DesignCredit';
 import { CartProvider } from '@/contexts/CartContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ToastProvider } from '@/contexts/ToastContext';
@@ -71,6 +72,7 @@ export default async function RootLayout({
           <ToastProvider>
             <CartProvider>
               {children}
+              <DesignCredit />
               <GiftFloater />
               <ToastContainer />
             </CartProvider>

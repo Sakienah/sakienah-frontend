@@ -96,11 +96,10 @@ export function Footer() {
             </div>
           </div>
         </div>
+      </div>
 
-        <div
-          className="flex justify-between items-center flex-wrap gap-4"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 28 }}
-        >
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 28 }}>
+        <div className="max-w-[1280px] mx-auto px-6 md:px-10 flex justify-between items-center flex-wrap gap-4">
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>
             © 2026 Sakienah. Alle rechten voorbehouden.
           </p>
