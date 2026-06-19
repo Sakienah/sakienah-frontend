@@ -76,6 +76,13 @@ export function ProductDetail({
 
   const canAdd = isBundle ? allBundleSelectionsReady && bundleMinStock > 0 : effectiveStock > 0;
 
+  // Voorraad die getoond wordt: bij bundles afhankelijk van geselecteerde kleuren
+  const displayStock = isBundle
+    ? allBundleSelectionsReady
+      ? bundleMinStock
+      : product.stock
+    : effectiveStock;
+
   useEffect(() => {
     const onScroll = () => setStickyVisible(window.scrollY > 500);
     window.addEventListener('scroll', onScroll);
@@ -470,23 +477,10 @@ export function ProductDetail({
             style={{
               fontSize: 11,
               fontWeight: 600,
-              color: isBundle
-                ? allBundleSelectionsReady && bundleMinStock === 0
-                  ? '#E74C3C'
-                  : '#4CAF78'
-                : effectiveStock > 0
-                  ? '#4CAF78'
-                  : '#E74C3C',
+              color: displayStock > 0 ? '#4CAF78' : '#E74C3C',
             }}
           >
-            ●{' '}
-            {isBundle
-              ? allBundleSelectionsReady && bundleMinStock === 0
-                ? 'Niet op voorraad'
-                : 'Op voorraad'
-              : effectiveStock > 0
-                ? 'Op voorraad'
-                : 'Niet op voorraad'}
+            ● {displayStock > 0 ? 'Op voorraad' : 'Niet op voorraad'}
           </span>
         </div>
       </div>
@@ -648,11 +642,11 @@ export function ProductDetail({
                 style={{
                   fontSize: 10,
                   fontWeight: 600,
-                  color: effectiveStock > 0 ? '#4CAF78' : '#E74C3C',
+                  color: displayStock > 0 ? '#4CAF78' : '#E74C3C',
                   flexShrink: 0,
                 }}
               >
-                ● {effectiveStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
+                ● {displayStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
               </span>
             </div>
             <div className="flex items-baseline" style={{ gap: 10 }}>
@@ -693,7 +687,7 @@ export function ProductDetail({
               ? '✓ Toegevoegd'
               : isBundle && !allBundleSelectionsReady
                 ? 'Kies kleuren'
-                : effectiveStock === 0
+                : displayStock === 0
                   ? 'Niet op voorraad'
                   : 'Voeg toe aan winkelwagen'}
           </button>

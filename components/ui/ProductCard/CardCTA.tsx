@@ -30,19 +30,25 @@ export function CardCTA({
     return (
       <div className="px-3 pb-3" style={{ paddingTop: 8, position: 'relative', zIndex: 10 }}>
         <Link
-          href={`/products/${productSlug}`}
-          className="block w-full text-center uppercase font-semibold no-underline active:scale-[0.97]"
+          href={isOutOfStock ? '#' : `/products/${productSlug}`}
+          onClick={(e) => {
+            if (isOutOfStock) {
+              e.preventDefault();
+            }
+          }}
+          className={`block w-full text-center uppercase font-semibold no-underline active:scale-[0.97] ${isOutOfStock ? 'pointer-events-none' : ''}`}
           style={{
             fontSize: 10,
             letterSpacing: '0.1em',
             padding: '12px 0',
-            background: '#0a0a0a',
+            background: isOutOfStock ? '#d0ccc4' : '#0a0a0a',
             color: '#fff',
+            cursor: isOutOfStock ? 'not-allowed' : 'pointer',
             transition:
               'background-color 200ms var(--ease-out-strong), transform 160ms var(--ease-out-strong)',
           }}
         >
-          Stel samen
+          {isOutOfStock ? 'Niet op voorraad' : 'Stel samen'}
         </Link>
 
         <div className="flex items-center justify-center gap-1.5 mt-2">
