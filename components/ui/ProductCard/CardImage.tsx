@@ -41,6 +41,29 @@ export function CardImage({
 }: Props) {
   const currentImage = images[currentImageIndex] ?? images[0];
 
+  // Single-badge priority: out of stock > discount > hot > bestseller > low stock > sold count
+  const badge = (() => {
+    if (isOutOfStock) {
+      return { text: 'Uitverkocht', style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (discountPct) {
+      return { text: `-${discountPct}%`, style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (isHot) {
+      return { text: 'Populair', style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (isBestseller) {
+      return { text: 'Bestseller', style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (isLowStock) {
+      return { text: `Nog ${stock} op voorraad`, style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (soldCount && soldCount > 10) {
+      return { text: `${soldCount}+ verkocht`, style: 'bg-[#0a0a0a] text-gold' };
+    }
+    return null;
+  })();
+
   return (
     <div
       className="flex-shrink-0 relative overflow-hidden rounded-t-2xl bg-[#FAF7F2]"
@@ -60,101 +83,16 @@ export function CardImage({
         </div>
       )}
 
-      <style>{`
-        @keyframes pulse-badge {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.7; }
-        }
-        .hot-badge {
-          animation: pulse-badge 2s ease-in-out infinite;
-        }
-      `}</style>
-
-      <div
-        className="absolute flex flex-col pointer-events-none"
-        style={{ top: 8, left: 8, gap: 4, zIndex: 2 }}
-      >
-        {isHot && !isOutOfStock && (
+      {badge && (
+        <div className="absolute pointer-events-none" style={{ top: 8, left: 8, zIndex: 2 }}>
           <span
-            className="hot-badge font-semibold uppercase"
-            style={{
-              fontSize: 9,
-              letterSpacing: '0.08em',
-              padding: '4px 8px',
-              background: 'linear-gradient(135deg, #e74c3c, #c0392b)',
-              color: '#fff',
-            }}
-          >
-            🔥 Populair
-          </span>
-        )}
-        {isOutOfStock && (
-          <span
-            className="font-semibold uppercase bg-[#0a0a0a] text-gold"
+            className={`inline-block font-semibold uppercase ${badge.style}`}
             style={{ fontSize: 9, letterSpacing: '0.1em', padding: '4px 8px' }}
           >
-            Uitverkocht
+            {badge.text}
           </span>
-        )}
-        {discountPct && !isOutOfStock && (
-          <span
-            className="font-bold uppercase"
-            style={{
-              fontSize: 9,
-              letterSpacing: '0.1em',
-              padding: '4px 8px',
-              background: '#0a0a0a',
-              color: '#c9a84c',
-            }}
-          >
-            -{discountPct}%
-          </span>
-        )}
-        {isLowStock && !isOutOfStock && !discountPct && !isHot && (
-          <span
-            className="low-stock-badge font-semibold uppercase bg-[#0a0a0a] text-gold relative"
-            style={{ fontSize: 9, letterSpacing: '0.08em', padding: '5px 8px' }}
-          >
-            Nog {stock} op voorraad
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
-              <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
-                fill="none"
-                stroke="#c9a84c"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeDasharray="200"
-                className="low-stock-border"
-              />
-            </svg>
-          </span>
-        )}
-        {isBestseller && !isOutOfStock && !isLowStock && !isHot && (
-          <span
-            className="font-semibold uppercase bg-[#0a0a0a] text-gold"
-            style={{ fontSize: 9, letterSpacing: '0.1em', padding: '4px 8px' }}
-          >
-            Bestseller
-          </span>
-        )}
-        {soldCount && soldCount > 10 && !isOutOfStock && (
-          <span
-            className="font-semibold uppercase"
-            style={{
-              fontSize: 9,
-              letterSpacing: '0.08em',
-              padding: '4px 8px',
-              background: '#0a0a0a',
-              color: '#c9a84c',
-            }}
-          >
-            {soldCount}+ verkocht
-          </span>
-        )}
-      </div>
+        </div>
+      )}
 
       <button
         type="button"

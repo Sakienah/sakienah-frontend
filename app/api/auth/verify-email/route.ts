@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   const setCookie = apiRes.headers.get('set-cookie') ?? '';
   const tokenMatch = setCookie.match(/sakienah_token=([^;]+)/);
-  const jwtToken = tokenMatch?.[1];
+  const jwtToken = tokenMatch?.[1] ? decodeURIComponent(tokenMatch[1]) : undefined;
 
   const res = new NextResponse(data, {
     status: 200,

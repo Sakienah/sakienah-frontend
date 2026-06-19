@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
   const setCookie = apiRes.headers.get('set-cookie') ?? '';
   const tokenMatch = setCookie.match(/sakienah_token=([^;]+)/);
-  const token = tokenMatch?.[1];
+  const token = tokenMatch?.[1] ? decodeURIComponent(tokenMatch[1]) : undefined;
 
   const res = new NextResponse(data, {
     status: 201,

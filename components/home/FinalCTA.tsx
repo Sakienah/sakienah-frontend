@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Truck, RotateCcw, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Reveal } from '@/components/ui/Reveal';
 
@@ -103,10 +104,10 @@ export function FinalCTA() {
         style={{ gap: 24 }}
       >
         {[
-          { icon: '↗', text: 'Gratis verzending vanaf €50' },
-          { icon: '↺', text: '30 dagen retour' },
-          { icon: '✓', text: 'Veilig betalen' },
-        ].map(({ icon, text }) => (
+          { icon: Truck, text: 'Gratis verzending vanaf €50' },
+          { icon: RotateCcw, text: '30 dagen retour' },
+          { icon: ShieldCheck, text: 'Veilig betalen' },
+        ].map(({ icon: Icon, text }) => (
           <span
             key={text}
             className="flex items-center gap-2"
@@ -116,7 +117,7 @@ export function FinalCTA() {
               letterSpacing: '0.05em',
             }}
           >
-            <span style={{ color: '#c9a84c', fontSize: 12 }}>{icon}</span>
+            <Icon size={14} strokeWidth={1.5} style={{ color: '#c9a84c' }} />
             {text}
           </span>
         ))}

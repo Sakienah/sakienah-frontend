@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Product } from '@/types';
 import { QuickView } from '../QuickView';
-import { DealTimer } from '../DealCard';
 import { useProductCard } from './useProductCard';
 import { CardImage } from './CardImage';
 import { CardSwatches } from './CardSwatches';
@@ -102,16 +101,12 @@ export function ProductCard({
         />
 
         {card.hasVariants && (
-          <CardSwatches
-            variants={product.variants}
-            selectedVariantId={card.selectedVariant?.id ?? null}
-            onSelect={card.selectVariant}
-          />
-        )}
-
-        {product.comparePrice && (
-          <div style={{ position: 'relative', zIndex: 2 }}>
-            <DealTimer productId={product.id} />
+          <div className="absolute z-10" style={{ top: 36, left: 10 }}>
+            <CardSwatches
+              variants={product.variants}
+              selectedVariantId={card.selectedVariant?.id ?? null}
+              onSelect={card.selectVariant}
+            />
           </div>
         )}
 
