@@ -177,7 +177,10 @@ export function CartPage() {
           const image = variant?.images[0] ?? product.images[0];
           const isBundle = (product.bundleItems?.length ?? 0) > 0;
           const itemStock = variant ? variant.stock : product.stock;
-          const isOutOfStock = !isBundle && itemStock < quantity;
+          const itemIsPreOrder = variant
+            ? variant.isPreOrder || product.isPreOrder
+            : product.isPreOrder;
+          const isOutOfStock = !isBundle && !itemIsPreOrder && itemStock < quantity;
           return (
             <div
               key={`${product.id}-${variantId ?? selectedColor ?? ''}`}
@@ -275,6 +278,11 @@ export function CartPage() {
                       })}
                     </div>
                   </div>
+                )}
+                {itemIsPreOrder && (
+                  <p style={{ fontSize: 11, color: '#c9a84c', fontWeight: 600, marginTop: 6 }}>
+                    Pre-order
+                  </p>
                 )}
                 {isOutOfStock && (
                   <p style={{ fontSize: 11, color: '#E74C3C', fontWeight: 600, marginTop: 6 }}>

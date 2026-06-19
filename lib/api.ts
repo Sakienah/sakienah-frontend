@@ -138,7 +138,16 @@ export type CartBundleItemProduct = {
   name: string;
   images: string[];
   stock: number;
-  variants: Array<{ id: string; colorName: string; colorHex: string; stock: number }>;
+  isPreOrder: boolean;
+  expectedShipDate: string | null;
+  variants: Array<{
+    id: string;
+    colorName: string;
+    colorHex: string;
+    stock: number;
+    isPreOrder: boolean;
+    expectedShipDate: string | null;
+  }>;
 };
 
 export type CartItemResponse = {
@@ -155,6 +164,8 @@ export type CartItemResponse = {
     sku: string | null;
     stock: number;
     images: string[];
+    isPreOrder: boolean;
+    expectedShipDate: string | null;
   } | null;
   product: {
     id: string;
@@ -164,6 +175,8 @@ export type CartItemResponse = {
     comparePrice: string | null;
     images: string[];
     stock: number;
+    isPreOrder: boolean;
+    expectedShipDate: string | null;
     category: { id: string; name: string; slug: string } | null;
     bundleItems: Array<{
       id: string;
@@ -180,6 +193,8 @@ export type CartItemResponse = {
       sku: string | null;
       stock: number;
       images: string[];
+      isPreOrder: boolean;
+      expectedShipDate: string | null;
     }>;
   };
 };

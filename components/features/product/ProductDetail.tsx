@@ -59,6 +59,10 @@ export function ProductDetail({
   // Effectieve stock en SKU: variant-niveau als er varianten zijn
   const effectiveStock = selectedVariant ? selectedVariant.stock : product.stock;
   const effectiveSku = selectedVariant?.sku ?? product.sku;
+  const effectiveIsPreOrder = selectedVariant
+    ? selectedVariant.isPreOrder || product.isPreOrder
+    : product.isPreOrder;
+  const effectiveExpectedShipDate = selectedVariant?.expectedShipDate ?? product.expectedShipDate;
 
   // Voor een bundle: minimum stock van alle losse items (na kleurkeuze)
   const bundleMinStock =
@@ -74,7 +78,19 @@ export function ProductDetail({
         )
       : 0;
 
-  const canAdd = isBundle ? allBundleSelectionsReady && bundleMinStock > 0 : effectiveStock > 0;
+  const bundleIsPreOrder = isBundle
+    ? (product.bundleItems ?? []).every((bi) => {
+        if (bi.product.variants.length > 0) {
+          const sel = bundleSelections.get(bi.productId);
+          return sel ? sel.isPreOrder || bi.product.isPreOrder : bi.product.isPreOrder;
+        }
+        return bi.product.isPreOrder;
+      })
+    : false;
+
+  const canAdd = isBundle
+    ? allBundleSelectionsReady && (bundleIsPreOrder || bundleMinStock > 0)
+    : effectiveIsPreOrder || effectiveStock > 0;
 
   // Voorraad die getoond wordt: bij bundles afhankelijk van geselecteerde kleuren
   const displayStock = isBundle
@@ -158,6 +174,43 @@ export function ProductDetail({
             </span>
           )}
         </div>
+        {effectiveIsPreOrder && (
+          <div
+            style={{
+              background: '#0a0a0a',
+              color: '#c9a84c',
+              fontSize: 11,
+              fontWeight: 600,
+              padding: '8px 14px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              marginBottom: 12,
+              letterSpacing: '0.08em',
+            }}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg>
+            Pre-order — verwachte verzending:{' '}
+            {effectiveExpectedShipDate
+              ? new Date(effectiveExpectedShipDate).toLocaleDateString('nl-NL', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })
+              : 'binnenkort bekend'}
+          </div>
+        )}
+
         {savings ? (
           <div
             style={{
@@ -320,12 +373,14 @@ export function ProductDetail({
             <div className="flex" style={{ gap: 10 }}>
               {product.variants.map((variant) => {
                 const isSelected = selectedVariant?.id === variant.id;
+                const isDisabled =
+                  variant.stock === 0 && !variant.isPreOrder && !product.isPreOrder;
                 return (
                   <button
                     key={variant.id}
                     onClick={() => onVariantChange(variant)}
                     title={variant.colorName}
-                    disabled={variant.stock === 0}
+                    disabled={isDisabled}
                     style={{
                       width: 34,
                       height: 34,
@@ -334,8 +389,8 @@ export function ProductDetail({
                       border: isSelected ? '2px solid #c9a84c' : '2px solid transparent',
                       outline: isSelected ? '2px solid #c9a84c' : '2px solid #E8E0D5',
                       outlineOffset: 2,
-                      cursor: variant.stock === 0 ? 'not-allowed' : 'pointer',
-                      opacity: variant.stock === 0 ? 0.35 : 1,
+                      cursor: isDisabled ? 'not-allowed' : 'pointer',
+                      opacity: isDisabled ? 0.35 : 1,
                       transition: 'outline 0.15s',
                     }}
                   />
@@ -407,16 +462,20 @@ export function ProductDetail({
             {isBundle
               ? !allBundleSelectionsReady
                 ? 'Kies kleuren hierboven'
-                : bundleMinStock === 0
+                : bundleMinStock === 0 && !bundleIsPreOrder
                   ? 'Niet op voorraad'
                   : added
                     ? '✓ Toegevoegd aan winkelwagen'
-                    : 'Voeg toe aan winkelwagen'
-              : effectiveStock === 0
+                    : bundleIsPreOrder
+                      ? 'Pre-order'
+                      : 'Voeg toe aan winkelwagen'
+              : effectiveStock === 0 && !effectiveIsPreOrder
                 ? 'Niet op voorraad'
                 : added
                   ? '✓ Toegevoegd aan winkelwagen'
-                  : 'Voeg toe aan winkelwagen'}
+                  : effectiveIsPreOrder
+                    ? 'Pre-order'
+                    : 'Voeg toe aan winkelwagen'}
           </button>
           <button
             onClick={() => {
@@ -477,10 +536,20 @@ export function ProductDetail({
             style={{
               fontSize: 11,
               fontWeight: 600,
-              color: displayStock > 0 ? '#4CAF78' : '#E74C3C',
+              color:
+                effectiveIsPreOrder || bundleIsPreOrder
+                  ? '#c9a84c'
+                  : displayStock > 0
+                    ? '#4CAF78'
+                    : '#E74C3C',
             }}
           >
-            ● {displayStock > 0 ? 'Op voorraad' : 'Niet op voorraad'}
+            ●{' '}
+            {effectiveIsPreOrder || bundleIsPreOrder
+              ? 'Pre-order'
+              : displayStock > 0
+                ? 'Op voorraad'
+                : 'Niet op voorraad'}
           </span>
         </div>
       </div>
@@ -642,11 +711,21 @@ export function ProductDetail({
                 style={{
                   fontSize: 10,
                   fontWeight: 600,
-                  color: displayStock > 0 ? '#4CAF78' : '#E74C3C',
+                  color:
+                    effectiveIsPreOrder || bundleIsPreOrder
+                      ? '#c9a84c'
+                      : displayStock > 0
+                        ? '#4CAF78'
+                        : '#E74C3C',
                   flexShrink: 0,
                 }}
               >
-                ● {displayStock > 0 ? 'Op voorraad' : 'Uitverkocht'}
+                ●{' '}
+                {effectiveIsPreOrder || bundleIsPreOrder
+                  ? 'Pre-order'
+                  : displayStock > 0
+                    ? 'Op voorraad'
+                    : 'Uitverkocht'}
               </span>
             </div>
             <div className="flex items-baseline" style={{ gap: 10 }}>
@@ -687,9 +766,11 @@ export function ProductDetail({
               ? '✓ Toegevoegd'
               : isBundle && !allBundleSelectionsReady
                 ? 'Kies kleuren'
-                : displayStock === 0
+                : displayStock === 0 && !effectiveIsPreOrder && !bundleIsPreOrder
                   ? 'Niet op voorraad'
-                  : 'Voeg toe aan winkelwagen'}
+                  : effectiveIsPreOrder || bundleIsPreOrder
+                    ? 'Pre-order'
+                    : 'Voeg toe aan winkelwagen'}
           </button>
         </div>
       )}

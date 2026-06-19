@@ -17,7 +17,7 @@ export function CardSwatches({ variants, selectedVariantId, onSelect }: Props) {
     <div className="flex flex-col" style={{ gap: 7, position: 'relative', zIndex: 10 }}>
       {visible.map((v) => {
         const isSel = selectedVariantId === v.id;
-        const disabled = v.stock === 0;
+        const disabled = v.stock === 0 && !v.isPreOrder;
         return (
           <button
             key={v.id}

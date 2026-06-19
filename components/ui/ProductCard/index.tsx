@@ -89,6 +89,7 @@ export function ProductCard({
           sizes={sizes}
           isOutOfStock={card.isOutOfStock}
           isLowStock={card.isLowStock}
+          productIsPreOrder={product.isPreOrder}
           stock={product.stock}
           discountPct={card.discountPct}
           isBestseller={card.isBestseller}
@@ -134,6 +135,7 @@ export function ProductCard({
           variantOutOfStock={card.variantOutOfStock}
           added={card.added}
           productSlug={product.slug}
+          isPreOrder={product.isPreOrder}
           onAddToCart={card.addToCart}
         />
       </motion.article>

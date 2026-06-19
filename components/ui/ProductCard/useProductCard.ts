@@ -21,8 +21,11 @@ export function useProductCard(product: Product) {
   const wishlisted = isWishlisted(product.id);
   const isBundle = (product.bundleItems ?? []).length > 0;
   const hasVariants = !isBundle && product.variants.length > 0;
-  const isOutOfStock = product.stock === 0;
-  const isLowStock = product.stock > 0 && product.stock <= 5;
+  const effectiveIsPreOrder = selectedVariant
+    ? selectedVariant.isPreOrder || product.isPreOrder
+    : product.isPreOrder;
+  const isOutOfStock = !effectiveIsPreOrder && product.stock === 0;
+  const isLowStock = !effectiveIsPreOrder && product.stock > 0 && product.stock <= 5;
   const discountPct = product.comparePrice
     ? Math.round((1 - parseFloat(product.price) / parseFloat(product.comparePrice)) * 100)
     : null;
@@ -34,8 +37,12 @@ export function useProductCard(product: Product) {
   const images = variantImages.length > 0 ? variantImages : product.images;
   const currentImage = images[currentImageIndex] ?? product.images[0];
 
-  const variantOutOfStock = selectedVariant?.stock === 0;
-  const canAdd = hasVariants ? selectedVariant !== null && !variantOutOfStock : !isOutOfStock;
+  const variantOutOfStock = selectedVariant
+    ? !selectedVariant.isPreOrder && selectedVariant.stock === 0
+    : false;
+  const canAdd = hasVariants
+    ? selectedVariant !== null && !variantOutOfStock
+    : isBundle || effectiveIsPreOrder || !isOutOfStock;
 
   function selectVariant(variant: ProductVariant) {
     setSelectedVariant(variant);

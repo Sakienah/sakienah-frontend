@@ -34,6 +34,8 @@ export type ProductVariant = {
   stock: number;
   images: string[];
   isActive: boolean;
+  isPreOrder: boolean;
+  expectedShipDate: string | null;
 };
 
 export type BundleSelection = {
@@ -66,6 +68,8 @@ export type Product = {
   variants: ProductVariant[];
   bundleItems: BundleItem[];
   isActive: boolean;
+  isPreOrder: boolean;
+  expectedShipDate: string | null;
   categoryId: string | null;
   category: Category | null;
   createdAt: string;

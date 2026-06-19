@@ -12,6 +12,7 @@ type Props = {
   variantOutOfStock: boolean;
   added: boolean;
   productSlug: string;
+  isPreOrder: boolean;
   onAddToCart: () => void;
 };
 
@@ -24,6 +25,7 @@ export function CardCTA({
   variantOutOfStock,
   added,
   productSlug,
+  isPreOrder,
   onAddToCart,
 }: Props) {
   if (isBundle) {
@@ -48,7 +50,7 @@ export function CardCTA({
               'background-color 200ms var(--ease-out-strong), transform 160ms var(--ease-out-strong)',
           }}
         >
-          {isOutOfStock ? 'Niet op voorraad' : 'Stel samen'}
+          {isOutOfStock ? 'Niet op voorraad' : isPreOrder ? 'Pre-order' : 'Stel samen'}
         </Link>
 
         <div className="flex items-center justify-center gap-1.5 mt-2">
@@ -77,7 +79,9 @@ export function CardCTA({
         ? 'Selecteer kleur'
         : variantOutOfStock
           ? 'Niet leverbaar'
-          : 'In winkelwagen';
+          : isPreOrder
+            ? 'Pre-order'
+            : 'In winkelwagen';
 
   return (
     <div className="px-3 pb-3" style={{ paddingTop: 8, position: 'relative', zIndex: 10 }}>

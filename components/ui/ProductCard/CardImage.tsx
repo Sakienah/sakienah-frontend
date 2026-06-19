@@ -10,6 +10,7 @@ type Props = {
   sizes: string;
   isOutOfStock: boolean;
   isLowStock: boolean;
+  productIsPreOrder: boolean;
   stock: number;
   discountPct: number | null;
   isBestseller: boolean;
@@ -29,6 +30,7 @@ export function CardImage({
   sizes,
   isOutOfStock,
   isLowStock,
+  productIsPreOrder,
   stock,
   discountPct,
   isBestseller,
@@ -41,10 +43,13 @@ export function CardImage({
 }: Props) {
   const currentImage = images[currentImageIndex] ?? images[0];
 
-  // Single-badge priority: out of stock > discount > hot > bestseller > low stock > sold count
+  // Single-badge priority: out of stock > pre-order > discount > hot > bestseller > low stock > sold count
   const badge = (() => {
     if (isOutOfStock) {
       return { text: 'Uitverkocht', style: 'bg-[#0a0a0a] text-gold' };
+    }
+    if (productIsPreOrder) {
+      return { text: 'Pre-order', style: 'bg-[#0a0a0a] text-gold' };
     }
     if (discountPct) {
       return { text: `-${discountPct}%`, style: 'bg-[#0a0a0a] text-gold' };
