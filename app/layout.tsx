@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, DM_Sans, Amiri } from 'next/font/google';
+import { Cormorant_Garamond, Inter, Amiri } from 'next/font/google';
 import { cookies } from 'next/headers';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
@@ -32,13 +32,15 @@ async function getInitialUser(): Promise<User | null> {
 const cormorant = Cormorant_Garamond({
   variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500'],
+  style: ['normal', 'italic'],
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
+const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -65,7 +67,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nl"
-      className={`${cormorant.variable} ${dmSans.variable} ${amiri.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${inter.variable} ${amiri.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <AuthProvider initialUser={initialUser}>

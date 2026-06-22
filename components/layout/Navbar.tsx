@@ -163,6 +163,9 @@ export function Navbar() {
   }, [mobileOpen]);
 
   const isShopActive = pathname.startsWith('/shop') || pathname.startsWith('/product');
+  const isHome = pathname === '/';
+  const transparentNav = isHome && !scrolled;
+  const navColor = transparentNav ? '#fff' : '#0a0a0a';
 
   return (
     <>
@@ -201,7 +204,7 @@ export function Navbar() {
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          background: 'rgba(255,255,255,0.97)',
+          background: transparentNav ? 'transparent' : 'rgba(255,255,255,0.97)',
           backdropFilter: scrolled ? 'blur(18px)' : 'none',
           boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03)' : 'none',
         }}
@@ -212,7 +215,8 @@ export function Navbar() {
           <div className="justify-self-start">
             <button
               onClick={() => setMobileOpen(true)}
-              className="icon-btn flex items-center justify-center text-[#0a0a0a] p-1"
+              className="icon-btn flex items-center justify-center p-1"
+              style={{ color: navColor, transition: 'color 0.3s' }}
               aria-label="Menu openen"
             >
               <span className="block w-[22px] h-[22px] md:w-[23px] md:h-[23px]">
@@ -224,8 +228,8 @@ export function Navbar() {
           {/* Center: logo */}
           <Link
             href="/"
-            className="justify-self-center font-display text-[22px] md:text-[26px] font-semibold text-[#0a0a0a] flex items-center gap-2 shrink-0"
-            style={{ letterSpacing: '-0.01em' }}
+            className="justify-self-center font-display text-[22px] md:text-[26px] font-semibold flex items-center gap-2 shrink-0"
+            style={{ letterSpacing: '-0.01em', color: navColor, transition: 'color 0.3s' }}
           >
             Sakienah
             <span
@@ -245,7 +249,8 @@ export function Navbar() {
             <div className="hidden md:block" style={{ position: 'relative' }}>
               <button
                 onClick={() => setSearchOpen((v) => !v)}
-                className="icon-btn flex items-center justify-center text-[#0a0a0a] p-1"
+                className="icon-btn flex items-center justify-center p-1"
+                style={{ color: navColor, transition: 'color 0.3s' }}
                 aria-label={searchOpen ? 'Zoeken sluiten' : 'Zoeken openen'}
                 aria-expanded={searchOpen}
               >
@@ -271,7 +276,8 @@ export function Navbar() {
             </div>
             <Link
               href="/wishlist"
-              className="icon-btn text-[#0a0a0a] relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              className="icon-btn relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              style={{ color: navColor, transition: 'color 0.3s' }}
               title="Favorieten"
             >
               <WishlistIcon />
@@ -279,7 +285,8 @@ export function Navbar() {
             </Link>
             <Link
               href="/cart"
-              className="icon-btn text-[#0a0a0a] relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              className="icon-btn relative flex w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              style={{ color: navColor, transition: 'color 0.3s' }}
               title="Winkelwagen"
             >
               <CartIcon />
@@ -287,7 +294,8 @@ export function Navbar() {
             </Link>
             <Link
               href="/account"
-              className="icon-btn text-[#0a0a0a] flex items-center w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              className="icon-btn flex items-center w-[20px] h-[20px] md:w-[21px] md:h-[21px]"
+              style={{ color: navColor, transition: 'color 0.3s' }}
               title={user ? user.naam : 'Inloggen'}
             >
               <AccountIcon />

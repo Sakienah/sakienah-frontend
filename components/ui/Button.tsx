@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 type ButtonProps = {
   children: ReactNode;
@@ -7,6 +7,7 @@ type ButtonProps = {
   className?: string;
   onClick?: () => void;
   href?: string;
+  style?: CSSProperties;
 };
 
 const EASE = 'cubic-bezier(0.23, 1, 0.32, 1)';
@@ -26,9 +27,10 @@ export function Button({
   className = '',
   onClick,
   href,
+  style: styleOverride,
 }: ButtonProps) {
   const classes = `${base} ${variants[variant]} ${className}`;
-  const style = { transition: `transform 160ms ${EASE}` };
+  const style = { transition: `transform 160ms ${EASE}`, ...styleOverride };
 
   if (href) {
     return (

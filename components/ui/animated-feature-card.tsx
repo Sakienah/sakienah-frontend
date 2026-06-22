@@ -10,7 +10,8 @@ interface AnimatedFeatureCardProps {
   tag: string;
   title: React.ReactNode;
   description?: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  arabic?: string;
   color: 'gold' | 'cream' | 'charcoal';
 }
 
@@ -42,7 +43,7 @@ const colorVariants = {
 };
 
 const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCardProps>(
-  ({ className, tag, title, description, icon: Icon, color }, ref) => {
+  ({ className, tag, title, description, icon: Icon, arabic, color }, ref) => {
     const cardStyle = colorVariants[color] as React.CSSProperties;
 
     return (
@@ -79,26 +80,62 @@ const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCard
         />
 
         {/* Large floating icon */}
-        <motion.div
-          className="absolute inset-x-0 top-0 z-10 flex items-center justify-center pt-10"
-          variants={{
-            initial: { scale: 1, y: 0 },
-            hover: { scale: 1.15, y: -18 },
-          }}
-          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-        >
-          <div
-            className="flex h-44 w-44 items-center justify-center rounded-full border-2"
-            style={{
-              backgroundColor: 'var(--feature-color-soft)',
-              borderColor: 'var(--feature-color-light)',
-              color: 'var(--feature-color)',
-              boxShadow: '0 20px 60px -20px var(--feature-color-light)',
+        {Icon && !arabic && (
+          <motion.div
+            className="absolute inset-x-0 top-0 z-10 flex items-center justify-center pt-10"
+            variants={{
+              initial: { scale: 1, y: 0 },
+              hover: { scale: 1.15, y: -18 },
             }}
+            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
           >
-            <Icon size={80} strokeWidth={1} />
-          </div>
-        </motion.div>
+            <div
+              className="flex h-44 w-44 items-center justify-center rounded-full border-2"
+              style={{
+                backgroundColor: 'var(--feature-color-soft)',
+                borderColor: 'var(--feature-color-light)',
+                color: 'var(--feature-color)',
+                boxShadow: '0 20px 60px -20px var(--feature-color-light)',
+              }}
+            >
+              <Icon size={80} strokeWidth={1} />
+            </div>
+          </motion.div>
+        )}
+
+        {/* Arabic calligraphy */}
+        {arabic && (
+          <motion.div
+            className="absolute inset-x-0 top-0 z-10 flex items-center justify-center pt-10"
+            variants={{
+              initial: { scale: 1, y: 0 },
+              hover: { scale: 1.15, y: -18 },
+            }}
+            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          >
+            <div
+              className="flex h-44 w-44 items-center justify-center rounded-full border-2"
+              style={{
+                backgroundColor: 'var(--feature-color-soft)',
+                borderColor: 'var(--feature-color-light)',
+                color: 'var(--feature-color)',
+                boxShadow: '0 20px 60px -20px var(--feature-color-light)',
+              }}
+            >
+              <span
+                className="font-arabic select-none"
+                style={{
+                  fontSize: 50,
+                  color: 'var(--feature-color)',
+                  direction: 'rtl',
+                  lineHeight: 1,
+                }}
+              >
+                {arabic}
+              </span>
+            </div>
+          </motion.div>
+        )}
 
         {/* Bottom content card */}
         <div
