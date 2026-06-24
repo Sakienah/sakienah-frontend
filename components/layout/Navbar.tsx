@@ -228,8 +228,8 @@ export function Navbar() {
           {/* Center: logo */}
           <Link
             href="/"
-            className="justify-self-center font-display text-[22px] md:text-[26px] font-semibold flex items-center gap-2 shrink-0"
-            style={{ letterSpacing: '-0.01em', color: navColor, transition: 'color 0.3s' }}
+            className="justify-self-center font-display text-[22px] md:text-[26px] flex items-center gap-2 shrink-0"
+            style={{ color: navColor, transition: 'color 0.3s' }}
           >
             Sakienah
             <span
@@ -329,8 +329,7 @@ export function Navbar() {
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
-            className="font-display text-[20px] font-semibold text-[#0a0a0a] flex items-center gap-1.5"
-            style={{ letterSpacing: '-0.01em' }}
+            className="font-display text-[20px] text-[#0a0a0a] flex items-center gap-1.5"
           >
             Sakienah
             <span

@@ -59,7 +59,7 @@ export function CategoryShowcase() {
 
       <div className="max-w-[1280px] mx-auto relative z-10">
         <Reveal>
-          <SectionHeader eyebrow="Collecties" heading="Ontdek onze collecties" />
+          <SectionHeader heading="Ontdek onze collecties" />
         </Reveal>
 
         <div

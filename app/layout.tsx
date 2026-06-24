@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, Inter, Amiri } from 'next/font/google';
+import { Gloock, Figtree, Amiri } from 'next/font/google';
 import { cookies } from 'next/headers';
 import './globals.css';
 import GiftFloater from '@/components/ui/GiftFloater';
@@ -29,18 +29,17 @@ async function getInitialUser(): Promise<User | null> {
   }
 }
 
-const cormorant = Cormorant_Garamond({
+const gloock = Gloock({
   variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['400', '500'],
-  style: ['normal', 'italic'],
+  weight: ['400'],
   display: 'swap',
 });
 
-const inter = Inter({
+const figtree = Figtree({
   variable: '--font-inter',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
 });
 
@@ -67,7 +66,7 @@ export default async function RootLayout({
   return (
     <html
       lang="nl"
-      className={`${cormorant.variable} ${inter.variable} ${amiri.variable} h-full antialiased`}
+      className={`${gloock.variable} ${figtree.variable} ${amiri.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <AuthProvider initialUser={initialUser}>

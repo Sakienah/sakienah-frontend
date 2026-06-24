@@ -43,6 +43,23 @@ body {
   color: var(--foreground);
 }
 
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* Gloock heeft alleen weight 400.
+   font-weight: 400 overschrijft Tailwind font-semibold/bold (want buiten @layer).
+   font-synthesis: none voorkomt dat de browser kunstmatig vet synthetiseert
+   voor inline style={{ fontWeight: 600/700 }} overrides. */
+.font-display {
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
 @keyframes marquee {
   0% {
     transform: translateX(0);

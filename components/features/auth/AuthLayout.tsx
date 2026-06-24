@@ -52,9 +52,8 @@ export function AuthLayout({ title, arabicTitle, subtitle, children }: AuthLayou
                   {subtitle}
                 </p>
                 <h1
-                  className="font-display font-semibold text-[#0a0a0a]"
+                  className="font-display text-[#0a0a0a]"
                   style={{
-                    letterSpacing: '-0.01em',
                     fontSize: 'clamp(1.5rem, 4vw, 1.875rem)',
                   }}
                 >

@@ -119,7 +119,7 @@ export function SocialProof() {
       >
         {/* Header */}
         <Reveal>
-          <SectionHeader eyebrow="Klantervaringen" heading="Wat onze klanten zeggen" />
+          <SectionHeader heading="Wat onze klanten zeggen" />
           <div
             style={{
               display: 'flex',

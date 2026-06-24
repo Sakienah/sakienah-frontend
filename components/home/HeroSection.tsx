@@ -23,6 +23,16 @@ export function HeroSection() {
               'linear-gradient(180deg, rgba(10,8,4,0.55) 0%, rgba(10,8,4,0.5) 10%, transparent 22%), linear-gradient(0deg, rgba(10,8,4,0.65) 0%, rgba(10,8,4,0.35) 28%, transparent 50%), linear-gradient(90deg, rgba(10,8,4,0.6) 0%, rgba(10,8,4,0.22) 42%, transparent 68%)',
           }}
         />
+        {/* Extra donkere laag op mobiel voor betere leesbaarheid */}
+        <div
+          aria-hidden
+          className="lg:hidden"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(10,8,4,0.35)',
+          }}
+        />
       </div>
 
       {/* Desktop content — text + inline CTA, bottom-left */}
@@ -47,7 +57,7 @@ export function HeroSection() {
               className="font-display text-white"
               style={{
                 fontSize: 'clamp(2.25rem, 5.5vw, 4.75rem)',
-                fontWeight: 700,
+                fontWeight: 400,
                 lineHeight: 1.05,
                 marginBottom: 2,
                 letterSpacing: '-0.02em',
@@ -57,7 +67,7 @@ export function HeroSection() {
               Alles voor jouw
             </h1>
             <h1
-              className="font-display text-gold italic mb-9"
+              className="font-display text-gold mb-9"
               style={{
                 fontSize: 'clamp(2.25rem, 5.5vw, 4.75rem)',
                 fontWeight: 400,
@@ -72,11 +82,11 @@ export function HeroSection() {
             <p
               className="mb-10"
               style={{
-                fontSize: 'var(--text-sm)',
+                fontSize: 'clamp(1rem, 1.2vw, 1.125rem)',
                 lineHeight: 1.75,
                 maxWidth: 440,
                 fontWeight: 300,
-                color: 'rgba(255,255,255,0.75)',
+                color: 'rgba(255,255,255,0.8)',
               }}
             >
               Van handgemaakte gebedskleden tot Koran accessoires — elk product met zorg
@@ -109,53 +119,50 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Mobile content — text centered above, CTA's pinned to the very bottom */}
-      <div className="lg:hidden relative z-10" style={{ minHeight: '100svh' }}>
-        <div
-          className="flex flex-col justify-end"
-          style={{ minHeight: '100svh', padding: '120px 24px 130px' }}
-        >
-          <div className="text-center mx-auto" style={{ maxWidth: 480 }}>
-            {/* Bismillah */}
-            <div className="flex items-center justify-center mb-3" style={{ gap: 12 }}>
-              <span
-                className="font-arabic"
-                style={{ fontSize: 'var(--text-lg)', color: '#c9a84c', direction: 'rtl' }}
-              >
-                بِسْمِ اللَّهِ
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h1
-              className="font-display text-white"
-              style={{
-                fontSize: 'clamp(2.25rem, 5.5vw, 4.75rem)',
-                fontWeight: 700,
-                lineHeight: 1.05,
-                marginBottom: 2,
-                letterSpacing: '-0.02em',
-                textShadow: '0 2px 24px rgba(0,0,0,0.3)',
-              }}
+      {/* Mobile content — alles gecentreerd in het midden van het beeld */}
+      <div
+        className="lg:hidden relative z-10 flex flex-col items-center justify-center text-center px-6"
+        style={{ minHeight: '100svh' }}
+      >
+        <div style={{ maxWidth: 480, width: '100%' }}>
+          {/* Bismillah */}
+          <div className="flex items-center justify-center mb-4">
+            <span
+              className="font-arabic"
+              style={{ fontSize: 'var(--text-lg)', color: '#c9a84c', direction: 'rtl' }}
             >
-              Alles voor jouw
-            </h1>
-            <h1
-              className="font-display text-gold italic"
-              style={{
-                fontSize: 'clamp(2.25rem, 5.5vw, 4.75rem)',
-                fontWeight: 400,
-                lineHeight: 1.05,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              spirituele reis
-            </h1>
+              بِسْمِ اللَّهِ
+            </span>
           </div>
-        </div>
 
-        {/* CTA's — pinned to the very bottom of the hero */}
-        <div className="absolute left-0 right-0 bottom-0" style={{ padding: '0 24px 40px' }}>
+          {/* Headline */}
+          <h1
+            className="font-display text-white"
+            style={{
+              fontSize: 'clamp(2.5rem, 10vw, 4rem)',
+              fontWeight: 400,
+              lineHeight: 1.05,
+              marginBottom: 2,
+              letterSpacing: '-0.02em',
+              textShadow: '0 2px 24px rgba(0,0,0,0.3)',
+            }}
+          >
+            Alles voor jouw
+          </h1>
+          <h1
+            className="font-display text-gold"
+            style={{
+              fontSize: 'clamp(2.5rem, 10vw, 4rem)',
+              fontWeight: 400,
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              marginBottom: 32,
+            }}
+          >
+            spirituele reis
+          </h1>
+
+          {/* CTA's */}
           <div className="flex flex-nowrap items-stretch justify-center" style={{ gap: 10 }}>
             <Button
               href="/shop"

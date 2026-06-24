@@ -18,12 +18,7 @@ export function StepGateway({ onContinue }: Props) {
         <p className="font-sans text-[10px] tracking-[0.2em] uppercase text-[#c9a84c] font-semibold mb-2.5">
           Afrekenen
         </p>
-        <h2
-          className="font-display text-[26px] font-semibold text-[#0a0a0a]"
-          style={{ letterSpacing: '-0.01em' }}
-        >
-          Hoe wil je afrekenen?
-        </h2>
+        <h2 className="font-display text-[26px] text-[#0a0a0a]">Hoe wil je afrekenen?</h2>
         <p style={{ fontSize: 13, color: '#aaa', marginTop: 8 }}>
           Kies hoe je wilt bestellen. Je bestelling is altijd veilig en beveiligd.
         </p>

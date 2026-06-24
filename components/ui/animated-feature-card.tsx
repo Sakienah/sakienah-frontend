@@ -58,9 +58,9 @@ const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCard
         initial="initial"
         variants={{
           initial: { y: 0 },
-          hover: { y: -12 },
+          hover: { y: -6 },
         }}
-        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
       >
         {/* Background wash */}
         <div
@@ -85,9 +85,9 @@ const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCard
             className="absolute inset-x-0 top-0 z-10 flex items-center justify-center pt-10"
             variants={{
               initial: { scale: 1, y: 0 },
-              hover: { scale: 1.15, y: -18 },
+              hover: { scale: 1.08, y: -10 },
             }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           >
             <div
               className="flex h-44 w-44 items-center justify-center rounded-full border-2"
@@ -109,9 +109,9 @@ const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCard
             className="absolute inset-x-0 top-0 z-10 flex items-center justify-center pt-10"
             variants={{
               initial: { scale: 1, y: 0 },
-              hover: { scale: 1.15, y: -18 },
+              hover: { scale: 1.08, y: -10 },
             }}
-            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
           >
             <div
               className="flex h-44 w-44 items-center justify-center rounded-full border-2"
@@ -159,7 +159,7 @@ const AnimatedFeatureCard = React.forwardRef<HTMLDivElement, AnimatedFeatureCard
             className="font-display mb-2"
             style={{
               fontSize: '1.35rem',
-              fontWeight: 600,
+              fontWeight: 400,
               lineHeight: 1.2,
               color: 'var(--feature-text)',
             }}

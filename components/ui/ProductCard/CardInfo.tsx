@@ -40,11 +40,10 @@ export function CardInfo({
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1 min-w-0 pr-2">
           <p
+            className="font-display"
             style={{
-              fontSize: 14,
-              fontWeight: 600,
+              fontSize: 15,
               marginBottom: 4,
-              lineHeight: 1.3,
               color: '#0a0a0a',
               display: '-webkit-box',
               WebkitLineClamp: 2,
