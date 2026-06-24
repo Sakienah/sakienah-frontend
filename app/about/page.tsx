@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/Footer';
 import { GeomPattern } from '@/components/ui/GeomPattern';
 import { Reveal } from '@/components/ui/Reveal';
 import { AnimatedFeatureCard } from '@/components/ui/animated-feature-card';
+import { DonationSection } from '@/components/features/donation/DonationSection';
 import Image from 'next/image';
 
 const values = [
@@ -265,6 +266,9 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
+
+        {/* Donatie sectie */}
+        <DonationSection />
       </main>
       <Footer />
     </>
